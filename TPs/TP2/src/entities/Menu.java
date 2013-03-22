@@ -25,6 +25,7 @@ public class Menu {
 			int opcion = 0;
 			int posicion=0;
 			MetodosGenerales metodosgrles=new MetodosGenerales();
+			
 			while(sigo)
 			{
 				System.out.print("1- Alta Empleado\n");
@@ -32,7 +33,7 @@ public class Menu {
 				System.out.print("3- Modificar Empleado\n");
 				System.out.print("4- Modificar Ejecutivo\n");
 				System.out.print("5- Baja Empleado\n");
-				System.out.print("6- Baja Empleado\n");
+				System.out.print("6- Baja Ejecutivo\n");
 				System.out.print("7- Calcular Vacaciones\n");
 				System.out.print("8- Disminuir Horas\n");
 				System.out.print("9- Aumentar Sueldo\n");
@@ -51,23 +52,25 @@ public class Menu {
 					case 1:
 						try
 						{
+							//metodosgrls.verificarVacantesEnEmpresa();
 							posicion=metodosgrles.verificarPosicionyCupoPersonas(personas);
 							Empleado empleado=new Empleado();	
 							
 								if(posicion>=0)
 								{
-									personas[posicion]=empleado.altaDeNuevaPersonaEnEmpresa();
+									personas[posicion]=empleado.altaDeEmpleado(empleado);
 										
 								}else
 								{
 									System.out.print("\nNO QUEDAN CUPOS EN LA EMPRESA\n");
+									Thread.sleep(2000);
 									break;
 								}			
 								
 								try
 								{
 									System.out.print("EMPLEADO CREADO CORRECTAMENTE - SE REGRESARA AL MENU PRINCIPAL");
-									Thread.sleep(3000);							
+									Thread.sleep(2000);							
 								}catch(Exception ex)
 								{
 									System.out.print("[menu] Thread Sleep Exception: "+ex);
@@ -86,17 +89,18 @@ public class Menu {
 							Ejecutivo ejecutivo=new Ejecutivo(Definiciones.SueldoEjecutivos);	
 							if(posicion>=0)
 							{
-								personas[posicion]=ejecutivo.altaDeNuevaPersonaEnEmpresa();
+								personas[posicion]=ejecutivo.altaDeEmpleado(ejecutivo);
 									
 							}else
 							{
 								System.out.print("\nNO QUEDAN CUPOS EN LA EMPRESA\n");
+								Thread.sleep(2000);										
 								break;
 							}	
 							try
 							{
 								System.out.print("EJECUTIVO CREADO CORRECTAMENTE - SE REGRESARÁ AL MENU PRINCIPAL");
-								Thread.sleep(3000);							
+								Thread.sleep(2000);							
 							}catch(Exception ex)
 							{
 								System.out.print("[menu] Thread Sleep Exception: "+ex);
@@ -115,71 +119,145 @@ public class Menu {
 						break;
 					case 5:
 							//bajaEmpleado();
+						int dniempleado=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EMPLEADO A DAR DE BAJA: ");		//TODO: VALIDAR
+						Empleado empleadobuscado=metodosgrles.buscarEmpleadoPorDNI(personas,dniempleado);
+						try
+						{
+							if(empleadobuscado!=null)
+							{
+								System.out.print("\n[menu] SE BORRARA EL EMPLEADO: "+empleadobuscado.getApellido());
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\n[menu] No se encontro empleado\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+							
+							if(menuYesorNot())
+							{								
+								Persona[] auxpersonas=new Persona[10];
+								auxpersonas=empleadobuscado.bajaDeEmpleado(personas,empleadobuscado);						
+								if(auxpersonas != null)
+								{
+									personas=auxpersonas;
+									System.out.print("\n[menu] Empleado dado de baja correctamente");
+									Thread.sleep(2000);						
+								}else
+								{
+										System.out.print("\n[menu] ERROR - No se pudo dar de baja empleado");
+										Thread.sleep(2000);
+								}	
+							}
+						}catch(Exception ex)
+						{}						
 						break;
 					case 6:
 						//	bajaEjecutivo();
+						int dniejecutivo=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EJECUTIVO A DAR DE BAJA: ");
+						Ejecutivo ejecutivobuscado=metodosgrles.buscarEjecutivoPorDNI(personas,dniejecutivo);
+						try
+						{
+							if(ejecutivobuscado!=null)
+							{
+								System.out.print("\n[menu] SE BORRARA EL EJECUTIVO: "+ejecutivobuscado.getApellido());
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\n[menu] No se encontro empleado\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+
+							if(menuYesorNot())
+							{								
+								Persona[] auxpersonas=new Persona[10];
+								auxpersonas=ejecutivobuscado.bajaDeEmpleado(personas,ejecutivobuscado);						
+								if(auxpersonas != null)
+								{
+									personas=auxpersonas;
+									System.out.print("\n[menu] Empleado dado de baja correctamente");
+									Thread.sleep(2000);
+								}else
+								{
+									System.out.print("\n[menu] No se pudo dar de baja empleado");
+									Thread.sleep(2000);
+								}											
+							}							
+						}catch (InterruptedException e) {
+							e.printStackTrace();							
+						}
 						break;
 					case 7:
 						break;
 					case 8:
 						break;
 					case 9:
+						break;
+					case 10:
 						int j=0;
 						boolean exit=false;
 						boolean next;
-						while((j<personas.length)&&(!exit))
+						try
 						{
-							if(personas[j] instanceof Empleado)
+							while((j<personas.length)&&(!exit))
 							{
-								next=false;
-								while(!next)
+								if(personas[j] instanceof Empleado)
 								{
-									Empleado empleado_show=(Empleado) personas[j];								
-									System.out.print("\n** EL EMPLEADO "+empleado_show.getApellido()+", "+empleado_show.getNombre()+" - DE DNI: "
-									+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()+"\n");
-									switch(mostrarContinuaOSale())
+									next=false;
+									while(!next)
 									{
-										case 'q':
-											next=true;
-											exit=true;
-										break;
-										case 'c':
-											next=true;
-										break;
+										Empleado empleado_show=(Empleado) personas[j];								
+										System.out.print("\n** EL EMPLEADO "+empleado_show.getApellido()+", "+empleado_show.getNombre()+" - DE DNI: "
+										+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()+"\n");
+										switch(mostrarContinuaOSale())
+										{
+											case 'q':
+												next=true;
+												exit=true;
+											break;
+											case 'c':
+												next=true;
+											break;
+										}
 									}
-								}
-								
-							}else if(personas[j] instanceof Ejecutivo)
-							{
-								next=false;
-								while(!next)
+									
+								}else if(personas[j] instanceof Ejecutivo)
 								{
-									Ejecutivo ejecutivo_show=(Ejecutivo) personas[j];
-									
-									System.out.print("\nEL EJECUTIVO "+ejecutivo_show.getApellido()+", "+ejecutivo_show.getNombre()+" - DE DNI: "
-									+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+"\n");
-									
-									switch(mostrarContinuaOSale())
+									next=false;
+									while(!next)
 									{
-										case 'q':
-											next=true;
-											exit=true;
-										break;
-										case 'c':
-											next=true;
-										break;
+										Ejecutivo ejecutivo_show=(Ejecutivo) personas[j];
+										
+										System.out.print("\nEL EJECUTIVO "+ejecutivo_show.getApellido()+", "+ejecutivo_show.getNombre()+" - DE DNI: "
+										+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+"\n");
+										
+										switch(mostrarContinuaOSale())
+										{
+											case 'q':
+												next=true;
+												exit=true;
+											break;
+											case 'c':
+												next=true;
+											break;
+										}
 									}
-								}
-							}else
-							{
-								
+								}else
+								{
+									
+									System.out.print("\nNO HAY NINGUN EMPLEADO EN SU EMPRESA");
+									Thread.sleep(2000);
+									break;
+								}						
+									
+								j++;
 							}						
-								
-							j++;
+							
+						}catch(Exception ex)
+						{
+							System.out.print("\nException: "+ex);							
 						}
-						
-						break;
-					case 10:
 						break;
 					case 99:
 						sigo=false;
@@ -217,10 +295,25 @@ public class Menu {
 			}
 		}catch(Exception ex)
 		{
-			System.out.print("[mostrarContinuaOSale] Exception: "+ex);
+			System.out.print("[mostrarContinuaOSale] Exception: "+ex);			
 			return 'q';
 		}
-		
+	}
+	
+	public boolean menuYesorNot()
+	{		
+		while(true)
+		{
+			switch(Dentre.caracter("\nCONTINUAR (Y - N)? \n"))
+			{
+				case 'y':
+				case 'Y':					
+					return true;
+				case 'N':
+				case 'n':					
+					return false;
+			}
+		}
 		
 	}
 

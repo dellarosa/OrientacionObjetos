@@ -14,16 +14,8 @@ public class Ejecutivo extends Empleado{
 	}
 
 	//un día y medio de vacaciones por cada 6
-	public void disminuirHorasTrabajo(int cantHorasMenos)
-	{		
-		this.setCantHorasTrabajoDiarias(this.canthorastrabajodiarias-cantHorasMenos);
-	}	
-	
-	public void setCantHorasTrabajoDiarias(int canthorastrabajodiarias)
-	{	
-		this.canthorastrabajodiarias=canthorastrabajodiarias;
-	}
 
+	
 	public int getCantidadDiasVacaciones()
 	{	
 		return this.cantidaddiastrabajados/4;		
@@ -34,16 +26,15 @@ public class Ejecutivo extends Empleado{
 		this.setCantidadDiasVacaciones(this.cantidaddiastrabajados/4);
 	}
 
-	public Ejecutivo altaDeNuevaPersonaEnEmpresa()
+	public Ejecutivo altaDeEmpleado(Ejecutivo ejecutivo)
 	{ 
 		try
 		{
 			MetodosGenerales metodosg=new MetodosGenerales();
-			Ejecutivo ejecutivo=new Ejecutivo();
 			System.out.print("\n**INGRESE LOS DATOS DE ALTA DEL NUEVO EMPLEADO**\n");
 			
 			//TODO AGREGAR VALIDACIONES
-			ejecutivo.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));
+			ejecutivo.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));		//VALIDAR QUE NO EXISTA UN DNI IGUAL
 			ejecutivo.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
 			ejecutivo.setApellido(Dentre.texto("\nINGRESE APELLIDO: "));
 			try
@@ -71,5 +62,24 @@ public class Ejecutivo extends Empleado{
 			throw ex;
 		}
 	}
+
+	public void bajarCantHorasTrabajoDiarias(int canthorastrabajodiarias)
+	{
+		if(this.canthorastrabajodiarias>canthorastrabajodiarias)
+		{
+			this.canthorastrabajodiarias=canthorastrabajodiarias;
+		}else
+		{
+			System.out.print("\n*LAS HORAS QUE DESEA INGRESAR SON MAYORES A LAS QUE YA TRABAJA*\n");
+		}
+	}
+	public int getCantHorasTrabajoDiarias()
+	{
+		return this.canthorastrabajodiarias;
+	}
 	
+	/*public void disminuirHorasTrabajo(int cantHorasMenos)
+	{		
+		this.setCantHorasTrabajoDiarias(this.canthorastrabajodiarias-cantHorasMenos);
+	}*/	
 }

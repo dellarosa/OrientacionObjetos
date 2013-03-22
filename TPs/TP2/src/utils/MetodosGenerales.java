@@ -36,10 +36,56 @@ public class MetodosGenerales {
 			}
 			i++;
 		}		
-		if(i>personas.length)
+		if(i>=personas.length)
 		{
 			return -1;
 		}
 		return i;
 	}
+	
+
+	public Empleado buscarEmpleadoPorDNI(Persona[] personas,int dnipersona)
+	{
+		int x=0;
+		try
+		{
+			while(x<personas.length)
+			{	
+				if(personas[x] instanceof Empleado)							//!!ATENCION: PODRIA DAR DE BAJA EMPLEADOS Y EJECUTIVOS - PERO LA LOGICA ESTA BIEN, SINO EMPLEADO Y EJECUTIVO SERIAN HERMANOS. 
+				{
+					if(personas[x].getDni()==dnipersona)
+					{					
+						//System.out.print("\n[buscarEmpleadoPorDNI] Encontre empleado: "+personas[x].getApellido());		//DEBUG
+						//Thread.sleep(3000);
+						return (Empleado)personas[x];					
+					}				
+				}
+				x++;
+			}		
+			return null;
+		}catch(Exception ex)
+		{
+			return null;
+		}
+		
+	}
+	public Ejecutivo buscarEjecutivoPorDNI(Persona[] personas,int dnipersona)
+	{
+		int x=0;		
+		while(x<personas.length)
+		{			
+			if(personas[x] instanceof Ejecutivo)
+			{
+				if(personas[x].getDni()==dnipersona)
+				{	
+					return (Ejecutivo)personas[x];
+				}
+			
+			}
+			x++;
+		}		
+		return null;
+		
+	}
+	
 }

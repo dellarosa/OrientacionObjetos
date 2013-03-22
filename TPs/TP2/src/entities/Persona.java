@@ -62,5 +62,5 @@ public abstract class Persona {
 		return this.edad;
 	}
 	
-	public abstract  Persona altaDeNuevaPersonaEnEmpresa();
+	//public abstract  Persona altaDeNuevaPersonaEnEmpresa();
 }

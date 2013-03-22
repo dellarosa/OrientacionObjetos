@@ -9,7 +9,7 @@ public class Empleado extends Persona
 	private String legajo;
 	protected double sueldo;
 	protected int canthorastrabajodiarias;
-	private int cantidaddiasvacaciones;
+	protected int cantidaddiasvacaciones;
 	protected int cantidaddiastrabajados;
 	
 	//INICIO DEL CUERPO DEL PROGRAMA//////////////////////////////////////////////////////////////////////////////////////////
@@ -39,17 +39,16 @@ public class Empleado extends Persona
 		this.sueldo=sueldo;
 	}
 	
-
+	/////////////////////////////////////////////////////////
 	public void setCantHorasTrabajoDiarias(int canthorastrabajodiarias)
 	{
-		this.canthorastrabajodiarias=canthorastrabajodiarias;
+		this.canthorastrabajodiarias=canthorastrabajodiarias;		
 	}
 	public int getCantHorasTrabajoDiarias()
 	{
 		return this.canthorastrabajodiarias;
 	}
-	
-
+	//////////////////////////////////////////////////////////
 	public int getCantidadDiasVacaciones()
 	{
 		return this.cantidaddiastrabajados/6;		
@@ -66,19 +65,20 @@ public class Empleado extends Persona
 	{
 		this.cantidaddiastrabajados=cantdiastrabajados;		
 	}
+	///////////////////////////////////////////////////////////
 	
-	public Empleado altaDeNuevaPersonaEnEmpresa()
+	public Empleado altaDeEmpleado(Empleado empleado)
 	{		
 		try
 		{			
 			MetodosGenerales metodosg=new MetodosGenerales();		
-			Empleado empleado=new Empleado();
+			
 			//personas[p];
 			System.out.print("\n**INGRESE LOS DATOS DE ALTA DEL NUEVO EMPLEADO**\n");
 			
 			//TODO AGREGAR VALIDACIONES
 
-			empleado.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));
+			empleado.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));			//VALIDAR QUE NO EXISTA UN DNI IGUAL
 			empleado.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
 			empleado.setApellido(Dentre.texto("\nINGRESE APELLIDO: "));
 			char sex=metodosg.validarSexo(Dentre.caracter("\nINGRESE SEXO (m-f): "));
@@ -99,6 +99,24 @@ public class Empleado extends Persona
 			throw ex;
 		}		
 		
+	}
+	
+	public Persona[] bajaDeEmpleado(Persona personas[],Empleado empleado)
+	{		
+		int x=0;
+		Persona[] auxpersonas=new Persona[10];
+		while(x<personas.length)
+		{			
+			if(personas[x]==empleado)
+			{	
+			}else
+			{
+				auxpersonas[x]=personas[x];
+			}
+			x++;
+		}
+		auxpersonas[x-1]=null;
+		return auxpersonas; 	
 	}
 	
 }
