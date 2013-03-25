@@ -112,7 +112,39 @@ public class Menu {
 							
 						break;
 					case 3:
-							//modificarEmpleado();
+						int dniempleadomodif=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EMPLEADO A MODIFICAR: ");		//TODO: VALIDAR
+						Empleado empleadobuscadoparamodif=metodosgrles.buscarEmpleadoPorDNI(personas,dniempleadomodif);
+						
+						try
+						{
+							if(empleadobuscadoparamodif!=null)
+							{
+								System.out.print("\n[menu] SE MODIFICARÁ EL EMPLEADO: "+empleadobuscadoparamodif.getApellido());
+								Thread.sleep(2000);
+							}
+							else
+							{
+								System.out.print("\n[menu] No se encontro empleado\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+							if(menuYesorNot())
+							{								
+								Empleado auxempleado=new Empleado();
+								auxempleado=empleadobuscadoparamodif.modificarEmpleado(empleadobuscadoparamodif);						
+								if(auxempleado != null)
+								{
+				
+								}else
+								{
+										System.out.print("\n[menu] ERROR - No se pudo modificar empleado");
+										Thread.sleep(2000);
+								}	
+							}
+						}catch(Exception ex)
+						{
+							
+						}
 						break;
 					case 4:
 							//modificarejecutivo();
@@ -246,7 +278,7 @@ public class Menu {
 								}else
 								{
 									
-									System.out.print("\nNO HAY NINGUN EMPLEADO EN SU EMPRESA");
+									System.out.print("\nNO HAY MAS EMPLEADO EN SU EMPRESA\n");
 									Thread.sleep(2000);
 									break;
 								}						

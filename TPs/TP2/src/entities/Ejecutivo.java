@@ -59,7 +59,7 @@ public class Ejecutivo extends Empleado{
 			{
 				System.out.print("\n**Exception en Thread sleep **"+e+"\n");
 			}
-			throw ex;
+			return null;
 		}
 	}
 

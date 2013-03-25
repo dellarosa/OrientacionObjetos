@@ -91,12 +91,12 @@ public class Empleado extends Persona
 			{
 				System.out.print("\n**Exception en ingreso de datos - VERIFICAR INGRESO - EXCEPTION: **"+ex+"\n");
 				Thread.sleep(2000);				
-				throw ex;
+				
 			}catch(Exception e)
 			{
 				System.out.print("\n**Exception en Thread sleep **"+e+"\n");
 			}
-			throw ex;
+			return null;
 		}		
 		
 	}
@@ -118,5 +118,10 @@ public class Empleado extends Persona
 		auxpersonas[x-1]=null;
 		return auxpersonas; 	
 	}
-	
+	public Empleado modificarEmpleado(Empleado empleado)
+	{
+		Empleado empleadomodificado=empleado;
+		
+		return empleadomodificado;
+	}
 }
