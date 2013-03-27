@@ -7,7 +7,7 @@ import utils.*;
 public class Menu {
 
 	private MenuPrincipal menuprincipal;
-	
+	private int dnibuscado;
 	public Menu()
 	{
 		menuprincipal=new MenuPrincipal();
@@ -112,8 +112,8 @@ public class Menu {
 							
 						break;
 					case 3:
-						int dniempleadomodif=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EMPLEADO A MODIFICAR: ");		//TODO: VALIDAR
-						Empleado empleadobuscadoparamodif=metodosgrles.buscarEmpleadoPorDNI(personas,dniempleadomodif);
+							dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EMPLEADO A MODIFICAR: ");		//TODO: VALIDAR
+						Empleado empleadobuscadoparamodif=metodosgrles.buscarEmpleadoPorDNI(personas,dnibuscado);
 						
 						try
 						{
@@ -131,14 +131,14 @@ public class Menu {
 							if(menuYesorNot())
 							{								
 								Empleado auxempleado=new Empleado();
-								auxempleado=empleadobuscadoparamodif.modificarEmpleado(empleadobuscadoparamodif);						
+								auxempleado=empleadobuscadoparamodif.modificarEmpleado(empleadobuscadoparamodif);								
 								if(auxempleado != null)
-								{
-				
+								{	
+									personas[metodosgrles.buscarIndiceEnPersonas(personas,empleadobuscadoparamodif)]=auxempleado;
 								}else
 								{
-										System.out.print("\n[menu] ERROR - No se pudo modificar empleado");
-										Thread.sleep(2000);
+									System.out.print("\n[menu] ERROR - No se reemplazó el empleado");
+									Thread.sleep(2000);
 								}	
 							}
 						}catch(Exception ex)
@@ -147,7 +147,39 @@ public class Menu {
 						}
 						break;
 					case 4:
-							//modificarejecutivo();
+						dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EJECUTIVO A MODIFICAR: ");		//TODO: VALIDAR
+						Ejecutivo ejecutivobuscadoparamodif=metodosgrles.buscarEjecutivoPorDNI(personas,dnibuscado);
+						
+						try
+						{
+							if(ejecutivobuscadoparamodif!=null)
+							{
+								System.out.print("\n[menu] SE MODIFICARÁ EL EJECUTIVO: "+ejecutivobuscadoparamodif.getApellido());
+								Thread.sleep(2000);
+							}
+							else
+							{
+								System.out.print("\n[menu] No se encontro ejecutivo\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+							if(menuYesorNot())
+							{								
+								Ejecutivo auxejecutivoo=new Ejecutivo();
+								auxejecutivoo=ejecutivobuscadoparamodif.modificarEmpleado(ejecutivobuscadoparamodif);								
+								if(auxejecutivoo != null)
+								{	
+									personas[metodosgrles.buscarIndiceEnPersonas(personas,ejecutivobuscadoparamodif)]=auxejecutivoo;
+								}else
+								{
+									System.out.print("\n[menu] ERROR - No se reemplazó el ejecutivo");
+									Thread.sleep(2000);
+								}	
+							}
+						}catch(Exception ex)
+						{
+							
+						}
 						break;
 					case 5:
 							//bajaEmpleado();
@@ -186,8 +218,8 @@ public class Menu {
 						break;
 					case 6:
 						//	bajaEjecutivo();
-						int dniejecutivo=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EJECUTIVO A DAR DE BAJA: ");
-						Ejecutivo ejecutivobuscado=metodosgrles.buscarEjecutivoPorDNI(personas,dniejecutivo);
+						dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos) DEL EJECUTIVO A DAR DE BAJA: ");
+						Ejecutivo ejecutivobuscado=metodosgrles.buscarEjecutivoPorDNI(personas,dnibuscado);
 						try
 						{
 							if(ejecutivobuscado!=null)
@@ -221,8 +253,93 @@ public class Menu {
 						}
 						break;
 					case 7:
+						int indicevacas=0;
+						boolean salir=false;
+						while((indicevacas<personas.length)&&(!salir))
+						{
+							if(personas[indicevacas] instanceof Empleado)
+							{		
+								System.out.print("\n[menu] EL EMPLEADO "+personas[indicevacas].getApellido()+" TIENE "+ 
+							    personas[indicevacas].getCantidadDiasVacaciones()+" DE VACACIONES\n");
+								
+								if(menuYesorNot())
+								{									
+								}else
+								{
+									salir=true;
+								}								
+							}							
+							else if(personas[indicevacas] instanceof Ejecutivo)
+							{
+								System.out.print("\n[menu] EL EJECUTIVO "+personas[indicevacas].getApellido()+" TIENE "+ 
+							    personas[indicevacas].getCantidadDiasVacaciones()+" DE VACACIONES\n");
+								
+								if(menuYesorNot())
+								{									
+								}else
+								{
+									salir=true;
+								}
+							}
+							indicevacas++;
+						}
 						break;
 					case 8:
+						try
+						{
+							dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos): ");
+							
+							Persona personabuscada=metodosgrles.buscarPersonaPorDNI(personas,dnibuscado);
+							
+							if(personabuscada!=null)
+							{
+								System.out.print("\n[menu] DISMINUIR HORAS A LA PERSONA: "+personabuscada.getApellido());
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\n[menu] No se encontro persona\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+	
+							if(menuYesorNot())
+							{			
+								int canthorasdisminuir=Dentre.entero("\nINGRESE CANTIDAD DE HORAS QUE DESEA DISMINUIR POR DIA: ");
+								
+								
+									if(personabuscada instanceof Empleado)
+									{
+										Empleado empleadohoras=(Empleado)personabuscada;
+										if(empleadohoras.setDisminuirHoras(canthorasdisminuir))
+										{
+											System.out.print("\n[menu] HORAS DE EMPLEADO DISMINUIDAS CORRECTAMENTE\n");							
+											Thread.sleep(2000);	
+										}else
+										{
+											System.out.print("\n[menu] NO SE DISMINUYERON LAS HORAS DEL EMPLEADO. ERROR\n");							
+											Thread.sleep(2000);
+										}
+									}
+									else if(personabuscada instanceof Empleado)
+									{
+										Ejecutivo ejecutivohoras=(Ejecutivo)personabuscada;
+										if(ejecutivohoras.setDisminuirHoras(canthorasdisminuir))
+										{
+											System.out.print("\n[menu] HORAS DE EJECUTIVO DISMINUIDAS CORRECTAMENTE\n");							
+											Thread.sleep(2000);	
+										}else
+										{
+											System.out.print("\n[menu] NO SE DISMINUYERON LAS HORAS DEL EJECUTIVO. ERROR\n");							
+											Thread.sleep(2000);
+										}
+									}
+							}	
+						}catch(Exception e)
+						{
+							
+						}
+						
+						
 						break;
 					case 9:
 						break;
@@ -241,7 +358,8 @@ public class Menu {
 									{
 										Empleado empleado_show=(Empleado) personas[j];								
 										System.out.print("\n** EL EMPLEADO "+empleado_show.getApellido()+", "+empleado_show.getNombre()+" - DE DNI: "
-										+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()+"\n");
+										+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()
+										+".\nTRABAJA "+empleado_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS\n");
 										switch(mostrarContinuaOSale())
 										{
 											case 'q':
@@ -262,7 +380,8 @@ public class Menu {
 										Ejecutivo ejecutivo_show=(Ejecutivo) personas[j];
 										
 										System.out.print("\nEL EJECUTIVO "+ejecutivo_show.getApellido()+", "+ejecutivo_show.getNombre()+" - DE DNI: "
-										+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+"\n");
+										+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+
+										".\nTRABAJA "+ejecutivo_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS.\n");
 										
 										switch(mostrarContinuaOSale())
 										{

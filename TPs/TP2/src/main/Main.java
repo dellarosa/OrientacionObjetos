@@ -11,18 +11,17 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Persona[] personas=new Persona[10];
-		//personas=null;
 		
 		Menu menu=new Menu();
+		
+		MantenimientoDiario mantdiario=new MantenimientoDiario(personas);
+		mantdiario.start();		
+
+		
 		Menu.MenuPrincipal menuprincipal= menu.getMenuPrincipal();
 		
-		menuprincipal.comenzarmenuprincipal(personas);
-		
-		
-		
+		menuprincipal.comenzarmenuprincipal(personas);		
 		//personas=crearpersonasrandom(personas);
-		
-		
 		
 	}
 

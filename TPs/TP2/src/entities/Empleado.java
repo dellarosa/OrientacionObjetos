@@ -10,12 +10,12 @@ public class Empleado extends Persona
 	protected double sueldo;
 	protected int canthorastrabajodiarias;
 	protected int cantidaddiasvacaciones;
-	protected int cantidaddiastrabajados;
+	protected int cantidaddiastrabajados;			
 	
 	//INICIO DEL CUERPO DEL PROGRAMA//////////////////////////////////////////////////////////////////////////////////////////
 	public Empleado()
 	{
-		
+		setCantHorasTrabajoDiarias(8);
 	}
 	public Empleado(String legajo)
 	{
@@ -40,6 +40,17 @@ public class Empleado extends Persona
 	}
 	
 	/////////////////////////////////////////////////////////
+	public boolean setDisminuirHoras(int canthorasadisminuir)
+	{
+		if(this.canthorastrabajodiarias>canthorasadisminuir)			//AGREGAR MEJOR VALIDACION
+		{
+			this.canthorastrabajodiarias=this.canthorastrabajodiarias-canthorasadisminuir;
+			return true;
+		}else
+		{
+			return false;
+		}
+	}
 	public void setCantHorasTrabajoDiarias(int canthorastrabajodiarias)
 	{
 		this.canthorastrabajodiarias=canthorastrabajodiarias;		
@@ -53,7 +64,7 @@ public class Empleado extends Persona
 	{
 		return this.cantidaddiastrabajados/6;		
 	}
-	public void setCantidadDiasVacaciones(int cantidaddiasvacas)
+	public void setCantidadDiasVacaciones()								//NO DEBERIA USARSE
 	{
 		this.cantidaddiasvacaciones=this.cantidaddiastrabajados/6;;
 	}
@@ -118,10 +129,72 @@ public class Empleado extends Persona
 		auxpersonas[x-1]=null;
 		return auxpersonas; 	
 	}
+	
 	public Empleado modificarEmpleado(Empleado empleado)
 	{
-		Empleado empleadomodificado=empleado;
-		
-		return empleadomodificado;
+		try
+		{		
+			boolean sigo = true;
+			int opcion = 0;			
+			while(sigo)
+			{
+				System.out.print("1-Modificar Apellido \n");
+				System.out.print("2-Modificar Nombre \n");
+				System.out.print("3-Modificar DNI \n");
+				System.out.print("4-Modificar SEXO \n");
+				System.out.print("5-Modificar LEGAJO \n");
+				
+				System.out.print("99- Salir\n");
+				try
+				{
+					opcion=Dentre.entero("OPCIÓN: ");
+				}catch(Exception ex)
+				{
+					System.out.print("Datos ingresados incorrectamente\n");
+				}
+				switch(opcion)
+				{
+					case 1:
+						empleado.setApellido(Dentre.texto("\nINGRESE APELLIDO NUEVO: "));														
+						break;
+					case 2:
+						empleado.setNombre(Dentre.texto("\nINGRESE NOMBRE NUEVO: "));
+						break;
+					case 3:
+						empleado.setDni(Dentre.entero("\nINGRESE DNI NUEVO: "));
+						break;
+					case 4:
+						empleado.setDni(Dentre.entero("\nINGRESE SEXO A CAMBIAR: "));
+						break;
+					case 5:
+						empleado.setLegajo(Dentre.texto("\nINGRESE LEGAJO NUEVO: "));
+						break;
+					case 99:
+						sigo=false;
+						break;
+					default:
+						break;
+				}
+				
+				try
+				{
+					if(sigo!=false)
+					{
+						System.out.print("\nDATOS MODIFICADOS CORRECTAMENTE\n");
+						Thread.sleep(2000);
+					}
+				}catch(Exception ex)
+				{
+					
+				}
+			}	
+			
+			System.out.print("\n[menu] ");
+			Thread.sleep(2000);
+		}catch(Exception e)
+		{
+			
+		}			
+		return empleado;
 	}
 }

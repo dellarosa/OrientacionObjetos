@@ -44,7 +44,7 @@ public class MetodosGenerales {
 	}
 	
 
-	public Empleado buscarEmpleadoPorDNI(Persona[] personas,int dnipersona)
+	public Empleado buscarEmpleadoPorDNI(Persona[] personas,int dnipersona)			//Podría hacer un metodo solo...
 	{
 		int x=0;
 		try
@@ -69,6 +69,7 @@ public class MetodosGenerales {
 		}
 		
 	}
+	
 	public Ejecutivo buscarEjecutivoPorDNI(Persona[] personas,int dnipersona)
 	{
 		int x=0;		
@@ -88,4 +89,39 @@ public class MetodosGenerales {
 		
 	}
 	
+	public Persona buscarPersonaPorDNI(Persona[] personas,int dnipersona)
+	{
+		int x=0;		
+		while(x<personas.length)
+		{			
+			if(personas[x] instanceof Ejecutivo)
+			{
+				if(personas[x].getDni()==dnipersona)
+				{	
+					return (Ejecutivo)personas[x];
+				}
+			
+			}
+			if(personas[x] instanceof Empleado)
+			{
+				if(personas[x].getDni()==dnipersona)
+				{	
+					return (Empleado)personas[x];
+				}
+			
+			}
+			x++;
+		}		
+		return null;
+		
+	}
+	public int buscarIndiceEnPersonas(Persona[] personas,Persona persona)
+	{
+		int indice=0;
+		while(personas[indice]!=persona)
+		{
+			indice++;
+		}
+		return indice;
+	}
 }

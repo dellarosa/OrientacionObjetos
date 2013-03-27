@@ -7,6 +7,7 @@ public abstract class Persona {
 	private int dni;
 	protected int edad;
 	
+	
 	public Persona()	
 	{
 		
@@ -62,5 +63,13 @@ public abstract class Persona {
 		return this.edad;
 	}
 	
-	//public abstract  Persona altaDeNuevaPersonaEnEmpresa();
+	public String toString()		//...
+	{
+		return "";
+	
+	}
+	public abstract int getCantidadDiasVacaciones();			//Podría/debería ir en la clase empleado, a su vez podría estar calculado por horas no por dias
+	
+
+	
 }
