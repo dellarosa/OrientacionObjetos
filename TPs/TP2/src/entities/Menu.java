@@ -8,6 +8,8 @@ public class Menu {
 
 	private MenuPrincipal menuprincipal;
 	private int dnibuscado;
+	private Empleado auxempleado;
+	private Ejecutivo auxejecutivo;
 	public Menu()
 	{
 		menuprincipal=new MenuPrincipal();
@@ -54,7 +56,8 @@ public class Menu {
 						{
 							//metodosgrls.verificarVacantesEnEmpresa();
 							posicion=metodosgrles.verificarPosicionyCupoPersonas(personas);
-							Empleado empleado=new Empleado();	
+							//Empleado empleado=new Empleado(Definiciones.SueldoInicialGeneral);	
+							Empleado empleado=new Empleado(0);
 							
 								if(posicion>=0)
 								{
@@ -320,7 +323,7 @@ public class Menu {
 											Thread.sleep(2000);
 										}
 									}
-									else if(personabuscada instanceof Empleado)
+									else if(personabuscada instanceof Ejecutivo)
 									{
 										Ejecutivo ejecutivohoras=(Ejecutivo)personabuscada;
 										if(ejecutivohoras.setDisminuirHoras(canthorasdisminuir))
@@ -342,6 +345,55 @@ public class Menu {
 						
 						break;
 					case 9:
+						try
+						{
+							dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos): ");
+							
+							Persona personabuscada=metodosgrles.buscarPersonaPorDNI(personas,dnibuscado);
+							
+							if(personabuscada!=null)
+							{
+								System.out.print("\n[menu] AUMENTAR SUEDO DE: "+personabuscada.getApellido());
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\n[menu] No se encontro persona\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+	
+							if(menuYesorNot())
+							{			
+								double porcentajeaumento=Dentre.doble("\nINGRESE PORCENTAJE DE AUMENTO (1-200%): ");
+								if((porcentajeaumento<1)||(porcentajeaumento>200))
+								{
+									System.out.print("\n[menu] EL PORCENTAJE INGRESADO ES INCORRECTO\n");							
+									Thread.sleep(2000);
+									break;
+								}
+								
+								if(personabuscada instanceof Empleado)
+								{
+									auxempleado=(Empleado)personabuscada;
+									auxempleado.setSueldo(((porcentajeaumento/100)+1)*auxempleado.getSueldo());
+									
+										System.out.print("\n[menu] SUELDO AUMENTADO CORRECTAMENTE\n");							
+										Thread.sleep(2000);	
+									
+								}
+								else if(personabuscada instanceof Ejecutivo)
+								{
+									auxempleado=(Empleado)personabuscada;
+									auxempleado.setSueldo(((porcentajeaumento/100)+1)*auxempleado.getSueldo());
+									
+										System.out.print("\n[menu] SUELDO AUMENTADO CORRECTAMENTE\n");							
+										Thread.sleep(2000);
+								}
+							}
+						}catch(Exception e)
+						{
+							
+						}
 						break;
 					case 10:
 						int j=0;

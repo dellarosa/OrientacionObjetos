@@ -17,6 +17,18 @@ public class Empleado extends Persona
 	{
 		setCantHorasTrabajoDiarias(8);
 	}
+	public Empleado(double sueldo)
+	{
+		setCantHorasTrabajoDiarias(8);
+		if(sueldo!=0)
+		{
+			this.setSueldo(sueldo);
+		}else
+		{
+			this.setSueldo(0);
+		}
+		
+	}
 	public Empleado(String legajo)
 	{
 		
