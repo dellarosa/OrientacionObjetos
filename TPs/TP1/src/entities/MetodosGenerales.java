@@ -239,9 +239,9 @@ public class MetodosGenerales
 		 {
 			 System.out.print("\n[crearautorandom]*******AUTO CREADO Nº "+(j+1)+"***********\n");
 			 
-			 System.out.print("[crearautorandom]MOTOR: "+autos[j].getMotor().getMarcaMotor()+"\n");
+			 System.out.print("[crearautorandom]"+autos[j].getMotor().toString()+"\n");
 			 System.out.print("[crearautorandom]AIRE: "+String.valueOf(autos[j].getFlagAireAcondicionado())+"\n");
-			 System.out.print("[crearautorandom]MARCHAS: "+autos[j].getCajadeVelocidades().getCantidadDeMarchas()+"\n");
+			 System.out.print("[crearautorandom]"+autos[j].getCajadeVelocidades().toString()+"\n");
 			 j++;	 		
 			 		
 		 }

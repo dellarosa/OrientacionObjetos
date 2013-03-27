@@ -57,7 +57,7 @@ public class CajaVelocidades {
 		 result.append(newLine);
 		 result.append("Marchas: "+this.getCantidadDeMarchas());
 		 result.append(newLine);
-		 result.append("Tipo de Caja:"+this.getTipoDeCaja_string());	 
+		 result.append("Tipo de Caja: "+this.getTipoDeCaja_string());	 
 		 result.append(newLine);
 		 
 		 return result.toString();
