@@ -209,4 +209,15 @@ public class Empleado extends Persona
 		}			
 		return empleado;
 	}
+	
+	public String toString()
+	{
+		return "Apellido: "+this.getApellido()+"\n"+		
+		"Nombre: "+ this.getNombre()+"\n"+
+		"DNI: "+this.getDni()+"\n"+
+		"EDAD: "+this.getEdad()+"\n"+
+		"Dias Vacas: "+this.getCantidadDiasVacaciones()+"\n"+
+		"Dias Trabajados: "+this.getCantidadDiasTrabajados()+"\n"
+		;
+	}
 }

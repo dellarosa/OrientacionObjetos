@@ -62,14 +62,13 @@ public abstract class Persona {
 	{
 		return this.edad;
 	}
-	
-	public String toString()		//...
-	{
-		return "";
-	
-	}
+		
 	public abstract int getCantidadDiasVacaciones();			//Podría/debería ir en la clase empleado, a su vez podría estar calculado por horas no por dias
 	
 
-	
+	public String toString()
+	{
+		return "DATOS PERSONA: \nNombre: "+this.getNombre()+"\nApellido: "+this.getApellido()+
+				"\nDNI: "+this.getDni()+"\nSexo: "+this.getSexo();
+	}
 }

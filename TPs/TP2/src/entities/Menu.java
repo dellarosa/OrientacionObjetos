@@ -408,7 +408,9 @@ public class Menu {
 									next=false;
 									while(!next)
 									{
-										Empleado empleado_show=(Empleado) personas[j];								
+										Empleado empleado_show=(Empleado) personas[j];
+										System.out.print("\n**DATOS EMPLEADOS\n" +empleado_show.toString());
+										
 										System.out.print("\n** EL EMPLEADO "+empleado_show.getApellido()+", "+empleado_show.getNombre()+" - DE DNI: "
 										+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()
 										+".\nTRABAJA "+empleado_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS\n");
@@ -430,6 +432,8 @@ public class Menu {
 									while(!next)
 									{
 										Ejecutivo ejecutivo_show=(Ejecutivo) personas[j];
+										
+										System.out.print("\n**DATOS EJECUTIVOS\n" +ejecutivo_show.toString());
 										
 										System.out.print("\nEL EJECUTIVO "+ejecutivo_show.getApellido()+", "+ejecutivo_show.getNombre()+" - DE DNI: "
 										+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+

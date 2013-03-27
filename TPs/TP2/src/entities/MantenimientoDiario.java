@@ -41,16 +41,16 @@ public class MantenimientoDiario extends Thread {
 		
     }
     
-    public void setAumentarDiaTrabajado(Persona personas)
+    public void setAumentarDiaTrabajado(Persona persona)
     {
     	
-    		if(personas instanceof Empleado)
+    		if(persona instanceof Empleado)
     		{
-    			Empleado empleado=(Empleado)personas;
+    			Empleado empleado=(Empleado)persona;
     			empleado.setCantidadDiasTrabajados(empleado.getCantidadDiasTrabajados()+1);
-    		}else if(personas instanceof Ejecutivo)
+    		}else if(persona instanceof Ejecutivo)
     		{
-    			Ejecutivo ejecutivo=(Ejecutivo)personas;
+    			Ejecutivo ejecutivo=(Ejecutivo)persona;
     			ejecutivo.setCantidadDiasTrabajados(ejecutivo.getCantidadDiasTrabajados()+1);
     		}    		
     	
