@@ -1,4 +1,4 @@
-package auto;
+package entities;
 
 import utils.Definiciones.MaterialRueda;
 import utils.Definiciones.MaterialRueda_string;
@@ -7,7 +7,7 @@ public class Rueda
 {
 	// DECALARACIÓN DE ATRIBUTOS
 	private double radio;
-	public String color;
+	private String color;
 	private int materialrueda;
 	
 	// COMIENZO DE LOS METODOS
@@ -17,36 +17,36 @@ public class Rueda
 		
 	}
 	
-	public void setradio(double radiomeasure)
+	public void setRadio(double radiomeasure)
 	{
 		this.radio=radiomeasure;
 	}
-	public double getradio()
+	public double getRadio()
 	{	
 		return this.radio;
 	}
 	
-	public void setcolor(String color)
+	public void setColor(String color)
 	{
 		this.color=color;
 	}
-	public String getcolor()
+	public String getColor()
 	{
 		return this.color;
 	}
 	
-	public void setmaterialrueda(int matrueda)
+	public void setMaterialRueda(int matrueda)
 	{
 		this.materialrueda=matrueda;
 	}
 	
-	public int getmaterialruedaint()
+	public int getMaterialRuedaint()
 	{
 		return this.materialrueda;
 	}
-	public String getmaterialruedastring()
+	public String getMaterialRuedaString()
 	{
-		switch(this.getmaterialruedaint())		
+		switch(this.getMaterialRuedaint())		
 		{
 			case MaterialRueda.materiarueda_chapa:
 				return MaterialRueda_string.materiarueda_chapa;
@@ -62,5 +62,9 @@ public class Rueda
 		
 	}
 	
-	
+	public String toString()
+	{
+		return "La rueda tiene las siguientes caracteristicas: \nRadio: "+this.getRadio()+"\nColor: "+
+				this.getColor()+"\nMaterial: "+this.getMaterialRuedaString();
+	}
 }

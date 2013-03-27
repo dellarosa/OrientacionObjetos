@@ -1,4 +1,4 @@
-package auto;
+package entities;
 
 import utils.Definiciones;
 
@@ -11,7 +11,7 @@ public class MetodosGenerales
 	}
 	
 	@SuppressWarnings("null")
-	public Auto[] crearautosrandom()
+	public Auto[] crearAutosRandom()
 	{
 		 int j=0;
 		 int cantdef=0;
@@ -21,10 +21,7 @@ public class MetodosGenerales
 
 		Auto[] autos = new Auto[cantautos];
 		 CajaVelocidades[] cajasvelocidad=new CajaVelocidades[cantautos];
-		 
-		 try
-		 {
-			 
+
 			 while(j<cantautos)
 			 {				
 				////////////////////////////////////////////// MOTOR ////////////////////////////////////////
@@ -35,16 +32,16 @@ public class MetodosGenerales
 					switch((int)(Math.random()*cantdef))
 					{
 						case 0:
-							motorrandom.setcaballosfuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_250);
+							motorrandom.setCaballosFuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_250);
 							break;
 						case 1:
-							motorrandom.setcaballosfuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_100);
+							motorrandom.setCaballosFuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_100);
 							break;
 						case 2:
-							motorrandom.setcaballosfuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_140);
+							motorrandom.setCaballosFuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_140);
 							break;
 						case 3:
-							motorrandom.setcaballosfuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_120);
+							motorrandom.setCaballosFuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_120);
 							break;
 						default:
 							break;
@@ -54,13 +51,13 @@ public class MetodosGenerales
 					switch((int)(Math.random()*cantdef))
 					{
 						case 0:
-							motorrandom.setcilindrada(Definiciones.CilindradaMotor.cilindradamotor_1600);
+							motorrandom.setCilindrada(Definiciones.CilindradaMotor.cilindradamotor_1600);
 							break;
 						case 1:
-							motorrandom.setcilindrada(Definiciones.CilindradaMotor.cilindradamotor_1800);
+							motorrandom.setCilindrada(Definiciones.CilindradaMotor.cilindradamotor_1800);
 							break;
 						case 2:
-							motorrandom.setcilindrada(Definiciones.CilindradaMotor.cilindradamotor_2000);
+							motorrandom.setCilindrada(Definiciones.CilindradaMotor.cilindradamotor_2000);
 							break;
 						default:
 							break;
@@ -70,13 +67,13 @@ public class MetodosGenerales
 					switch((int)(Math.random()*cantdef))
 					{
 						case 0:
-							motorrandom.setmarcamotor(Definiciones.MarcasMotor.marcaAudi);
+							motorrandom.setMarcaMotor(Definiciones.MarcasMotor.marcaAudi);
 							break;
 						case 1:
-							motorrandom.setmarcamotor(Definiciones.MarcasMotor.marcaFord);
+							motorrandom.setMarcaMotor(Definiciones.MarcasMotor.marcaFord);
 							break;
 						case 2:
-							motorrandom.setmarcamotor(Definiciones.MarcasMotor.marcaKia);
+							motorrandom.setMarcaMotor(Definiciones.MarcasMotor.marcaKia);
 							break;
 						default:
 							break;
@@ -89,13 +86,13 @@ public class MetodosGenerales
 					switch((int)(Math.random()*cantdef))
 					{
 						case 0:
-							cajasvelocidad[j].setcantidadmarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_4);
+							cajasvelocidad[j].setCantidadMarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_4);
 							break;
 						case 1:
-							cajasvelocidad[j].setcantidadmarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_5);
+							cajasvelocidad[j].setCantidadMarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_5);
 							break;
 						case 2:
-							cajasvelocidad[j].setcantidadmarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_6);
+							cajasvelocidad[j].setCantidadMarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_6);
 							break;
 						default:
 							break;
@@ -105,13 +102,13 @@ public class MetodosGenerales
 					switch((int)(Math.random()*cantdef))
 					{
 						case 0:
-							cajasvelocidad[j].settipodecaja(Definiciones.RelacionMarchas.relacionmarcha_cajacorta);
+							cajasvelocidad[j].setTipoDeCaja(Definiciones.RelacionMarchas.relacionmarcha_cajacorta);
 							break;
 						case 1:
-							cajasvelocidad[j].settipodecaja(Definiciones.RelacionMarchas.relacionmarcha_cajamediana);
+							cajasvelocidad[j].setTipoDeCaja(Definiciones.RelacionMarchas.relacionmarcha_cajamediana);
 							break;
 						case 2:
-							cajasvelocidad[j].settipodecaja(Definiciones.RelacionMarchas.relacionmarcha_cajalarga);
+							cajasvelocidad[j].setTipoDeCaja(Definiciones.RelacionMarchas.relacionmarcha_cajalarga);
 							break;
 						default:
 							break;
@@ -134,14 +131,14 @@ public class MetodosGenerales
 							
 							while(z<4)
 							{
-								ruedascar[z].setcolor(Definiciones.Color_string.colornegro);
+								ruedascar[z].setColor(Definiciones.Color_string.colornegro);
 								z++;
 							}
 							break;
 						case 1:
 							while(z<4)
 							{
-								ruedascar[z].setcolor(Definiciones.Color_string.colorblanco);
+								ruedascar[z].setColor(Definiciones.Color_string.colorblanco);
 								z++;
 							}
 							
@@ -149,7 +146,7 @@ public class MetodosGenerales
 						case 2:
 							while(z<4)
 							{
-								ruedascar[z].setcolor(Definiciones.Color_string.colorrojo);
+								ruedascar[z].setColor(Definiciones.Color_string.colorrojo);
 								z++;
 							}
 							
@@ -164,14 +161,14 @@ public class MetodosGenerales
 						case 0:
 							while(z<4)
 							{
-								ruedascar[z].setmaterialrueda(Definiciones.MaterialRueda.materiarueda_acero);
+								ruedascar[z].setMaterialRueda(Definiciones.MaterialRueda.materiarueda_acero);
 								z++;
 							}
 							break;
 						case 1:
 							while(z<4)
 							{
-								ruedascar[z].setmaterialrueda(Definiciones.MaterialRueda.materiarueda_aleacion);
+								ruedascar[z].setMaterialRueda(Definiciones.MaterialRueda.materiarueda_aleacion);
 								z++;
 							}
 							
@@ -179,7 +176,7 @@ public class MetodosGenerales
 						case 2:
 							while(z<4)
 							{
-								ruedascar[z].setmaterialrueda(Definiciones.MaterialRueda.materiarueda_fibracarbono);
+								ruedascar[z].setMaterialRueda(Definiciones.MaterialRueda.materiarueda_fibracarbono);
 								z++;
 							}
 							
@@ -194,7 +191,7 @@ public class MetodosGenerales
 						case 0:
 							while(z<4)
 							{
-								ruedascar[z].setradio(Definiciones.PulgadasRueda.pulgadarueda15);
+								ruedascar[z].setRadio(Definiciones.PulgadasRueda.pulgadarueda15);
 								z++;
 							}
 							
@@ -202,7 +199,7 @@ public class MetodosGenerales
 						case 1:
 							while(z<4)
 							{
-								ruedascar[z].setradio(Definiciones.PulgadasRueda.pulgadarueda16);
+								ruedascar[z].setRadio(Definiciones.PulgadasRueda.pulgadarueda16);
 								z++;
 							}
 							
@@ -210,7 +207,7 @@ public class MetodosGenerales
 						case 2:
 							while(z<4)
 							{
-								ruedascar[z].setradio(Definiciones.PulgadasRueda.pulgadarueda17);
+								ruedascar[z].setRadio(Definiciones.PulgadasRueda.pulgadarueda17);
 								z++;
 							}						
 							break;
@@ -236,20 +233,15 @@ public class MetodosGenerales
 					
 					j++;
 			 }
-		 }catch(Exception ex)
-		 {
-			 System.out.print("[crearautorandom]NO SE PUDIERON REALIZAR LOS AUTOS RANDOM. Exception: "+ex+"\n");
-			 System.out.print("[crearautorandom] GET Exception: "+ex.getMessage());
-		 }
-		 
+
 		 j=0;
 		 while(j<autos.length)
 		 {
 			 System.out.print("\n[crearautorandom]*******AUTO CREADO Nº "+(j+1)+"***********\n");
 			 
-			 System.out.print("[crearautorandom]MOTOR: "+autos[j].motor.getmarcamotor()+"\n");
-			 System.out.print("[crearautorandom]AIRE: "+String.valueOf(autos[j].getflagaireacondicionado())+"\n");
-			 System.out.print("[crearautorandom]MARCHAS: "+autos[j].cajavelocidad.getcantidaddemarchas()+"\n");
+			 System.out.print("[crearautorandom]MOTOR: "+autos[j].getMotor().getMarcaMotor()+"\n");
+			 System.out.print("[crearautorandom]AIRE: "+String.valueOf(autos[j].getFlagAireAcondicionado())+"\n");
+			 System.out.print("[crearautorandom]MARCHAS: "+autos[j].getCajadeVelocidades().getCantidadDeMarchas()+"\n");
 			 j++;	 		
 			 		
 		 }

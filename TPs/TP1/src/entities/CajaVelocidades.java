@@ -1,4 +1,4 @@
-package auto;
+package entities;
 import utils.Definiciones.RelacionMarchas_string;
 import utils.Definiciones.RelacionMarchas;
 
@@ -17,24 +17,24 @@ public class CajaVelocidades {
 		
 	}
 	
-	public void setcantidadmarchas(int cantidadmarchas)
+	public void setCantidadMarchas(int cantidadmarchas)
 	{
 		this.cantidadmarchas=cantidadmarchas;
 	}
-	public int getcantidaddemarchas()
+	public int getCantidadDeMarchas()
 	{
 		return this.cantidadmarchas;		
 	}
 	
-	public void settipodecaja(int tipodecaja)
+	public void setTipoDeCaja(int tipodecaja)
 	{
 		this.tipodecaja=tipodecaja;
 	}
-	public int gettipodecaja()
+	public int getTipoDeCaja()
 	{		
 		return this.tipodecaja; 
 	}
-	public String gettipodecaja_string()
+	public String getTipoDeCaja_string()
 	{
 		switch(this.tipodecaja)
 		{
@@ -47,5 +47,19 @@ public class CajaVelocidades {
 			default:
 				return "Caja sin definir";
 		}
+	}
+	
+	public String toString()
+	{
+		 StringBuilder result = new StringBuilder();
+		 String newLine = System.getProperty("line.separator");		 
+		 result.append("CAJA DE VELOCIDADES");
+		 result.append(newLine);
+		 result.append("Marchas: "+this.getCantidadDeMarchas());
+		 result.append(newLine);
+		 result.append("Tipo de Caja:"+this.getTipoDeCaja_string());	 
+		 result.append(newLine);
+		 
+		 return result.toString();
 	}
 }
