@@ -27,7 +27,13 @@ public class Empleado extends Persona
 		{
 			this.setSueldo(0);
 		}
-		
+		if(this.getLegajo()==null)
+		{
+			this.setLegajo("1");
+		}else
+		{		
+			this.setLegajo(String.valueOf(Integer.valueOf(this.getLegajo())+1));
+		}
 	}
 	public Empleado(String legajo)
 	{
@@ -212,12 +218,9 @@ public class Empleado extends Persona
 	
 	public String toString()
 	{
-		return "Apellido: "+this.getApellido()+"\n"+		
-		"Nombre: "+ this.getNombre()+"\n"+
-		"DNI: "+this.getDni()+"\n"+
-		"EDAD: "+this.getEdad()+"\n"+
-		"Dias Vacas: "+this.getCantidadDiasVacaciones()+"\n"+
-		"Dias Trabajados: "+this.getCantidadDiasTrabajados()+"\n"
+		return super.toString()+"\nLegajo: "+this.getLegajo()+"\nSueldo: "+this.getSueldo()+				
+		
+		"\nDias Trabajados: "+this.getCantidadDiasTrabajados()+"\n"
 		;
 	}
 }

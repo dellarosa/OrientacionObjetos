@@ -14,6 +14,13 @@ public class Ejecutivo extends Empleado{
 	{
 		setSueldo(sueldoejecutiv);
 		setCantHorasTrabajoDiarias(8);
+		if(this.getLegajo()==null)
+		{
+			this.setLegajo("1");
+		}else
+		{		
+			this.setLegajo(String.valueOf(Integer.valueOf(this.getLegajo())+1));
+		}
 	}
 
 	//un día y medio de vacaciones por cada 6
@@ -153,13 +160,8 @@ public class Ejecutivo extends Empleado{
 	
 	public String toString()
 	{
-		return "Apellido: "+this.getApellido()+"\n"+		
-		"Nombre: "+ this.getNombre()+"\n"+
-		"DNI: "+this.getDni()+"\n"+
-		"EDAD: "+this.getEdad()+"\n"+
-		"Dias Vacas: "+this.getCantidadDiasVacaciones()+"\n"+
-		"Dias Trabajados: "+this.getCantidadDiasTrabajados()+"\n"
-		;
+		return super.toString()+"Edad: "+this.getEdad();
+		
 	}
 	
 	/*public void disminuirHorasTrabajo(int cantHorasMenos)

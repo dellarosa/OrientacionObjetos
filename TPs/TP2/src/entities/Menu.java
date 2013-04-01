@@ -30,7 +30,8 @@ public class Menu {
 			
 			while(sigo)
 			{
-				System.out.print("1- Alta Empleado\n");
+				System.out.print("\nMENU PRINCIPAL\n");
+				System.out.print("\n1- Alta Empleado\n");
 				System.out.print("2- Alta Ejecutivo\n");
 				System.out.print("3- Modificar Empleado\n");
 				System.out.print("4- Modificar Ejecutivo\n");
@@ -403,60 +404,61 @@ public class Menu {
 						{
 							while((j<personas.length)&&(!exit))
 							{
-								if(personas[j] instanceof Empleado)
+								 if(personas[j] instanceof Ejecutivo)
 								{
-									next=false;
-									while(!next)
-									{
-										Empleado empleado_show=(Empleado) personas[j];
-										System.out.print("\n**DATOS EMPLEADOS\n" +empleado_show.toString());
-										
-										System.out.print("\n** EL EMPLEADO "+empleado_show.getApellido()+", "+empleado_show.getNombre()+" - DE DNI: "
-										+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()
-										+".\nTRABAJA "+empleado_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS\n");
-										switch(mostrarContinuaOSale())
+										next=false;
+										while(!next)
 										{
-											case 'q':
-												next=true;
-												exit=true;
-											break;
-											case 'c':
-												next=true;
-											break;
+											Ejecutivo ejecutivo_show=(Ejecutivo) personas[j];
+											
+											System.out.print("\n**DATOS EJECUTIVOS:\n" +ejecutivo_show.toString());
+											
+											/*System.out.print("\nEL EJECUTIVO "+ejecutivo_show.getApellido()+", "+ejecutivo_show.getNombre()+" - DE DNI: "
+											+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+
+											".\nTRABAJA "+ejecutivo_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS.\n");
+											*/
+											switch(mostrarContinuaOSale())
+											{
+												case 'q':
+													next=true;
+													exit=true;
+												break;
+												case 'c':
+													next=true;
+												break;
+											}
 										}
 									}
-									
-								}else if(personas[j] instanceof Ejecutivo)
-								{
-									next=false;
-									while(!next)
-									{
-										Ejecutivo ejecutivo_show=(Ejecutivo) personas[j];
-										
-										System.out.print("\n**DATOS EJECUTIVOS\n" +ejecutivo_show.toString());
-										
-										System.out.print("\nEL EJECUTIVO "+ejecutivo_show.getApellido()+", "+ejecutivo_show.getNombre()+" - DE DNI: "
-										+ejecutivo_show.getDni()+" TIENE UN SUELDO DE: $"+ejecutivo_show.getSueldo()+" Y SU EDAD ES: "+ejecutivo_show.getEdad()+
-										".\nTRABAJA "+ejecutivo_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS.\n");
-										
-										switch(mostrarContinuaOSale())
+									else if(personas[j] instanceof Empleado)
+									{									
+										next=false;
+										while(!next)
 										{
-											case 'q':
-												next=true;
-												exit=true;
-											break;
-											case 'c':
-												next=true;
-											break;
+											Empleado empleado_show=(Empleado) personas[j];
+											System.out.print("\n**DATOS EMPLEADOS:\n" +empleado_show.toString());
+											
+											/*System.out.print("\n** EL EMPLEADO "+empleado_show.getApellido()+", "+empleado_show.getNombre()+" - DE DNI: "
+											+empleado_show.getDni()+" TIENE UN SUELDO DE: $"+empleado_show.getSueldo()
+											+".\nTRABAJA "+empleado_show.getCantHorasTrabajoDiarias()+" HORAS DIARIAS\n");*/
+											switch(mostrarContinuaOSale())
+											{
+												case 'q':
+													next=true;
+													exit=true;
+												break;
+												case 'c':
+													next=true;
+												break;
+											}
 										}
-									}
-								}else
-								{
-									
-									System.out.print("\nNO HAY MAS EMPLEADO EN SU EMPRESA\n");
-									Thread.sleep(2000);
-									break;
-								}						
+										
+									}else								
+									{
+										
+										System.out.print("\nNO HAY MAS EMPLEADO EN SU EMPRESA\n");
+										Thread.sleep(2000);
+										break;
+									}						
 									
 								j++;
 							}						
@@ -488,7 +490,7 @@ public class Menu {
 	{		
 		try
 		{			
-			switch(Dentre.caracter("INGRESE C para continuar y Q para salir: \n"))
+			switch(Dentre.caracter("\nINGRESE C para continuar y Q para salir: \n"))
 			{
 				case 'Q':
 				case 'q':
