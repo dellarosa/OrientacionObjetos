@@ -2,9 +2,10 @@ package entities;
 
 import auto.Auto;
 import utils.Dentre;
+import utils.InterfazEmpleado;
 import utils.MetodosGenerales;
 
-public class Empleado extends Persona 
+public class Empleado extends Persona implements InterfazEmpleado
 {
 	//DECLARACION DE VARIABLES/////////////////////////////////////////////////////////////////////////////////////////////////
 	private String legajo;
@@ -224,16 +225,36 @@ public class Empleado extends Persona
 		return empleado;
 	}
 	
-	public String salirOficinaHaciaAuto()
-	{
-		return "";
-	}
-	
 	public String toString()
 	{
 		return super.toString()+"\nLegajo: "+this.getLegajo()+"\nSueldo: "+this.getSueldo()+				
 		
 		"\nDias Trabajados: "+this.getCantidadDiasTrabajados()+"\n"
 		;
+	}
+	@Override
+	public boolean subirAlAuto() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean manejarAuto() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean bajarAuto() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean irACasaYDescansar() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean salirOficinaHaciaAuto() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -1,5 +1,9 @@
 package auto;
-public class Auto {
+
+import utils.InterfazAuto;
+
+public class Auto implements InterfazAuto
+{
 
 	private Motor motor;
 	private CajaVelocidades cajavelocidad;
@@ -93,6 +97,21 @@ public class Auto {
 		"Y tiene "+this.getCantidadPuertas()+" puertas.\n"+
 		"Disponibilidad: "+this.getDisponibilidad();
 		
+	}
+	@Override
+	public boolean encenderMotor() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean abrirPuerta() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	@Override
+	public boolean cerrarPuerta() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
 

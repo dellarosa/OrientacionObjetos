@@ -1,9 +1,11 @@
 package entities;
 
 import utils.Dentre;
+
 import utils.MetodosGenerales;
 
-public class Ejecutivo extends Empleado{
+public class Ejecutivo extends Empleado 		
+{
 
 	public Ejecutivo()
 	{
