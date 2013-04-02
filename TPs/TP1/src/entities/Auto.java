@@ -6,12 +6,12 @@ public class Auto {
 	private Rueda[] ruedas;
 	private int cantidadpuertas; 
 	private boolean flagaireacond;
-	
+	private String patente;
 	public Auto()
 	{
 		
 	}
-	public Auto(Motor motor,CajaVelocidades cajadevelocidad,Rueda[] ruedas,int cantpuertas,boolean flagaire)
+	public Auto(Motor motor,CajaVelocidades cajadevelocidad,Rueda[] ruedas,int cantpuertas,boolean flagaire,String patente)
 	{
 		this.setMotor(motor);
 		this.setCajaVelocidades(cajadevelocidad);
@@ -19,6 +19,14 @@ public class Auto {
 		this.setCantidadPuertas(cantpuertas);
 		this.setFlagAireAcondicionado(flagaire);
 		
+	}
+	public void setPatente(String patente)
+	{
+		this.patente=patente;
+	}
+	public String getPatente()
+	{
+		return this.patente;
 	}
 	public void setMotor(Motor motor)
 	{

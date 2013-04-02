@@ -1,6 +1,5 @@
 package main;
 import entities.*;
-import utils.Definiciones;
 public class Main {
 
 	/**
@@ -34,7 +33,7 @@ public class Main {
 			 
 			 CajaVelocidades cajavelocidad=new CajaVelocidades(Definiciones.CantidadMarchasCaja.cantmarchascaja_6,Definiciones.RelacionMarchas.relacionmarcha_cajacorta);
 			 
-			 Auto auto=new Auto(motoraudi,cajavelocidad,ruedas,3,true);
+			 Auto auto=new Auto(motoraudi,cajavelocidad,ruedas,3,true,"AAA 123");
 			 System.out.print("[main] "+ auto.toString());
 
 		 /*System.out.print("[main] ACABO DE CREAR UN AUTO\n");
@@ -47,7 +46,7 @@ public class Main {
 		 //////////////////////////////////////////////// CREAR AUTO RANDOM //////////////////////////////////
 		 
 		 MetodosGenerales metodos=new MetodosGenerales();		 
-		Auto autosrandom[]=metodos.crearAutosRandom();
+		Auto autosrandom[]=metodos.crearAutosRandom(6,"AAA 123");
 		 
 			 System.out.print("\n[main] SE HAN CREADO "+autosrandom.length+" AUTOS RANDOMICAMENTE\n");
 		 

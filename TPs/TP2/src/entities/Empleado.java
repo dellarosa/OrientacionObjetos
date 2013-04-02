@@ -1,5 +1,6 @@
 package entities;
 
+import auto.Auto;
 import utils.Dentre;
 import utils.MetodosGenerales;
 
@@ -11,7 +12,7 @@ public class Empleado extends Persona
 	protected int canthorastrabajodiarias;
 	protected int cantidaddiasvacaciones;
 	protected int cantidaddiastrabajados;			
-	
+	private Auto auto;
 	//INICIO DEL CUERPO DEL PROGRAMA//////////////////////////////////////////////////////////////////////////////////////////
 	public Empleado()
 	{
@@ -39,7 +40,14 @@ public class Empleado extends Persona
 	{
 		
 	}
-	
+	public void setAuto(Auto auto)
+	{
+		this.auto=auto;
+	}
+	public Auto getAuto()
+	{
+		return this.auto;
+	}
 	public String getLegajo()
 	{
 		return legajo;
@@ -214,6 +222,11 @@ public class Empleado extends Persona
 			
 		}			
 		return empleado;
+	}
+	
+	public String salirOficinaHaciaAuto()
+	{
+		return "";
 	}
 	
 	public String toString()

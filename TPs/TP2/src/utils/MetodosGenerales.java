@@ -1,5 +1,6 @@
 package utils;
 
+import auto.Auto;
 import entities.Ejecutivo;
 import entities.Empleado;
 import entities.Persona;
@@ -124,4 +125,47 @@ public class MetodosGenerales {
 		}
 		return indice;
 	}
+	
+	public Auto asignarAuto(Auto[] autos)
+	{
+		
+		boolean salir=false;
+		System.out.print("Se mostraran los autos disponibles.");
+		int i=0;
+		while((!salir)&&(i<autos.length))
+		{	
+			System.out.print("\nAuto Nº"+i+1+":\n"+autos[i].toString());
+			
+			switch(Dentre.caracter("\n 'A' para asignar auto 'C' para continuar 'Q' para salir"))
+			{
+				case 'A':
+				case 'a':
+						return autos[i];
+					
+				case 'c':
+				case 'C':
+					
+					break;
+				case 'q':
+				case 'Q':
+						return null;
+			
+				default:
+					
+					break;
+			}
+			i++;
+		}
+		return null;
+	}
+	public void mostrarAutos(Auto[] autos)
+	{
+		int i=0;
+		while(i<autos.length)
+		{
+			autos[i].toString();
+		}
+		
+	}
+	
 }

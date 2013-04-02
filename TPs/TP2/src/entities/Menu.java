@@ -2,6 +2,8 @@ package entities;
 
 import java.io.IOException;
 
+import auto.Auto;
+
 import utils.*;
 
 public class Menu {
@@ -21,7 +23,7 @@ public class Menu {
 	
 	public class MenuPrincipal
 	{	
-		public void comenzarmenuprincipal(Persona[] personas)
+		public void comenzarmenuprincipal(Persona[] personas,Auto[] autos)
 		{
 			boolean sigo = true;
 			int opcion = 0;
@@ -41,6 +43,9 @@ public class Menu {
 				System.out.print("8- Disminuir Horas\n");
 				System.out.print("9- Aumentar Sueldo\n");
 				System.out.print("10- Mostrar Datos\n");
+				System.out.print("11- Asignar Auto\n");
+				
+				System.out.print("95- Simulacion\n");
 				
 				System.out.print("99- Salir\n");
 				try

@@ -1,6 +1,6 @@
 package entities;
-import utils.Definiciones.RelacionMarchas_string;
-import utils.Definiciones.RelacionMarchas;
+import entities.Definiciones.RelacionMarchas;
+import entities.Definiciones.RelacionMarchas_string;
 
 public class CajaVelocidades {
 
@@ -51,15 +51,7 @@ public class CajaVelocidades {
 	
 	public String toString()
 	{
-		 StringBuilder result = new StringBuilder();
-		 String newLine = System.getProperty("line.separator");		 
-		 result.append("CAJA DE VELOCIDADES");
-		 result.append(newLine);
-		 result.append("Marchas: "+this.getCantidadDeMarchas());
-		 result.append(newLine);
-		 result.append("Tipo de Caja: "+this.getTipoDeCaja_string());	 
-		 result.append(newLine);
+		return "CAJA DE VELOCIDADES\nMarchas: " +this.getCantidadDeMarchas()+"\nTipo de Caja: "+this.getTipoDeCaja_string();
 		 
-		 return result.toString();
 	}
 }

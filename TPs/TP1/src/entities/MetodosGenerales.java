@@ -1,6 +1,7 @@
 package entities;
 
-import utils.Definiciones;
+import java.util.Random;
+
 
 public class MetodosGenerales 
 {
@@ -10,15 +11,14 @@ public class MetodosGenerales
 		
 	}
 	
-	@SuppressWarnings("null")
-	public Auto[] crearAutosRandom()
+	public Auto[] crearAutosRandom(int cantautos,String patente)
 	{
 		 int j=0;
 		 int cantdef=0;
 		 
-		 ///////CREACION RANDOM DE 6 AUTOS	//////////////////////////////////////////////////////
-		int cantautos=6;
-
+		 ///////CREACION RANDOM DE  AUTOS	//////////////////////////////////////////////////////
+		
+		Random random=new Random();
 		Auto[] autos = new Auto[cantautos];
 		 CajaVelocidades[] cajasvelocidad=new CajaVelocidades[cantautos];
 
@@ -29,7 +29,8 @@ public class MetodosGenerales
 				 Motor motorrandom=new Motor();
 				 
 				 	cantdef=4;
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+				 	switch(random.nextInt(cantdef))
 					{
 						case 0:
 							motorrandom.setCaballosFuerza(Definiciones.CaballosdeFuerza.cantcaballosfuerza_250);
@@ -48,7 +49,8 @@ public class MetodosGenerales
 					}
 										
 					cantdef=3;
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							motorrandom.setCilindrada(Definiciones.CilindradaMotor.cilindradamotor_1600);
@@ -64,7 +66,8 @@ public class MetodosGenerales
 					} 
 					
 					cantdef=3;					
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							motorrandom.setMarcaMotor(Definiciones.MarcasMotor.marcaAudi);
@@ -83,7 +86,8 @@ public class MetodosGenerales
 					cajasvelocidad[j] = new CajaVelocidades();
 					
 					cantdef=3;				
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							cajasvelocidad[j].setCantidadMarchas(Definiciones.CantidadMarchasCaja.cantmarchascaja_4);
@@ -99,7 +103,8 @@ public class MetodosGenerales
 					} 
 					
 					cantdef=3;				
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							cajasvelocidad[j].setTipoDeCaja(Definiciones.RelacionMarchas.relacionmarcha_cajacorta);
@@ -125,7 +130,8 @@ public class MetodosGenerales
 					}
 					
 					cantdef=3;				
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							
@@ -156,7 +162,8 @@ public class MetodosGenerales
 					} 
 					z=0;
 					cantdef=3;				
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							while(z<4)
@@ -186,7 +193,8 @@ public class MetodosGenerales
 					}
 					z=0;
 					cantdef=3;				
-					switch((int)(Math.random()*cantdef))
+					//switch((int)(Math.random()*cantdef))
+					switch(random.nextInt(cantdef))
 					{
 						case 0:
 							while(z<4)
@@ -218,17 +226,18 @@ public class MetodosGenerales
 					
 					/////////////////////////////////
 					boolean aireflag=false;
-					if((int)(Math.random()*10)<5)
+					//if((int)(Math.random()*10)<5)
+					if(random.nextInt(10)<5)
 					{
 						aireflag=false;
 					}else
 					{
 						aireflag=true;
 					}
-					int cantpuertas=1+(int)Math.random()*5;					
-									
+					//int cantpuertas=1+(int)Math.random()*5;					
+					int cantpuertas=1+random.nextInt(5);
 					////////////////////////////////////// CREACION DE AUTOS /////////////////
-					autos[j]=new Auto(motorrandom,cajasvelocidad[j],ruedascar,cantpuertas,aireflag);
+					autos[j]=new Auto(motorrandom,cajasvelocidad[j],ruedascar,cantpuertas,aireflag,patente);
 				
 					
 					j++;
@@ -248,4 +257,5 @@ public class MetodosGenerales
 		 
 		 return autos;
 	}
+	
 }

@@ -1,7 +1,7 @@
 package entities;
 
-import utils.Definiciones.MaterialRueda;
-import utils.Definiciones.MaterialRueda_string;
+import entities.Definiciones.MaterialRueda;
+import entities.Definiciones.MaterialRueda_string;
 
 public class Rueda 
 {

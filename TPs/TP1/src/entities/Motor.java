@@ -48,17 +48,6 @@ public class Motor {
 	
 	public String toString()
 	{
-		 StringBuilder result = new StringBuilder();
-		 String newLine = System.getProperty("line.separator");
-		 result.append("MOTOR ");
-		 result.append(newLine);
-		 result.append("Marca: "+this.getMarcaMotor());
-		 result.append(newLine);
-		 result.append("Cilindrada: "+this.getCilindrada());
-		 result.append(newLine);
-		 result.append("Caballos de Fuerza: "+this.getCaballosFuerza());		 
-		 result.append(newLine);
-		 
-		 return result.toString();
+		return "MOTOR\nMarca: "+this.getMarcaMotor()+"\nCilindrada: "+this.getCilindrada()+"\nCaballos de Fuerza: "+this.getCaballosFuerza();
 	}
 }
