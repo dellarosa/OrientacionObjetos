@@ -148,8 +148,8 @@ public class MetodosGenerales {
 					break;
 				case 'q':
 				case 'Q':
-						return null;
-			
+						salir=true;
+						break;
 				default:
 					
 					break;

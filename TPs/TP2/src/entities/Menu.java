@@ -12,6 +12,8 @@ public class Menu {
 	private int dnibuscado;
 	private Empleado auxempleado;
 	private Ejecutivo auxejecutivo;
+	Persona personabuscada;
+	
 	public Menu()
 	{
 		menuprincipal=new MenuPrincipal();
@@ -355,11 +357,11 @@ public class Menu {
 						{
 							dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos): ");
 							
-							Persona personabuscada=metodosgrles.buscarPersonaPorDNI(personas,dnibuscado);
+							 personabuscada=metodosgrles.buscarPersonaPorDNI(personas,dnibuscado);
 							
 							if(personabuscada!=null)
 							{
-								System.out.print("\n[menu] AUMENTAR SUEDO DE: "+personabuscada.getApellido());
+								System.out.print("\n[menu] AUMENTAR SUELDO DE: "+personabuscada.getApellido());
 								Thread.sleep(2000);
 							}else
 							{
@@ -472,6 +474,45 @@ public class Menu {
 						{
 							System.out.print("\nException: "+ex);							
 						}
+						break;
+						
+					case 11:
+						try
+						{
+							dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos): ");
+							
+							personabuscada=metodosgrles.buscarPersonaPorDNI(personas,dnibuscado);		//No se deberia instanciar persona, ya que sería abstracta, pero dado el esquema de trabajo...
+							
+							if(personabuscada!=null)
+							{
+								System.out.print("\n[menu] SE LE ASIGNARA AUTO A: "+personabuscada.getApellido());
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\n[menu] No se encontro persona\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+							if(personabuscada instanceof Empleado)
+							{
+								((Empleado) personabuscada).setAuto(metodosgrles.asignarAuto(autos));
+								System.out.print("\n[menu] SE HA ASIGNADO EL AUTO CON PATENTE: "+((Empleado)personabuscada).getAuto().getPatente());
+								Thread.sleep(2000);
+							}else if(personabuscada instanceof Ejecutivo)
+							{
+								((Ejecutivo)personabuscada).setAuto(metodosgrles.asignarAuto(autos));
+								System.out.print("\n[menu] SE HA ASIGNADO EL AUTO CON PATENTE: "+((Ejecutivo)personabuscada).getAuto().getPatente());
+								Thread.sleep(2000);
+							}else{}
+							
+							
+						}catch(Exception ex)
+						{
+							
+						}
+						break;
+					case 95:
+						
 						break;
 					case 99:
 						sigo=false;
