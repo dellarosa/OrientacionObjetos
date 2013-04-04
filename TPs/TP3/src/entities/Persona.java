@@ -71,4 +71,7 @@ public abstract class Persona {
 		return "DATOS PERSONA: \nNombre: "+this.getNombre()+"\nApellido: "+this.getApellido()+
 				"\nDNI: "+this.getDni()+"\nSexo: "+this.getSexo();
 	}
+	
+	
+
 }

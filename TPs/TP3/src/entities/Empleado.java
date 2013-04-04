@@ -2,10 +2,9 @@ package entities;
 
 import auto.Auto;
 import utils.Dentre;
-import utils.InterfazEmpleado;
 import utils.MetodosGenerales;
 
-public class Empleado extends Persona implements InterfazEmpleado
+public class Empleado extends Persona  
 {
 	//DECLARACION DE VARIABLES/////////////////////////////////////////////////////////////////////////////////////////////////
 	private String legajo;
@@ -105,125 +104,7 @@ public class Empleado extends Persona implements InterfazEmpleado
 	}
 	///////////////////////////////////////////////////////////
 	
-	public Empleado altaDeEmpleado(Empleado empleado)
-	{		
-		try
-		{			
-			MetodosGenerales metodosg=new MetodosGenerales();		
-			
-			//personas[p];
-			System.out.print("\n**INGRESE LOS DATOS DE ALTA DEL NUEVO EMPLEADO**\n");
-			
-			//TODO AGREGAR VALIDACIONES
-
-			empleado.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));			//VALIDAR QUE NO EXISTA UN DNI IGUAL
-			empleado.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
-			empleado.setApellido(Dentre.texto("\nINGRESE APELLIDO: "));
-			char sex=metodosg.validarSexo(Dentre.caracter("\nINGRESE SEXO (m-f): "));
-			empleado.setSexo(sex);
-			empleado.setSueldo(Dentre.doble("\nINGRESE EL SUELDO: "));
-			return empleado;
-		}catch(Exception ex)
-		{	
-			try
-			{
-				System.out.print("\n**Exception en ingreso de datos - VERIFICAR INGRESO - EXCEPTION: **"+ex+"\n");
-				Thread.sleep(2000);				
-				
-			}catch(Exception e)
-			{
-				System.out.print("\n**Exception en Thread sleep **"+e+"\n");
-			}
-			return null;
-		}		
-		
-	}
 	
-	public Persona[] bajaDeEmpleado(Persona personas[],Empleado empleado)
-	{		
-		int x=0;
-		Persona[] auxpersonas=new Persona[10];
-		while(x<personas.length)
-		{			
-			if(personas[x]==empleado)
-			{	
-			}else
-			{
-				auxpersonas[x]=personas[x];
-			}
-			x++;
-		}
-		auxpersonas[x-1]=null;
-		return auxpersonas; 	
-	}
-	
-	public Empleado modificarEmpleado(Empleado empleado)
-	{
-		try
-		{		
-			boolean sigo = true;
-			int opcion = 0;			
-			while(sigo)
-			{
-				System.out.print("1-Modificar Apellido \n");
-				System.out.print("2-Modificar Nombre \n");
-				System.out.print("3-Modificar DNI \n");
-				System.out.print("4-Modificar SEXO \n");
-				System.out.print("5-Modificar LEGAJO \n");
-				
-				System.out.print("99- Salir\n");
-				try
-				{
-					opcion=Dentre.entero("OPCIÓN: ");
-				}catch(Exception ex)
-				{
-					System.out.print("Datos ingresados incorrectamente\n");
-				}
-				switch(opcion)
-				{
-					case 1:
-						empleado.setApellido(Dentre.texto("\nINGRESE APELLIDO NUEVO: "));														
-						break;
-					case 2:
-						empleado.setNombre(Dentre.texto("\nINGRESE NOMBRE NUEVO: "));
-						break;
-					case 3:
-						empleado.setDni(Dentre.entero("\nINGRESE DNI NUEVO: "));
-						break;
-					case 4:
-						empleado.setDni(Dentre.entero("\nINGRESE SEXO A CAMBIAR: "));
-						break;
-					case 5:
-						empleado.setLegajo(Dentre.texto("\nINGRESE LEGAJO NUEVO: "));
-						break;
-					case 99:
-						sigo=false;
-						break;
-					default:
-						break;
-				}
-				
-				try
-				{
-					if(sigo!=false)
-					{
-						System.out.print("\nDATOS MODIFICADOS CORRECTAMENTE\n");
-						Thread.sleep(2000);
-					}
-				}catch(Exception ex)
-				{
-					
-				}
-			}	
-			
-			System.out.print("\n[menu] ");
-			Thread.sleep(2000);
-		}catch(Exception e)
-		{
-			
-		}			
-		return empleado;
-	}
 	
 	public String toString()
 	{
@@ -232,29 +113,32 @@ public class Empleado extends Persona implements InterfazEmpleado
 		"\nDias Trabajados: "+this.getCantidadDiasTrabajados()+"\n"
 		;
 	}
-	@Override
-	public boolean subirAlAuto() {
+
+		////////////////////////////////////////////////////////METODOS SIMULACION ////////////////////
+		public boolean simSubirAlAuto() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean manejarAuto() {
+		return true;
+		}
+		
+		public boolean simManejarAuto() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean bajarAuto() {
+		return true;
+		}
+		
+		public boolean simBajarAuto() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean irACasaYDescansar() {
+		return true;
+		}
+		
+		public boolean simIrACasaYDescansar() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-	@Override
-	public boolean salirOficinaHaciaAuto() {
+		return true;
+		}
+		
+		public boolean simSalirOficinaHaciaAuto() {
 		// TODO Auto-generated method stub
-		return false;
-	}
+		return true;
+		}
+
+	
 }

@@ -181,4 +181,253 @@ public class MetodosGenerales {
 		
 	}
 	
+	
+	public Empleado altaDeEmpleado(Empleado empleado)
+	{		
+		try
+		{			
+			MetodosGenerales metodosg=new MetodosGenerales();		
+			
+			//personas[p];
+			System.out.print("\n**INGRESE LOS DATOS DE ALTA DEL NUEVO EMPLEADO**\n");
+			
+			//TODO AGREGAR VALIDACIONES
+
+			empleado.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));			//VALIDAR QUE NO EXISTA UN DNI IGUAL
+			empleado.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
+			empleado.setApellido(Dentre.texto("\nINGRESE APELLIDO: "));
+			char sex=metodosg.validarSexo(Dentre.caracter("\nINGRESE SEXO (m-f): "));
+			empleado.setSexo(sex);
+			empleado.setSueldo(Dentre.doble("\nINGRESE EL SUELDO: "));
+			return empleado;
+		}catch(Exception ex)
+		{	
+			try
+			{
+				System.out.print("\n**Exception en ingreso de datos - VERIFICAR INGRESO - EXCEPTION: **"+ex+"\n");
+				Thread.sleep(2000);				
+				
+			}catch(Exception e)
+			{
+				System.out.print("\n**Exception en Thread sleep **"+e+"\n");
+			}
+			return null;
+		}		
+		
+	}
+	
+	public Persona[] bajaDeEmpleado(Persona personas[],Empleado empleado)
+	{		
+		int x=0;
+		Persona[] auxpersonas=new Persona[10];
+		while(x<personas.length)
+		{			
+			if(personas[x]==empleado)
+			{	
+			}else
+			{
+				auxpersonas[x]=personas[x];
+			}
+			x++;
+		}
+		auxpersonas[x-1]=null;
+		return auxpersonas; 	
+	}
+	
+	public Persona[] bajaDeEjecutivo(Persona personas[],Ejecutivo empleado)
+	{		
+		int x=0;
+		Persona[] auxpersonas=new Persona[10];
+		while(x<personas.length)
+		{			
+			if(personas[x]==empleado)
+			{	
+			}else
+			{
+				auxpersonas[x]=personas[x];
+			}
+			x++;
+		}
+		auxpersonas[x-1]=null;
+		return auxpersonas; 	
+	}
+	public Empleado modificarEmpleado(Empleado empleado)
+	{
+		try
+		{		
+			boolean sigo = true;
+			int opcion = 0;			
+			while(sigo)
+			{
+				System.out.print("1-Modificar Apellido \n");
+				System.out.print("2-Modificar Nombre \n");
+				System.out.print("3-Modificar DNI \n");
+				System.out.print("4-Modificar SEXO \n");
+				System.out.print("5-Modificar LEGAJO \n");
+				
+				System.out.print("99- Salir\n");
+				try
+				{
+					opcion=Dentre.entero("OPCIÓN: ");
+				}catch(Exception ex)
+				{
+					System.out.print("Datos ingresados incorrectamente\n");
+				}
+				switch(opcion)
+				{
+					case 1:
+						empleado.setApellido(Dentre.texto("\nINGRESE APELLIDO NUEVO: "));														
+						break;
+					case 2:
+						empleado.setNombre(Dentre.texto("\nINGRESE NOMBRE NUEVO: "));
+						break;
+					case 3:
+						empleado.setDni(Dentre.entero("\nINGRESE DNI NUEVO: "));
+						break;
+					case 4:
+						empleado.setDni(Dentre.entero("\nINGRESE SEXO A CAMBIAR: "));
+						break;
+					case 5:
+						empleado.setLegajo(Dentre.texto("\nINGRESE LEGAJO NUEVO: "));
+						break;
+					case 99:
+						sigo=false;
+						break;
+					default:
+						break;
+				}
+				
+				try
+				{
+					if(sigo!=false)
+					{
+						System.out.print("\nDATOS MODIFICADOS CORRECTAMENTE\n");
+						Thread.sleep(2000);
+					}
+				}catch(Exception ex)
+				{
+					
+				}
+			}	
+			
+			System.out.print("\n[menu] ");
+			Thread.sleep(2000);
+		}catch(Exception e)
+		{
+			
+		}			
+		return empleado;
+	}
+	
+	public Ejecutivo modificarEmpleado(Ejecutivo ejecutivo)
+	{
+		try
+		{		
+			boolean sigo = true;
+			int opcion = 0;			
+			while(sigo)
+			{
+				System.out.print("1-Modificar Apellido \n");
+				System.out.print("2-Modificar Nombre \n");
+				System.out.print("3-Modificar DNI \n");
+				System.out.print("4-Modificar EDAD \n");
+				System.out.print("5-Modificar SEXO \n");
+				System.out.print("6-Modificar LEGAJO \n");
+				
+				System.out.print("99- Salir\n");
+				try
+				{
+					opcion=Dentre.entero("OPCIÓN: ");
+				}catch(Exception ex)
+				{
+					System.out.print("Datos ingresados incorrectamente\n");
+				}
+				switch(opcion)
+				{
+					case 1:
+						ejecutivo.setApellido(Dentre.texto("\nINGRESE APELLIDO NUEVO: "));														
+						break;
+					case 2:
+						ejecutivo.setNombre(Dentre.texto("\nINGRESE NOMBRE NUEVO: "));
+						break;
+					case 3:
+						ejecutivo.setDni(Dentre.entero("\nINGRESE DNI NUEVO: "));
+						break;
+					case 4:
+						ejecutivo.setDni(Dentre.entero("\nINGRESE EDAD A CAMBIAR: "));
+						break;
+					case 5:
+						ejecutivo.setDni(Dentre.entero("\nINGRESE SEXO A CAMBIAR: "));
+						break;
+					case 6:
+						ejecutivo.setLegajo(Dentre.texto("\nINGRESE LEGAJO NUEVO: "));
+						break;
+					case 99:
+						sigo=false;
+						break;
+					default:
+						break;
+				}
+				
+				try
+				{
+					if(sigo!=false)
+					{
+						System.out.print("\nDATOS MODIFICADOS CORRECTAMENTE\n");
+						Thread.sleep(2000);
+					}
+				}catch(Exception ex)
+				{
+					
+				}
+			}	
+			
+			System.out.print("\n[menu] ");
+			Thread.sleep(2000);
+		}catch(Exception e)
+		{
+			
+		}			
+		return ejecutivo;
+	}
+	
+
+	public Ejecutivo altaDeEmpleado(Ejecutivo ejecutivo)
+	{ 
+		try
+		{
+			MetodosGenerales metodosg=new MetodosGenerales();
+			System.out.print("\n**INGRESE LOS DATOS DE ALTA DEL NUEVO EMPLEADO**\n");
+			
+			//TODO AGREGAR VALIDACIONES
+			ejecutivo.setDni(Dentre.entero("\nINGRESE DNI (sin puntos): "));		//VALIDAR QUE NO EXISTA UN DNI IGUAL
+			ejecutivo.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
+			ejecutivo.setApellido(Dentre.texto("\nINGRESE APELLIDO: "));
+			try
+			{
+				char sex=metodosg.validarSexo(Dentre.caracter("\nINGRESE SEXO (m-f): "));
+				ejecutivo.setSexo(sex);
+			}catch(Exception ex)
+			{
+				
+			}		
+			ejecutivo.setEdad(Dentre.entero("\nINGRESE EDAD: "));
+			
+			return ejecutivo;
+		}catch(Exception ex)
+		{	
+			try
+			{
+				System.out.print("\n**Exception en ingreso de datos - VERIFICAR INGRESO - EXCEPTION: **"+ex+"\n");
+				Thread.sleep(2000);				
+				throw ex;
+			}catch(Exception e)
+			{
+				System.out.print("\n**Exception en Thread sleep **"+e+"\n");
+			}
+			return null;
+		}
+	}
+	
+	
 }

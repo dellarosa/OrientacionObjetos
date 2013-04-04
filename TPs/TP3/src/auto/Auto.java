@@ -1,8 +1,7 @@
 package auto;
 
-import utils.InterfazAuto;
 
-public class Auto implements InterfazAuto
+public class Auto 
 {
 
 	private Motor motor;
@@ -98,20 +97,22 @@ public class Auto implements InterfazAuto
 		"Disponibilidad: "+this.getDisponibilidad();
 		
 	}
-	@Override
-	public boolean encenderMotor() {
-		// TODO Auto-generated method stub
-		return false;
+
+	public boolean simEncenderMotor() {
+	//System.out.print("\nEl motor ha sido encendido");
+	return true; 
 	}
-	@Override
-	public boolean abrirPuerta() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean simAbrirPuerta() {
+	//System.out.print("\nLa puerta se ha abierto");
+	return true;
 	}
-	@Override
-	public boolean cerrarPuerta() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean simCerrarPuerta() {
+	//System.out.print("\nLa puerta fue cerrada");
+	return true;
+	}
+	public boolean simApagarMotor() {
+	//System.out.print("\nLa puerta fue cerrada");
+	return true;
 	}
 }
 

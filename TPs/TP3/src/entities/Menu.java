@@ -70,7 +70,7 @@ public class Menu {
 							
 								if(posicion>=0)
 								{
-									personas[posicion]=empleado.altaDeEmpleado(empleado);
+									personas[posicion]=metodosgrles.altaDeEmpleado(empleado);
 										
 								}else
 								{
@@ -104,7 +104,7 @@ public class Menu {
 							Ejecutivo ejecutivo=new Ejecutivo(Definiciones.SueldoEjecutivos);	
 							if(posicion>=0)
 							{
-								personas[posicion]=ejecutivo.altaDeEmpleado(ejecutivo);
+								personas[posicion]=metodosgrles.altaDeEmpleado(ejecutivo);
 									
 							}else
 							{
@@ -150,7 +150,7 @@ public class Menu {
 							if(menuYesorNot())
 							{								
 								Empleado auxempleado=new Empleado();
-								auxempleado=empleadobuscadoparamodif.modificarEmpleado(empleadobuscadoparamodif);								
+								auxempleado=metodosgrles.modificarEmpleado(empleadobuscadoparamodif);								
 								if(auxempleado != null)
 								{	
 									personas[metodosgrles.buscarIndiceEnPersonas(personas,empleadobuscadoparamodif)]=auxempleado;
@@ -185,7 +185,7 @@ public class Menu {
 							if(menuYesorNot())
 							{								
 								Ejecutivo auxejecutivoo=new Ejecutivo();
-								auxejecutivoo=ejecutivobuscadoparamodif.modificarEmpleado(ejecutivobuscadoparamodif);								
+								auxejecutivoo=metodosgrles.modificarEmpleado(ejecutivobuscadoparamodif);								
 								if(auxejecutivoo != null)
 								{	
 									personas[metodosgrles.buscarIndiceEnPersonas(personas,ejecutivobuscadoparamodif)]=auxejecutivoo;
@@ -220,17 +220,12 @@ public class Menu {
 							if(menuYesorNot())
 							{								
 								Persona[] auxpersonas=new Persona[10];
-								auxpersonas=empleadobuscado.bajaDeEmpleado(personas,empleadobuscado);						
-								if(auxpersonas != null)
-								{
+								auxpersonas=metodosgrles.bajaDeEmpleado(personas,empleadobuscado);						
+								
 									personas=auxpersonas;
 									System.out.print("\n[menu] Empleado dado de baja correctamente");
 									Thread.sleep(2000);						
-								}else
-								{
-										System.out.print("\n[menu] ERROR - No se pudo dar de baja empleado");
-										Thread.sleep(2000);
-								}	
+								
 							}
 						}catch(Exception ex)
 						{}						
@@ -255,17 +250,12 @@ public class Menu {
 							if(menuYesorNot())
 							{								
 								Persona[] auxpersonas=new Persona[10];
-								auxpersonas=ejecutivobuscado.bajaDeEmpleado(personas,ejecutivobuscado);						
-								if(auxpersonas != null)
-								{
+								auxpersonas=metodosgrles.bajaDeEjecutivo(personas,ejecutivobuscado);						
+								
 									personas=auxpersonas;
 									System.out.print("\n[menu] Empleado dado de baja correctamente");
 									Thread.sleep(2000);
-								}else
-								{
-									System.out.print("\n[menu] No se pudo dar de baja empleado");
-									Thread.sleep(2000);
-								}											
+													
 							}							
 						}catch (InterruptedException e) {
 							e.printStackTrace();							
@@ -524,7 +514,120 @@ public class Menu {
 						}
 						break;
 					case 95:
-						
+						try
+						{
+							dnibuscado=Dentre.entero("\nINGRESE DNI (sin puntos) PARA SIMULACION: ");
+							
+							personabuscada=metodosgrles.buscarPersonaPorDNI(personas,dnibuscado);		//No se deberia instanciar persona, ya que sería abstracta, pero dado el esquema de trabajo...
+							
+							if(personabuscada!=null)
+							{
+								System.out.print("\n[menu] SE SIMuLARA A: "+personabuscada.getApellido());
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\n[menu] No se encontro persona\n");							
+								Thread.sleep(2000);	
+								break;
+							}
+							
+							if(personabuscada instanceof Empleado)
+							{
+								if(((Empleado)personabuscada).getAuto()==null)
+								{
+									System.out.print("\n[menu] EL EMPLEADO NO TIENE ASIGNADO NINGUN AUTO - ASIGNE AUTO\n");Thread.sleep(2000);break;
+								}
+								
+								if(((Empleado)personabuscada).simSalirOficinaHaciaAuto())
+								{System.out.print("\n[menu] Empleado Salio de la oficina\n");Thread.sleep(2000);}
+								else
+									break;
+								
+								if(((Empleado)personabuscada).getAuto().simAbrirPuerta())		//Mi auto es automatico, cuando me acerco se abre la puerta
+								{System.out.print("\n[menu] Se abrio la puerta\n");Thread.sleep(2000);}
+								else																	
+									break;
+								if(((Empleado)personabuscada).simSubirAlAuto())					
+									{System.out.print("\n[menu] Subi al auto\n");Thread.sleep(2000);}
+									else
+										break;
+								if(((Empleado)personabuscada).getAuto().simEncenderMotor())				//Mi auto es automatico, se prende el motor al sentarme
+									{System.out.print("\n[menu] Encendi auto\n");Thread.sleep(2000);}
+									else
+										break;
+								if(((Empleado)personabuscada).simManejarAuto())
+									{System.out.print("\n[menu] Maneja\n");Thread.sleep(2000);}
+									else
+										break;
+								if(((Empleado)personabuscada).getAuto().simApagarMotor())
+									{System.out.print("\n[menu] Apague motor\n");Thread.sleep(2000);}
+									else
+										break;
+								if(((Empleado)personabuscada).simBajarAuto())
+									{System.out.print("\n[menu] Baje Auto\n");Thread.sleep(2000);}
+									else
+										break;
+								if(((Empleado)personabuscada).getAuto().simCerrarPuerta())
+									{System.out.print("\n[menu] Cerre Puerta\n");Thread.sleep(2000);}
+									else
+										break;
+								if(((Empleado)personabuscada).simIrACasaYDescansar())
+									{System.out.print("\n[menu] a casa a descansar\n");Thread.sleep(2000);}
+									else
+										break;
+								
+								System.out.print("\n[menu] SIMULACION TERMINADA");
+								Thread.sleep(2000);
+							}else if(personabuscada instanceof Ejecutivo)
+							{
+								if(((Ejecutivo)personabuscada).getAuto()==null)
+								{
+									System.out.print("\n[menu] EL EMPLEADO NO TIENE ASIGNADO NINGUN AUTO - ASIGNE AUTO\n");Thread.sleep(2000);break;
+								}
+									if(((Ejecutivo)personabuscada).simSalirOficinaHaciaAuto())
+									{System.out.print("\n[menu] Ejecutivo Salio de la oficina\n");Thread.sleep(2000);}
+									else
+										break;
+									if(((Ejecutivo)personabuscada).getAuto().simAbrirPuerta())	
+									{System.out.print("\n[menu] Se abrio la puerta\n");Thread.sleep(2000);}
+									else
+										break;
+									if(((Ejecutivo)personabuscada).simSubirAlAuto())					
+									{	System.out.print("\n[menu] Subi al auto\n");Thread.sleep(2000);}
+										else
+											break;
+									if(((Ejecutivo)personabuscada).getAuto().simEncenderMotor())
+										{System.out.print("\n[menu] Encendi auto\n");Thread.sleep(2000);}
+										else
+											break;
+									if(((Ejecutivo)personabuscada).simManejarAuto())
+										{System.out.print("\n[menu] Maneja\n");Thread.sleep(2000);}
+										else
+											break;
+									if(((Ejecutivo)personabuscada).getAuto().simApagarMotor())
+										{System.out.print("\n[menu] Apague motor\n");Thread.sleep(2000);}
+										else
+											break;
+									if(((Ejecutivo)personabuscada).simBajarAuto())
+										{System.out.print("\n[menu] Baje Auto\n");Thread.sleep(2000);}
+										else
+											break;
+									if(((Ejecutivo)personabuscada).getAuto().simCerrarPuerta())
+										{System.out.print("\n[menu] Cerre Puerta\n");Thread.sleep(2000);}
+										else
+											break;
+									if(((Ejecutivo)personabuscada).simIrACasaYDescansar())
+										{System.out.print("\n[menu] Fui a casa a descansar\n");Thread.sleep(2000);}
+										else
+											break;
+									
+									System.out.print("\n[menu] SIMULACION TERMINADA");
+									Thread.sleep(2000);
+							}else{}
+						}catch(Exception ex)
+						{
+							
+						}
 						break;
 					case 99:
 						sigo=false;
