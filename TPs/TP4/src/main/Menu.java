@@ -1,11 +1,14 @@
 package main;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import utils.Definiciones;
 import utils.Dentre;
+import utils.MiException;
 
 public class Menu {
 	
@@ -23,18 +26,33 @@ public class Menu {
 	public class MenuPrincipal
 	{
 		boolean sigo;
+		
 		public MenuPrincipal()
 		{
 			
 		}
-		public void empezarMenu(Statement stmt,Connection conn)
+		public void empezarMenu() throws Exception
 		{
+			Connection conn;
+			Statement stmt;
 			String query=null;
 			sigo=false;
+			
 			while(!sigo)
-			{				
-				System.out.print("\n1-CREAR DB");
-				System.out.print("\n2-INSERTAR DATOS");
+			{
+				try
+				{
+					Class.forName(Definiciones.DB_DRIVER);
+					conn = DriverManager.getConnection(Definiciones.DB_URL, Definiciones.DB_USERNAME, Definiciones.DB_PASSWORD);
+					conn.setAutoCommit(false);
+					stmt = conn.createStatement();
+				}catch(SQLException e)
+				{
+					throw new MiException("Error de conexión SQL");
+				}
+				
+				System.out.print("\n1-INSERTAR AUTOPARTE");
+				System.out.print("\n2-ELIMINAR AUTOPARTE DATOS");
 				System.out.print("\n3-BUSCAR POR FILTRO");
 				System.out.print("\n4-BUSCAR TODO");
 				int opcion=Dentre.entero("\nINGRESE OPCION:");
@@ -87,8 +105,7 @@ public class Menu {
 							query="SELECT * FROM Usuarios";							
 							ResultSet rs=stmt.executeQuery(query);							
 							conn.commit();
-							System.out.print("\n[main] Usuarios: "+rs.getInt("U_Id")+
-									"\nUser: "+rs.getString("user")+"\nMail: "+rs.getString("mail"));
+							System.out.print("\n[main] Usuarios: "+rs.getInt("U_Id")+"\nUser: "+rs.getString("user")+"\nMail: "+rs.getString("mail"));
 							
 						}catch(SQLException e)
 						{
@@ -99,9 +116,12 @@ public class Menu {
 						break;
 				}
 				
-				
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();										//CIERRO BD
+				System.exit(0);
 				
 			}
 		}
+		
 	}
 }
