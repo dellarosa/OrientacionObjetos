@@ -132,6 +132,11 @@ public class Menu {
 							reparacion.setAutopartes(autoparteutil);
 							reparacion.setCosto(metgral.obtenerCostoAutopartes(autoparteutil));
 							
+							////
+							query="SELECT * FROM Usuarios";							
+							ResultSet rs=stmt.executeQuery(query);							
+							conn.commit();
+							System.out.print("\n[main] Usuarios: "+rs.getInt("U_Id")+"\nUser: "+rs.getString("user")+"\nMail: "+rs.getString("mail"));
 							
 						}catch(SQLException e)
 						{
