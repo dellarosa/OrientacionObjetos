@@ -42,10 +42,25 @@ public class SQLClass {
 				System.out.print("\n[main] "+query);
 				
 				//########################## AUTOPARTES #################################
-				query="CREATE TABLE Autopartes(autoparte_ID int NOT NULL PRIMARY KEY,indiceTipo int NOT NULL,tipoAutoparte varchar(40) NOT NULL,descripcion varchar(100),marca varchar(25) NOT NULL,modelo varchar(25) NOT NULL,costo float NOT NULL,tamaño varchar(20) NOT NULL, cantidadDisponible int,cantidadMinima int NOT NULL)";							
+				//query="CREATE TABLE Autopartes(autoparte_ID int NOT NULL PRIMARY KEY,indiceTipoAutoparte int NOT NULL,TipoAutoparte varchar(30),descripcion varchar(100),marca varchar(25) NOT NULL,modelo varchar(25) NOT NULL,costo float NOT NULL,cantidadDisponible int)
+				query="CREATE TABLE Autopartes(autoparte_ID int NOT NULL PRIMARY KEY,descripcion varchar(100),marca varchar(25) NOT NULL,modelo varchar(25) NOT NULL,costo float NOT NULL,cantidadDisponible int)";							
 				stmt.executeUpdate(query);			
 				conn.commit();
 				System.out.print("\n[main] "+query);
+
+				//########################## FILTROS #################################
+				/*query="CREATE TABLE Filtros (filtro_ID int NOT NULL PRIMARY KEY,tamaño varchar(20) NOT NULL, tamaño varchar(20) NOT NULL, cantidadDisponible int)";							
+				stmt.executeUpdate(query);			
+				conn.commit();
+				System.out.print("\n[main] "+query);
+				
+				//Podrian ser mas tablas de cada autoparte, y manejar herencia como en el modelo de clases, pero dado la utilización se elige este modelo.
+				query="INSERT INTO Autopartes (autoparte_ID,indiceTipo,tipoAutoparte,descripcion,marca,modelo,costo,tamaño,cantidadDisponible) VALUES (1,1,1,'filtro aire','filtros para autos','Filtros2000','F2000',30,'grande',4,2)";
+				stmt.executeUpdate(query);
+				conn.commit();
+				System.out.print("\n[main] "+query);
+				*/
+				
 				//########################## CLIENTE #################################
 				query="CREATE TABLE Cliente(cliente_ID int NOT NULL PRIMARY KEY,nombre varchar(40) NOT NULL,modeloAuto varchar(40) NOT NULL,mail varchar(40) NOT NULL)";							
 				stmt.executeUpdate(query);			
