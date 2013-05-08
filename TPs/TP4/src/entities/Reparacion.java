@@ -1,7 +1,7 @@
 package entities;
 
 public class Reparacion {
-	float costo;
+	double costo;
 	String fechainicio;
 	String fechaentrega;
 	Cliente cliente;
@@ -11,10 +11,10 @@ public class Reparacion {
 	{
 		
 	}
-	public float getCosto() {
+	public double getCosto() {
 		return costo;
 	}
-	public void setCosto(float costo) {
+	public void setCosto(double costo) {
 		this.costo = costo;
 	}
 	public String getFechainicio() {

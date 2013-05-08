@@ -20,53 +20,61 @@ public class Main {
 		boolean login=false;		
 		String user;
 		String pass;
-		
+		boolean salir=false;
 		try
-		{	
-			SQLClass.crearTablas();		//INICIAL			
-			
-			System.out.print("\n\nINGRESAR AL SISTEMA TALLER 2013 (q para finalizar)");
-			do
-			{				
-				user=Dentre.texto("\n INGRESE SU USUARIO: ");				
-				if(user.toCharArray()[0]=='q')
-				{
-					System.out.print("\n\nADIOS");
-					System.exit(0);
-				}
-				pass=Dentre.texto("\nINGRESE SU CONTRASEÑA: ");				
-				if(pass=="q")
-				{
-					System.out.print("\n\nADIOS");
-					System.exit(0);					
-				}
-				
-				if(loginUser(user,pass)!=true)
-				{
-					System.out.print("\nUSUARIO O CONTRASEÑA INCORRECTA, VUELVA A INGRESAR");
-					Thread.sleep(2000);
-				}else
-				{
-					System.out.print("\nUSUARIO LOGUEADO");
-					Thread.sleep(2000);
-					login=true;
-				}
-				
-			}while(!login);
-				
-			while(login)
+		{	while(!salir) //GENERAL
 			{
-			
-				Menu menu= new Menu();
-				Menu.MenuPrincipal menuprinc=menu.getMenuPrincipal();
-				menuprinc.empezarMenu();
+				SQLClass.crearTablas();		//INICIAL
 				
-				/*query="DROP jdbc:hsqldb:file:C:\\Android3\\P1\\UP\\filedb";			
-				System.out.print("[main] DROP DB: "+query);
-				stmt.executeUpdate(query);
-				conn.commit();
-				*/
+				System.out.print("\n\nINGRESAR AL SISTEMA TALLER 2013 (\'salir\' para finalizar)");
+				do
+				{				
+					user=Dentre.texto("\n INGRESE SU USUARIO: ");				
+					if(user=="salir")
+					{
+						System.out.print("\n\nADIOS");
+						System.exit(0);
+					}
+					pass=Dentre.texto("\nINGRESE SU CONTRASEÑA: ");				
+					if(pass=="salir")
+					{
+						System.out.print("\n\nADIOS");
+						System.exit(0);					
+					}
+					
+					if(loginUser(user,pass)!=true)
+					{
+						System.out.print("\nUSUARIO O CONTRASEÑA INCORRECTA, VUELVA A INGRESAR");
+						Thread.sleep(2000);
+					}else
+					{
+						System.out.print("\nUSUARIO LOGUEADO");
+						Thread.sleep(2000);
+						login=true;
+					}
+					
+				}while(!login);
+					
+				while(login)
+				{
 				
+					Menu menu= new Menu();
+					Menu.MenuPrincipal menuprinc=menu.getMenuPrincipal();
+					String strresponse=menuprinc.empezarMenu();
+					
+					/*query="DROP jdbc:hsqldb:file:C:\\Android3\\P1\\UP\\filedb";			
+					System.out.print("[main] DROP DB: "+query);
+					stmt.executeUpdate(query);
+					conn.commit();
+					*/
+					if(strresponse=="salir")
+					{
+						System.out.print("\n\nADIOS");
+						salir=true;
+						System.exit(0);
+					}
+					
+				}
 			}
 		}catch(SQLException e)
 		{
@@ -76,6 +84,7 @@ public class Main {
 		{
 			System.out.print("\n**ERROR MiException: "+e);
 		}
+		
 	}
 	
 	

@@ -5,15 +5,23 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import entities.Autoparte;
+import entities.Cliente;
+import entities.Reparacion;
+import entities.Usuario;
 
 import utils.Definiciones;
 import utils.Dentre;
+import utils.MetodosGrl;
 import utils.MiException;
 
 public class Menu {
 	
 	MenuPrincipal menuprinc;
-	
+	MetodosGrl metgral;
 	public Menu()
 	{
 		menuprinc=new MenuPrincipal();
@@ -29,9 +37,9 @@ public class Menu {
 		
 		public MenuPrincipal()
 		{
-			
+			metgral=new MetodosGrl();
 		}
-		public void empezarMenu() throws Exception
+		public String empezarMenu() throws Exception
 		{
 			Connection conn;
 			Statement stmt;
@@ -51,10 +59,15 @@ public class Menu {
 					throw new MiException("Error de conexión SQL");
 				}
 				
-				System.out.print("\n1-INSERTAR AUTOPARTE");
-				System.out.print("\n2-ELIMINAR AUTOPARTE DATOS");
-				System.out.print("\n3-BUSCAR POR FILTRO");
-				System.out.print("\n4-BUSCAR TODO");
+				System.out.print("\n1-CARGAR CLIENTE");
+				System.out.print("\n2-CARGAR AUTOPARTE");
+				System.out.print("\n3-CARGAR REPARACION");
+				System.out.print("\n4-FINALIZAR REPARACION");
+				System.out.print("\n5-MOSTRAR DATOS");
+				System.out.print("\n94-CARGAR USUARIO");		//SI ES ADMINISTRADOR
+				System.out.print("\n98-CAMBIAR DE USUARIO");
+				System.out.print("\n99-SALIR");
+				
 				int opcion=Dentre.entero("\nINGRESE OPCION:");
 				
 				switch(opcion)
@@ -62,10 +75,11 @@ public class Menu {
 					case 1:
 						try
 						{
-							 query="CREATE TABLE Usuarios(U_Id int NOT NULL PRIMARY KEY,name varchar(40) NOT NULL,mail varchar(40) NOT NULL,user varchar(12) NOT NULL,pass varchar(8) NOT NULL)";
+							Cliente cliente= new Cliente();
+							cliente.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
+							cliente.setMail(Dentre.texto("\nINGRESE MAIL: "));
 							
-							//Dentre.texto("[main] CREAR TABLA? "+query);
-							System.out.print("[main] CREAR TABLA: "+query);
+							query="INSERT INTO Clientes (cliente_ID,name,mail,auto) VALUES (1,'Pepe','pepearrobavida.com','gol power')";
 							stmt.executeUpdate(query);
 							conn.commit();
 						}catch(SQLException e)
@@ -75,21 +89,17 @@ public class Menu {
 						
 						break;
 					case 2:
-						try
-						{
-							query="INSERT INTO Usuarios (U_Id,name,mail,user,pass) VALUES (1,'Pepe','pepearrobavida.com','pepito','12341234')";
-							stmt.executeUpdate(query);
-							conn.commit();
-							System.out.print("\n[main] INSERTE: "+query);
-						}catch(SQLException e)
-						{
-							e.printStackTrace();
-						}
-						
+												
 						break;
 					case 3:
 						try
 						{
+							Reparacion reparacion=new Reparacion();							
+							reparacion.setCliente(metgral.obtenerCliente());
+							reparacion.setUsuario(metgral.obtenerUsuarioActual());
+							Calendar c = new GregorianCalendar();
+							reparacion.setFechainicio(c.getTime().toString());
+							
 							query="INSERT INTO Usuarios (U_Id,name,mail,user,pass) VALUES (1,'Pepe','pepearrobavida.com','pepito','12341234')";
 							stmt.executeUpdate(query);
 							conn.commit();
@@ -102,25 +112,71 @@ public class Menu {
 					case 4:
 						try
 						{
-							query="SELECT * FROM Usuarios";							
-							ResultSet rs=stmt.executeQuery(query);							
-							conn.commit();
-							System.out.print("\n[main] Usuarios: "+rs.getInt("U_Id")+"\nUser: "+rs.getString("user")+"\nMail: "+rs.getString("mail"));
+							Reparacion reparacion=metgral.obtenerReparacion();
+							Autoparte[] autoparteutil=metgral.obtenerAutopartesEnSistema();
+							boolean fin=false;
+							int x=0;
+							while(x<autoparteutil.length)
+							{
+								System.out.print("\n"+x+1+"-AUTOPARTE: "+autoparteutil[x].getClass().getCanonicalName());
+								x++;
+							}
+							while(!fin)					
+							{
+															
+							}
+							
+							Dentre.entero("\nINGRESE AUTOPARTES UTILIZADAS: ");
+							Autoparte autoparte=new Autoparte();
+							
+							reparacion.setAutopartes(autoparteutil);
+							reparacion.setCosto(metgral.obtenerCostoAutopartes(autoparteutil));
+							
 							
 						}catch(SQLException e)
 						{
 							e.printStackTrace();
 						}
 						break;
+					case 5:
+						
+						break;
+					case 94:
+							//SI ES ADMINISTRADOR CARGA USUARIO
+						try
+						{
+							Usuario usuario=new Usuario();
+							usuario.setEmail(Dentre.texto("\nINGRESE MAIL: "));
+							usuario.setName(Dentre.texto("\nINGRESE NOMBRE: "));
+							usuario.setUsername(Dentre.texto("\nINGRESE USER: "));
+							usuario.setPassword(Dentre.texto("\nINGRESE PASS: "));
+							
+							query="INSERT INTO Usuarios (U_Id,name,mail,user,pass) VALUES (1,"+usuario.getName()+","+usuario.getEmail()+","+usuario.getUsername()+","+usuario.getPassword()+")";
+							stmt.executeUpdate(query);
+							conn.commit();
+							System.out.print("\n[main] INSERTE: "+query);
+						}catch(SQLException e)
+						{
+							e.printStackTrace();
+						}
+
+						break;
+					case 98:
+							sigo=true;
+						break;
+					case 99:
+													
+							return "salir";
+						
 					default:
 						break;
 				}
 				
 				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD
-				System.exit(0);
-				
+				conn.close();										//CIERRO BD			
+				//System.exit(0);				
 			}
+			return "OK";
 		}
 		
 	}
