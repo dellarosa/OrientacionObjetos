@@ -5,7 +5,7 @@ public class Reparacion {
 	private String fechainicio;
 	private String fechaentrega;
 	private Cliente cliente;
-	private Autoparte autopartes[];
+	private Autoparte autopartes[][];
 	//private Usuario	usuario;		//POR AHORA NO
 	private int id;
 	private int entregado;
@@ -50,10 +50,10 @@ public class Reparacion {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	public Autoparte[] getAutopartes() {
+	public Autoparte[][] getAutopartes() {
 		return autopartes;
 	}
-	public void setAutopartes(Autoparte[] autopartes) {
+	public void setAutopartes(Autoparte[][] autopartes) {
 		this.autopartes = autopartes;
 	}
 	/*public Usuario getUsuario() {

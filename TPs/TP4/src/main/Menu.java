@@ -8,8 +8,11 @@ import java.sql.Statement;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import entities.Aceite;
 import entities.Autoparte;
 import entities.Cliente;
+import entities.Filtro;
+import entities.Lampara;
 import entities.Reparacion;
 import entities.SQLClass;
 import entities.Usuario;
@@ -54,11 +57,25 @@ public class Menu {
 			Statement stmt;
 			String query=null;
 			sigo=false;
+			Autoparte[][] autopartesG=new Autoparte[][]{};
+			Cliente[] clientesG=new Cliente[]{};
+			Reparacion[] reparacionesG=new Reparacion[]{};
+			Filtro[] filtrosG=new Filtro[]{};
+			Lampara[] lamparasG=new Lampara[]{};
+			Aceite[] aceitesG=new Aceite[]{};
 			
 			while(!sigo)
 			{
+				
 				try
 				{
+					metgral.cargaAutopartes(autopartesG);
+					metgral.cargaClientes(clientesG);
+					metgral.cargaReparaciones(reparacionesG);
+					metgral.cargarFiltros(filtrosG);
+					metgral.cargarAceites(aceitesG);
+					metgral.cargarLamparas(lamparasG);
+					
 					conn = DriverManager.getConnection(Definiciones.DB_URL, Definiciones.DB_USERNAME, Definiciones.DB_PASSWORD);
 					conn.setAutoCommit(false);
 					stmt = conn.createStatement();
@@ -68,14 +85,17 @@ public class Menu {
 				}
 				
 				System.out.print("\n1-CARGAR CLIENTE");
-				System.out.print("\n1-MODIFICACION CLIENTE");
-				System.out.print("\n1-BAJA CLIENTE");
-				System.out.print("\n2-CARGAR AUTOPARTE");
-				System.out.print("\n2-MODIFICACION AUTOPARTE");
-				System.out.print("\n3-CARGAR REPARACION");
-				System.out.print("\n4-FINALIZAR REPARACION");
-				System.out.print("\n5-MOSTRAR DATOS");
-				System.out.print("\n94-CARGAR USUARIO");		//SI ES ADMINISTRADOR
+				System.out.print("\n2-MODIFICACION CLIENTE");
+				System.out.print("\n3-BAJA CLIENTE");
+				System.out.print("\n4-CARGAR AUTOPARTE");
+				System.out.print("\n5-MODIFICACION AUTOPARTE");
+				System.out.print("\n6-BAJA AUTOPARTE");
+				System.out.print("\n7-CARGAR REPARACION");
+				System.out.print("\n8-FINALIZAR REPARACION");
+				System.out.print("\n9-VER REPARACIONES");				
+				System.out.print("\n10-MOSTRAR DATOS");				
+				
+				//System.out.print("\n11-CALCULAR ");		//SI ES ADMINISTRADOR
 				System.out.print("\n98-CAMBIAR DE USUARIO");
 				System.out.print("\n99-SALIR");
 				
@@ -103,55 +123,84 @@ public class Menu {
 												
 						break;
 					case 3:
-						try
-						{
-							Reparacion reparacion=new Reparacion();							
-							reparacion.setCliente(metgral.obtenerCliente());
-							reparacion.setUsuario(metgral.obtenerUsuarioActual());
-							Calendar c = new GregorianCalendar();
-							reparacion.setFechainicio(c.getTime().toString());
-							
-							query="INSERT INTO Usuarios (U_Id,name,mail,user,pass) VALUES (1,'Pepe','pepearrobavida.com','pepito','12341234')";
-							stmt.executeUpdate(query);
-							conn.commit();
-							
-						}catch(SQLException e)
-						{
-							e.printStackTrace();
-						}
+						
 						break;
 					case 4:
 						try
 						{
-							Reparacion reparacion=metgral.obtenerReparacion();
-							Autoparte[] autoparteutil=metgral.obtenerAutopartesEnSistema();
-							boolean fin=false;
+							Reparacion reparacion=metgral.obtenerReparacion();							
+							
+							boolean fin=false;							
 							int x=0;
-							while(x<autoparteutil.length)
+							//PODRIA SER DINAMICO
+							System.out.print("\n1-FILTROS");	
+							System.out.print("\n2-ACEITE");
+							System.out.print("\n3-LAMPARA");
+							System.out.print("\n4-NUEVA AUTOPARTE");
+							switch(Dentre.entero("\nINGRESE TIPO AUTOPARTE: "))
 							{
-								System.out.print("\n"+x+1+"-AUTOPARTE: "+autoparteutil[x].getClass().getCanonicalName());
-								x++;
+								case Definiciones.FILTRO_INDICE:
+									Filtro filtro =new Filtro();
+									
+									filtro.setId(metgral.buscarUltimoIdFiltro(filtrosG));
+									filtro.setMaterial(Dentre.texto("\nINGRESE TIPO MATERIAL: "));
+									filtro.setTamaño(Dentre.texto("\nINGRESE TAMAÑO: "));
+									filtro.setMarca(Dentre.texto("\nINGRESE MARCA: "));
+									filtro.setModelo(Dentre.texto("\nINGRESE MODELO: "));
+									filtro.setTipoAutoparte("filtro");
+									filtro.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
+									filtro.setCosto(Dentre.doble("\nINGRESE COSTO: "));
+									filtro.setAutoparteID(metgral.buscarUltimaAutoparte(autopartesG));
+									SQLClass.insertarFiltro(filtro);
+									SQLClass.insertarAutoparte(filtro.getAutoparteID(),filtro.getTipoAutoparte(),filtro.getMarca(),filtro.getModelo(),filtro.getCosto(),filtro.getCantDisponible());
+										
+									break;
+									
+								case Definiciones.ACEITE_INDICE:
+									Aceite aceite =new Aceite();
+									
+									aceite.setId(metgral.buscarUltimoIdFiltro(filtrosG));
+									aceite.setCantidadlitros(Dentre.entero("\nINGRESE CANTIDAD LITROS: "));
+									aceite.setTipoAceite(Dentre.texto("\nINGRESE TAMAÑO: "));
+									aceite.setMarca(Dentre.texto("\nINGRESE MARCA: "));
+									aceite.setModelo(Dentre.texto("\nINGRESE MODELO: "));
+									aceite.setTipoAutoparte("filtro");
+									aceite.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
+									aceite.setCosto(Dentre.doble("\nINGRESE COSTO: "));
+									aceite.setAutoparteID(metgral.buscarUltimaAutoparte(autopartesG));
+									SQLClass.insertarAceite(aceite);
+									SQLClass.insertarAutoparte(aceite.getAutoparteID(),aceite.getTipoAutoparte(),aceite.getMarca(),aceite.getModelo(),aceite.getCosto(),aceite.getCantDisponible());
+									break;
+									
+								case Definiciones.LAMPARA_INDICE:
+									Lampara lampara =new Lampara();
+									
+									lampara.setId(metgral.buscarUltimoIdFiltro(filtrosG));
+									lampara.setColor(Dentre.texto("\nINGRESE CANTIDAD LITROS: "));
+									lampara.setTamaño(Dentre.texto("\nINGRESE TAMAÑO: "));
+									lampara.setMarca(Dentre.texto("\nINGRESE MARCA: "));
+									lampara.setModelo(Dentre.texto("\nINGRESE MODELO: "));
+									lampara.setTipoAutoparte("filtro");
+									lampara.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
+									lampara.setCosto(Dentre.doble("\nINGRESE COSTO: "));
+									lampara.setAutoparteID(metgral.buscarUltimaAutoparte(autopartesG));
+									SQLClass.insertarLampara(lampara);
+									SQLClass.insertarAutoparte(lampara.getAutoparteID(),lampara.getTipoAutoparte(),lampara.getMarca(),lampara.getModelo(),lampara.getCosto(),lampara.getCantDisponible());
+									
+									break;
+								
+								case 4:
+									break;
+								default:
+									break;
 							}
-							while(!fin)					
-							{
-															
-							}
-							
-							Dentre.entero("\nINGRESE AUTOPARTES UTILIZADAS: ");
-							Autoparte autoparte=new Autoparte();
-							
-							reparacion.setAutopartes(autoparteutil);
-							reparacion.setCosto(metgral.obtenerCostoAutopartes(autoparteutil));
-							
-							////
-							query="SELECT * FROM Usuarios";							
-							ResultSet rs=stmt.executeQuery(query);							
-							conn.commit();
-							System.out.print("\n[main] Usuarios: "+rs.getInt("U_Id")+"\nUser: "+rs.getString("user")+"\nMail: "+rs.getString("mail"));
 							
 						}catch(SQLException e)
 						{
 							e.printStackTrace();
+						}catch(Exception e)
+						{
+							
 						}
 						break;
 					case 5:

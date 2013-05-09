@@ -35,16 +35,11 @@ public class Main {
 		{
 			while(!salir)
 			{
-				Autoparte[][] autopartes=new Autoparte[][]{};
-				Cliente[] clientes=new Cliente[]{};
-				Reparacion[] reparaciones=new Reparacion[]{};				
+								
 				Usuario[] usuarios=new Usuario[]{};
 				
-				metgral.cargarUsuarios(usuarios);				
-				metgral.cargaAutopartes(autopartes);
-				metgral.cargaClientes(clientes);
-				metgral.cargaReparaciones(reparaciones);
-				
+				metgral.cargarUsuarios(usuarios);
+						
 				
 				Usuario usuarioLogueado=menuInicio.empezarMenuInicio(usuarios);
 			

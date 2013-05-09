@@ -2,7 +2,7 @@ package entities;
 
 public class Filtro extends Autoparte{
 
-	private int tamaño;
+	private String tamaño;
 	private String material;
 	private int id;
 	private int autoparteID;
@@ -19,10 +19,10 @@ public class Filtro extends Autoparte{
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getTamaño() {
+	public String getTamaño() {
 		return tamaño;
 	}
-	public void setTamaño(int tamaño) {
+	public void setTamaño(String tamaño) {
 		this.tamaño = tamaño;
 	}
 	public String getMaterial() {
