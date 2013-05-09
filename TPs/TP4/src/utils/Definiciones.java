@@ -15,4 +15,8 @@ public class Definiciones {
 	public static final int ACEITE_INDICE=1;
 	public static final int LAMPARA_INDICE=2;
 	
+	public static final String FILTRO_STRING="filtro";
+	public static final String ACEITE_STRING="aceite";
+	public static final String LAMPARA_STRING="lampara";
+	
 }

@@ -2,11 +2,8 @@ package main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import entities.Aceite;
 import entities.Autoparte;
@@ -14,7 +11,10 @@ import entities.Cliente;
 import entities.Filtro;
 import entities.Lampara;
 import entities.Reparacion;
-import entities.SQLClass;
+import entities.SQLCarga;
+import entities.SQLDelete;
+import entities.SQLInserts;
+import entities.SQLSelects;
 import entities.Usuario;
 
 import utils.Definiciones;
@@ -27,6 +27,11 @@ public class Menu {
 	MenuPrincipal menuprinc;
 	MetodosGrl metgral;
 	MenuInicio menuinicio;
+	
+	SQLInserts sqlinserts=new SQLInserts();
+	SQLSelects sqlselects=new SQLSelects();
+	SQLDelete sqldelete=new SQLDelete();
+	SQLCarga sqlcarga =new SQLCarga();
 	
 	public Menu()
 	{
@@ -45,40 +50,38 @@ public class Menu {
 	}
 	public class MenuPrincipal
 	{
-		boolean sigo;
+		boolean sigo;		
 		
 		public MenuPrincipal()
 		{
 			metgral=new MetodosGrl();
 		}
-		public String empezarMenu(Usuario user) throws Exception
+		public String empezarMenu(Usuario user) throws Exception,MiException
 		{
 			Connection conn;
-			Statement stmt;
-			String query=null;
-			sigo=false;
+			Statement stmt;			
+			
 			Autoparte[][] autopartesG=new Autoparte[][]{};
 			Cliente[] clientesG=new Cliente[]{};
 			Reparacion[] reparacionesG=new Reparacion[]{};
-			Filtro[] filtrosG=new Filtro[]{};
-			Lampara[] lamparasG=new Lampara[]{};
-			Aceite[] aceitesG=new Aceite[]{};
+			//Filtro[] filtrosG=new Filtro[]{};
+			//Lampara[] lamparasG=new Lampara[]{};
+			//Aceite[] aceitesG=new Aceite[]{};
 			
+			sigo=false;
 			while(!sigo)
 			{
 				
 				try
 				{
-					metgral.cargaAutopartes(autopartesG);
-					metgral.cargaClientes(clientesG);
-					metgral.cargaReparaciones(reparacionesG);
-					metgral.cargarFiltros(filtrosG);
-					metgral.cargarAceites(aceitesG);
-					metgral.cargarLamparas(lamparasG);
+					sqlcarga.cargaAutopartes(autopartesG);
+					sqlcarga.cargaClientes(clientesG);
+					sqlcarga.cargaReparaciones(reparacionesG);
+					//sqlcarga.cargarFiltros(filtrosG);
+					//sqlcarga.cargarAceites(aceitesG);
+					//sqlcarga.cargarLamparas(lamparasG);
 					
-					conn = DriverManager.getConnection(Definiciones.DB_URL, Definiciones.DB_USERNAME, Definiciones.DB_PASSWORD);
-					conn.setAutoCommit(false);
-					stmt = conn.createStatement();
+					
 				}catch(SQLException e)
 				{
 					throw new MiException("Error de conexión SQL");
@@ -106,13 +109,30 @@ public class Menu {
 					case 1:
 						try
 						{
+							conn = DriverManager.getConnection(Definiciones.DB_URL, Definiciones.DB_USERNAME, Definiciones.DB_PASSWORD);
+							conn.setAutoCommit(false);
+							stmt = conn.createStatement();
+							
 							Cliente cliente= new Cliente();
+							cliente.setId(metgral.buscarUltimoCliente(clientesG));
 							cliente.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
 							cliente.setMail(Dentre.texto("\nINGRESE MAIL: "));
+							cliente.setAuto(Dentre.texto("\nINGRESE AUTO: "));
 							
-							query="INSERT INTO Clientes (cliente_ID,name,mail,auto) VALUES (1,'Pepe','pepearrobavida.com','gol power')";
-							stmt.executeUpdate(query);
-							conn.commit();
+							if(sqlinserts.insertarCliente(cliente))
+							{
+								System.out.print("\nCLIENTE INGRESADO CORRECTAMENTE");
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\nFALLO INGRESO CLIENTE");
+								Thread.sleep(2000);
+							}
+							
+							
+							stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+							conn.close();										//CIERRO BD
+							
 						}catch(SQLException e)
 						{
 							e.printStackTrace();
@@ -120,19 +140,32 @@ public class Menu {
 						
 						break;
 					case 2:
-												
+							try
+							{
+								Cliente cliente=sqlselects.buscarClientePorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
+								if(sqldelete.eliminarCliente(cliente))
+								{
+									System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
+									Thread.sleep(2000);
+								}else
+								{
+									System.out.print("\nFALLO BAJA USUARIO");
+									Thread.sleep(2000);
+								}	
+							}
+							catch(Exception e)
+							{							
+								throw new MiException("DELETE USER EXCEPTION: "+e);
+							}	
+														
 						break;
 					case 3:
 						
 						break;
 					case 4:
 						try
-						{
-							Reparacion reparacion=metgral.obtenerReparacion();							
-							
-							boolean fin=false;							
-							int x=0;
-							//PODRIA SER DINAMICO
+						{							
+							//PODRIA SER MAS DINAMICO
 							System.out.print("\n1-FILTROS");	
 							System.out.print("\n2-ACEITE");
 							System.out.print("\n3-LAMPARA");
@@ -142,7 +175,7 @@ public class Menu {
 								case Definiciones.FILTRO_INDICE:
 									Filtro filtro =new Filtro();
 									
-									filtro.setId(metgral.buscarUltimoIdFiltro(filtrosG));
+									filtro.setId(metgral.buscarUltimaAutoparteId(autopartesG[Definiciones.FILTRO_INDICE]));
 									filtro.setMaterial(Dentre.texto("\nINGRESE TIPO MATERIAL: "));
 									filtro.setTamaño(Dentre.texto("\nINGRESE TAMAÑO: "));
 									filtro.setMarca(Dentre.texto("\nINGRESE MARCA: "));
@@ -151,15 +184,15 @@ public class Menu {
 									filtro.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
 									filtro.setCosto(Dentre.doble("\nINGRESE COSTO: "));
 									filtro.setAutoparteID(metgral.buscarUltimaAutoparte(autopartesG));
-									SQLClass.insertarFiltro(filtro);
-									SQLClass.insertarAutoparte(filtro.getAutoparteID(),filtro.getTipoAutoparte(),filtro.getMarca(),filtro.getModelo(),filtro.getCosto(),filtro.getCantDisponible());
+									sqlinserts.insertarFiltro(filtro);
+									sqlinserts.insertarAutoparte(filtro.getAutoparteID(),filtro.getTipoAutoparte(),filtro.getMarca(),filtro.getModelo(),filtro.getCosto(),filtro.getCantDisponible());
 										
 									break;
 									
 								case Definiciones.ACEITE_INDICE:
 									Aceite aceite =new Aceite();
 									
-									aceite.setId(metgral.buscarUltimoIdFiltro(filtrosG));
+									aceite.setId(metgral.buscarUltimaAutoparteId(autopartesG[Definiciones.ACEITE_INDICE]));
 									aceite.setCantidadlitros(Dentre.entero("\nINGRESE CANTIDAD LITROS: "));
 									aceite.setTipoAceite(Dentre.texto("\nINGRESE TAMAÑO: "));
 									aceite.setMarca(Dentre.texto("\nINGRESE MARCA: "));
@@ -168,14 +201,14 @@ public class Menu {
 									aceite.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
 									aceite.setCosto(Dentre.doble("\nINGRESE COSTO: "));
 									aceite.setAutoparteID(metgral.buscarUltimaAutoparte(autopartesG));
-									SQLClass.insertarAceite(aceite);
-									SQLClass.insertarAutoparte(aceite.getAutoparteID(),aceite.getTipoAutoparte(),aceite.getMarca(),aceite.getModelo(),aceite.getCosto(),aceite.getCantDisponible());
+									sqlinserts.insertarAceite(aceite);
+									sqlinserts.insertarAutoparte(aceite.getAutoparteID(),aceite.getTipoAutoparte(),aceite.getMarca(),aceite.getModelo(),aceite.getCosto(),aceite.getCantDisponible());
 									break;
 									
 								case Definiciones.LAMPARA_INDICE:
 									Lampara lampara =new Lampara();
 									
-									lampara.setId(metgral.buscarUltimoIdFiltro(filtrosG));
+									lampara.setId(metgral.buscarUltimaAutoparteId(autopartesG[Definiciones.LAMPARA_INDICE]));
 									lampara.setColor(Dentre.texto("\nINGRESE CANTIDAD LITROS: "));
 									lampara.setTamaño(Dentre.texto("\nINGRESE TAMAÑO: "));
 									lampara.setMarca(Dentre.texto("\nINGRESE MARCA: "));
@@ -184,8 +217,8 @@ public class Menu {
 									lampara.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
 									lampara.setCosto(Dentre.doble("\nINGRESE COSTO: "));
 									lampara.setAutoparteID(metgral.buscarUltimaAutoparte(autopartesG));
-									SQLClass.insertarLampara(lampara);
-									SQLClass.insertarAutoparte(lampara.getAutoparteID(),lampara.getTipoAutoparte(),lampara.getMarca(),lampara.getModelo(),lampara.getCosto(),lampara.getCantDisponible());
+									sqlinserts.insertarLampara(lampara);
+									sqlinserts.insertarAutoparte(lampara.getAutoparteID(),lampara.getTipoAutoparte(),lampara.getMarca(),lampara.getModelo(),lampara.getCosto(),lampara.getCantDisponible());
 									
 									break;
 								
@@ -197,38 +230,20 @@ public class Menu {
 							
 						}catch(SQLException e)
 						{
-							e.printStackTrace();
+							throw new MiException("[CARGAR AUTOPARTE] SQLException : "+e);
 						}catch(Exception e)
 						{
-							
+							throw new MiException("[CARGAR AUTOPARTE] Exception : "+e);
 						}
 						break;
 					case 5:
 						
 						break;
 					case 94:
-							//SI ES ADMINISTRADOR CARGA USUARIO
-						try
-						{
-							Usuario usuario=new Usuario();
-							usuario.setEmail(Dentre.texto("\nINGRESE MAIL: "));
-							usuario.setName(Dentre.texto("\nINGRESE NOMBRE: "));
-							usuario.setUsername(Dentre.texto("\nINGRESE USER: "));
-							usuario.setPassword(Dentre.texto("\nINGRESE PASS: "));
-							
-							query="INSERT INTO Usuarios (U_Id,name,mail,user,pass) VALUES (1,"+usuario.getName()+","+usuario.getEmail()+","+usuario.getUsername()+","+usuario.getPassword()+")";
-							stmt.executeUpdate(query);
-							conn.commit();
-							System.out.print("\n[main] INSERTE: "+query);
-						}catch(SQLException e)
-						{
-							e.printStackTrace();
-						}
-
+						
 						break;
 					case 98:
-							sigo=true;
-						break;
+							return "mudar";
 					case 99:
 													
 							return "salir";
@@ -236,10 +251,7 @@ public class Menu {
 					default:
 						break;
 				}
-				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD			
-				//System.exit(0);				
+							
 			}
 			return "OK";
 		}
@@ -300,8 +312,8 @@ public class Menu {
 					case 2:
 							try
 							{
-								Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
-								if(metgral.eliminarUsuario(usuarioBaja))
+								Usuario usuarioBaja=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
+								if(sqldelete.eliminarUsuario(usuarioBaja))
 								{
 									System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
 									Thread.sleep(2000);
@@ -321,7 +333,7 @@ public class Menu {
 							
 						try
 						{
-							Usuario usuarioModif=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
+							Usuario usuarioModif=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
 							if(usuarioModif==null)
 							{
 								System.out.print("\nNO SE ENCONTRO EL USUARIO");

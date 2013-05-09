@@ -1,18 +1,9 @@
 package main;
 
-import java.sql.Connection;
-import utils.Definiciones;
-import utils.Dentre;
-import utils.MetodosGrl;
 import utils.MiException;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import entities.Autoparte;
-import entities.Cliente;
-import entities.Reparacion;
+import entities.SQLCarga;
 import entities.SQLClass;
 import entities.Usuario;
 import main.Menu;;
@@ -22,9 +13,9 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		boolean login=false;	
+		
 		boolean salir=false;
-		MetodosGrl metgral=new MetodosGrl();
+		SQLCarga sqlcarga=new SQLCarga();		
 		
 		SQLClass.crearTablas();		//INICIAL
 		
@@ -38,7 +29,7 @@ public class Main {
 								
 				Usuario[] usuarios=new Usuario[]{};
 				
-				metgral.cargarUsuarios(usuarios);
+				sqlcarga.cargarUsuarios(usuarios);
 						
 				
 				Usuario usuarioLogueado=menuInicio.empezarMenuInicio(usuarios);
@@ -62,11 +53,11 @@ public class Main {
 			}	
 		}catch(SQLException e)
 		{
-			System.out.print("\n**ERROR SQL: "+e);
+			System.out.print("\n[main]**ERROR SQL: "+e);
 		}
 		catch(MiException e)
 		{
-			System.out.print("\n**ERROR MiException: "+e);
+			System.out.print("\n[main]**ERROR MiException: "+e);
 		}
 		
 	}

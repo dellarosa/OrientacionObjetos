@@ -17,6 +17,7 @@ public class SQLClass {
 	
 	public static void crearTablas() throws MiException, SQLException
 	{
+		SQLInserts sqlinserts=new SQLInserts();
 		String query;
 		Connection conn=null;
 		Statement stmt = null;
@@ -49,9 +50,9 @@ public class SQLClass {
 				System.out.print("\n[SQLClass] "+query);
 				//query="INSERT INTO Autopartes (autoparte_ID,indiceTipo,tipoAutoparte,descripcion,marca,modelo,costo,tamaño) VALUES (1,1,1,'filtro aire','filtros para autos','Filtros2000','F2000',30,'grande',4)";
 
-				insertarAutoparte(1,"filtro","Filtros2000","F2000",30,4);
-				insertarAutoparte(2,"aceite","aceites2000","A2000",68,5);
-				insertarAutoparte(3,"lampara","lamparas","L2000",20,3);
+				sqlinserts.insertarAutoparte(1,"filtro","Filtros2000","F2000",30,4);
+				sqlinserts.insertarAutoparte(2,"aceite","aceites2000","A2000",68,5);
+				sqlinserts.insertarAutoparte(3,"lampara","lamparas","L2000",20,3);
 				
 				//########################## FILTROS #################################
 				query="CREATE TABLE Filtro (filtro_ID int NOT NULL PRIMARY KEY, autoparte_ID,tamaño varchar(20) NOT NULL, material varchar(20) NOT NULL)";							
@@ -64,7 +65,7 @@ public class SQLClass {
 				conn.commit();
 				System.out.print("\n[SQLClass] "+query);
 
-				insertarFiltro(1,1,"grande","plastico");				
+				sqlinserts.insertarFiltro(1,1,"grande","plastico");				
 				
 				//########################## ACEITES #################################
 				query="CREATE TABLE Aceite (aceite_ID int NOT NULL PRIMARY KEY, autoparte_ID,litros varchar(20) NOT NULL, tipo varchar(20) NOT NULL)";							
@@ -77,7 +78,7 @@ public class SQLClass {
 				conn.commit();
 				System.out.print("\n[SQLClass] "+query);
 
-				insertarAceite(1,2,4,"sintetico");
+				sqlinserts.insertarAceite(1,2,4,"sintetico");
 			
 
 				//########################## LAMPARAS #################################
@@ -91,7 +92,7 @@ public class SQLClass {
 				conn.commit();
 				System.out.print("\n[SQLClass] "+query);
 					
-				insertarLampara(1,3,"blanca","mediana");		
+				sqlinserts.insertarLampara(1,3,"blanca","mediana");		
 				
 				
 				
@@ -100,6 +101,8 @@ public class SQLClass {
 				stmt.executeUpdate(query);			
 				conn.commit();
 				System.out.print("\n[SQLClass] "+query);
+				
+				sqlinserts.insertarCliente(1, "PEPe", "GOL POWER","pepearrobapepe.com");
 				
 				//########################## REPARACIONES AUTOPARTES #################################
 				query="CREATE TABLE ReparacionAutoparte(reparacionAutoparte_ID int NOT NULL PRIMARY KEY,reparacion_ID int NOT NULL ,autoparte_ID int NOT NULL)";							
@@ -166,286 +169,6 @@ public class SQLClass {
 	}
 	
 	
-	//###################################### INSERTAR AUTOPARTE #############################################################################
-	
-		public static boolean insertarAutoparte(int autoparte_ID,String tipo,String marca,String modelo,double costo,int cantDisponible) throws MiException, SQLException
-		{
-			String query;
-			Connection conn=null;
-			Statement stmt = null;
-			try
-			{
-				
-				conn=getConnection();
-				conn.setAutoCommit(false);
-				stmt = conn.createStatement();
-			
-				try
-				{	
-					query="INSERT INTO Autoparte (autoparte_ID,tipoAutoparte,marca,modelo,costo,cantidadDisponible) VALUES ('"+autoparte_ID+"','"+tipo+"','"+marca+"','"+modelo+"','"+costo+"','"+cantDisponible+")";
-					stmt.executeUpdate(query);
-					conn.commit();
-					System.out.print("\n[insertarAutoparte] "+query);
-					
-				}catch(SQLException e)
-				{
-					conn.rollback();	
-				}
-			
-			}catch(SQLException e)
-			{
-				throw new MiException("[insertarAutoparte]SQL Connection EXCEPTION "+e.getMessage());
-			}catch(Exception e)
-			{
-			
-				throw new MiException("[insertarAutoparte]ERROR AL CREAR TABLAS",e);
-			}
-			finally
-			{
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD			
-			}	
-			return true;
-		}
-	
-	//###################################### INSERTAR FILTRO #############################################################################
-	
-		public static boolean insertarFiltro(int id,int autoparte_ID,String tamaño,String material) throws MiException, SQLException
-		{
-			String query;
-			Connection conn=null;
-			Statement stmt = null;
-			try
-			{
-				
-				conn=getConnection();
-				conn.setAutoCommit(false);
-				stmt = conn.createStatement();
-			
-				try
-				{					
-					query="INSERT INTO Filtro (filtro_ID,autoparte_ID,tamaño,material) VALUES ('"+id+"','"+autoparte_ID+"','"+tamaño+"','"+material+"')";
-					stmt.executeUpdate(query);
-					conn.commit();
-					System.out.print("\n[insertarFiltro] "+query);
-					
-				}catch(SQLException e)
-				{
-					conn.rollback();	
-				}
-			
-			}catch(SQLException e)
-			{
-				throw new MiException("[insertarFiltro]SQL Connection EXCEPTION "+e.getMessage());
-			}catch(Exception e)
-			{
-			
-				throw new MiException("[insertarFiltro]ERROR AL CREAR TABLAS",e);
-			}
-			finally
-			{
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD			
-			}	
-			return true;
-		}
-	
-		public static boolean insertarFiltro(Filtro filtro) throws MiException, SQLException
-		{
-			String query;
-			Connection conn=null;
-			Statement stmt = null;
-			try
-			{
-				
-				conn=getConnection();
-				conn.setAutoCommit(false);
-				stmt = conn.createStatement();
-			
-				try
-				{					
-					query="INSERT INTO Filtro (filtro_ID,autoparte_ID,tamaño,material) VALUES ('"+filtro.getId()+"','"+filtro.getAutoparteID()+"','"+filtro.getTamaño()+"','"+filtro.getMaterial()+"')";
-					stmt.executeUpdate(query);
-					conn.commit();
-					System.out.print("\n[insertarFiltro] "+query);
-					
-				}catch(SQLException e)
-				{
-					conn.rollback();	
-				}
-			
-			}catch(SQLException e)
-			{
-				throw new MiException("[insertarFiltro]SQL Connection EXCEPTION "+e.getMessage());
-			}catch(Exception e)
-			{
-			
-				throw new MiException("[insertarFiltro]ERROR AL CREAR TABLAS",e);
-			}
-			finally
-			{
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD			
-			}	
-			return true;
-		}
-	
-	//###################################### INSERTAR ACEITE #############################################################################
-			
-	public static boolean insertarAceite(int id,int autoparte_ID,int cantLitros,String tipo) throws MiException, SQLException
-	{
-		String query;
-		Connection conn=null;
-		Statement stmt = null;
-		try
-		{
-			
-			conn=getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-		
-			try
-			{
-				query="INSERT INTO Aceite (aceite_ID,autoparte_ID,litros,tipo) VALUES ('"+id+"','"+autoparte_ID+"','"+cantLitros+"','"+tipo+"')";
-				stmt.executeUpdate(query);
-				conn.commit();
-				System.out.print("\n[insertarAceite] "+query);
-			}catch(SQLException e)
-			{
-				conn.rollback();	
-			}
-		
-		}catch(SQLException e)
-		{
-			throw new MiException("[insertarAceite]SQL Connection EXCEPTION "+e.getMessage());
-		}catch(Exception e)
-		{
-		
-			throw new MiException("[insertarAceite]ERROR AL CREAR TABLAS",e);
-		}
-		finally
-		{
-			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-			conn.close();										//CIERRO BD			
-		}	
-		return true;
-	}
-	public static boolean insertarAceite(Aceite aceite) throws MiException, SQLException
-	{
-		String query;
-		Connection conn=null;
-		Statement stmt = null;
-		try
-		{
-			
-			conn=getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-		
-			try
-			{
-				query="INSERT INTO Aceite (aceite_ID,autoparte_ID,litros,tipo) VALUES ('"+aceite.getId()+"','"+aceite.getAutoparteID()+"','"+aceite.getCantidadlitros()+"','"+aceite.getTipoAceite()+"')";
-				stmt.executeUpdate(query);
-				conn.commit();
-				System.out.print("\n[insertarAceite] "+query);
-			}catch(SQLException e)
-			{
-				conn.rollback();	
-			}
-		
-		}catch(SQLException e)
-		{
-			throw new MiException("[insertarAceite]SQL Connection EXCEPTION "+e.getMessage());
-		}catch(Exception e)
-		{
-		
-			throw new MiException("[insertarAceite]ERROR AL CREAR TABLAS",e);
-		}
-		finally
-		{
-			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-			conn.close();										//CIERRO BD			
-		}	
-		return true;
-	}
-	//############################## INSERTAR LAMPARA #####################################################################################
-	
-	public static boolean insertarLampara(int id,int autoparte_ID,String color,String tamaño) throws MiException, SQLException
-	{
-		String query;
-		Connection conn=null;
-		Statement stmt = null;
-		try
-		{
-			
-			conn=getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-		
-			try
-			{
-				query="INSERT INTO Lampara (lampara_ID,autoparte_ID,color,tamaño) VALUES ('"+id+"','"+autoparte_ID+"','"+color+"','"+tamaño+"')";
-				stmt.executeUpdate(query);
-				conn.commit();
-				System.out.print("\n[insertarLampara] "+query);
-			}catch(SQLException e)
-			{
-				conn.rollback();	
-			}
-		
-		}catch(SQLException e)
-		{
-			throw new MiException("[insertarLampara]SQL Connection EXCEPTION "+e.getMessage());
-		}catch(Exception e)
-		{
-		
-			throw new MiException("[insertarLampara]ERROR AL CREAR TABLAS",e);
-		}
-		finally
-		{
-			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-			conn.close();										//CIERRO BD			
-		}	
-		return true;
-	}
-	public static boolean insertarLampara(Lampara lampara) throws MiException, SQLException
-	{
-		String query;
-		Connection conn=null;
-		Statement stmt = null;
-		try
-		{
-			
-			conn=getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-		
-			try
-			{
-				query="INSERT INTO Lampara (lampara_ID,autoparte_ID,color,tamaño) VALUES ('"+lampara.getId()+"','"+lampara.getAutoparteID()+"','"+lampara.getColor()+"','"+lampara.getTamaño()+"')";
-				stmt.executeUpdate(query);
-				conn.commit();
-				System.out.print("\n[insertarLampara] "+query);
-			}catch(SQLException e)
-			{
-				conn.rollback();	
-			}
-		
-		}catch(SQLException e)
-		{
-			throw new MiException("[insertarLampara]SQL Connection EXCEPTION "+e.getMessage());
-		}catch(Exception e)
-		{
-		
-			throw new MiException("[insertarLampara]ERROR AL CREAR TABLAS",e);
-		}
-		finally
-		{
-			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-			conn.close();										//CIERRO BD			
-		}	
-		return true;
-	}
 	
 	
 	
