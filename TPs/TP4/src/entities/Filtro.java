@@ -2,9 +2,23 @@ package entities;
 
 public class Filtro extends Autoparte{
 
-	int tamaño;
-	String material;
+	private int tamaño;
+	private String material;
+	private int id;
+	private int autoparteID;
 	
+	public int getAutoparteID() {
+		return autoparteID;
+	}
+	public void setAutoparteID(int autoparteID) {
+		this.autoparteID = autoparteID;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public int getTamaño() {
 		return tamaño;
 	}

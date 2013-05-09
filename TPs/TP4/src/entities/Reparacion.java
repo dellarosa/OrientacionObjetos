@@ -1,15 +1,30 @@
 package entities;
 
 public class Reparacion {
-	double costo;
-	String fechainicio;
-	String fechaentrega;
-	Cliente cliente;
-	Autoparte autopartes[];
-	Usuario	usuario;
+	private double costo;	
+	private String fechainicio;
+	private String fechaentrega;
+	private Cliente cliente;
+	private Autoparte autopartes[];
+	//private Usuario	usuario;		//POR AHORA NO
+	private int id;
+	private int entregado;
+	
+	public int getEntregado() {
+		return entregado;
+	}
+	public void setEntregado(int entregado) {
+		this.entregado = entregado;
+	}
 	public Reparacion()
 	{
 		
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public double getCosto() {
 		return costo;
@@ -41,11 +56,11 @@ public class Reparacion {
 	public void setAutopartes(Autoparte[] autopartes) {
 		this.autopartes = autopartes;
 	}
-	public Usuario getUsuario() {
+	/*public Usuario getUsuario() {
 		return usuario;
 	}
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
+	}*/
 	
 }

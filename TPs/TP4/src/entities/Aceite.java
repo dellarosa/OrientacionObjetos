@@ -2,20 +2,34 @@ package entities;
 
 public class Aceite extends Autoparte {
 
-	int cantidadlitros;
-	String TipoAceite;
+	private int id;
+	private int autoparteID;
+	private int cantidadlitros;
+	private String tipoAceite;
 	
 	public int getCantidadlitros() {
 		return cantidadlitros;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getAutoparteID() {
+		return autoparteID;
+	}
+	public void setAutoparteID(int autoparteID) {
+		this.autoparteID = autoparteID;
 	}
 	public void setCantidadlitros(int cantidadlitros) {
 		this.cantidadlitros = cantidadlitros;
 	}
 	public String getTipoAceite() {
-		return TipoAceite;
+		return tipoAceite;
 	}
 	public void setTipoAceite(String tipoAceite) {
-		TipoAceite = tipoAceite;
+		this.tipoAceite = tipoAceite;
 	}
 	
 	public String toString()

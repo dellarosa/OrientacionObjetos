@@ -11,6 +11,7 @@ import java.util.GregorianCalendar;
 import entities.Autoparte;
 import entities.Cliente;
 import entities.Reparacion;
+import entities.SQLClass;
 import entities.Usuario;
 
 import utils.Definiciones;
@@ -22,15 +23,23 @@ public class Menu {
 	
 	MenuPrincipal menuprinc;
 	MetodosGrl metgral;
+	MenuInicio menuinicio;
+	
 	public Menu()
 	{
 		menuprinc=new MenuPrincipal();
+		menuinicio=new MenuInicio();
+		
 	}
 	public MenuPrincipal getMenuPrincipal()
 	{
 		return this.menuprinc;
 	}
 	//////////////
+	public MenuInicio getMenuInicio()
+	{
+		return this.menuinicio;
+	}
 	public class MenuPrincipal
 	{
 		boolean sigo;
@@ -39,7 +48,7 @@ public class Menu {
 		{
 			metgral=new MetodosGrl();
 		}
-		public String empezarMenu() throws Exception
+		public String empezarMenu(Usuario user) throws Exception
 		{
 			Connection conn;
 			Statement stmt;
@@ -50,7 +59,6 @@ public class Menu {
 			{
 				try
 				{
-					Class.forName(Definiciones.DB_DRIVER);
 					conn = DriverManager.getConnection(Definiciones.DB_URL, Definiciones.DB_USERNAME, Definiciones.DB_PASSWORD);
 					conn.setAutoCommit(false);
 					stmt = conn.createStatement();
@@ -60,7 +68,10 @@ public class Menu {
 				}
 				
 				System.out.print("\n1-CARGAR CLIENTE");
+				System.out.print("\n1-MODIFICACION CLIENTE");
+				System.out.print("\n1-BAJA CLIENTE");
 				System.out.print("\n2-CARGAR AUTOPARTE");
+				System.out.print("\n2-MODIFICACION AUTOPARTE");
 				System.out.print("\n3-CARGAR REPARACION");
 				System.out.print("\n4-FINALIZAR REPARACION");
 				System.out.print("\n5-MOSTRAR DATOS");
@@ -184,5 +195,145 @@ public class Menu {
 			return "OK";
 		}
 		
+	}
+	//#######################################################################################
+	public class MenuInicio
+	{
+		public MenuInicio()
+		{
+			metgral=new MetodosGrl();
+		}
+		public Usuario empezarMenuInicio(Usuario[] usuarios) throws MiException
+		{
+			boolean salir=false;
+			String user;
+			String pass;
+			boolean login=false;
+			Usuario usuario=new Usuario();
+			while(!salir) //GENERAL
+			{
+				
+								
+				System.out.print("\n\n****BIENVENIDO TALLER 2013****");
+				System.out.print("\n1-CREAR USUARIO");
+				System.out.print("\n2-MODIFICAR USUARIO");
+				System.out.print("\n3-BAJA USUARIO");
+				System.out.print("\n4-LOGUEARSE AL SISTEMA");
+				System.out.print("\n99-SALIR");
+				switch(Dentre.entero("\n\n INGRESE OPCIÓN: "))
+				{
+					case 1:
+						try
+						{
+							Usuario userCreate=new Usuario();
+							
+							userCreate.setName(Dentre.texto("\n INGRESE NOMBRE: "));
+							userCreate.setEmail(Dentre.texto("\n INGRESE MAIL: "));							
+							userCreate.setUsername(Dentre.texto("\n INGRESE APODO: "));							
+							userCreate.setPassword(Dentre.texto("\n INGRESE PASSWORD: "));							
+							userCreate.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA: "));
+							userCreate.setId(metgral.buscarUltimoUsuario(usuarios)+1);
+							if(metgral.crearUsuario(userCreate))
+							{
+								System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\nFALLO MODIFICACION USUARIO");
+								Thread.sleep(2000);
+							}
+						}
+						catch(Exception e)
+						{							
+							throw new MiException("CREATE USER EXCEPTION: "+e);
+						}
+						break;
+					case 2:
+							try
+							{
+								Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
+								if(metgral.eliminarUsuario(usuarioBaja))
+								{
+									System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
+									Thread.sleep(2000);
+								}else
+								{
+									System.out.print("\nFALLO BAJA USUARIO");
+									Thread.sleep(2000);
+								}	
+							}
+							catch(Exception e)
+							{							
+								throw new MiException("DELETE USER EXCEPTION: "+e);
+							}	
+														
+						break;
+					case 3:
+							
+						try
+						{
+							Usuario usuarioModif=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
+							if(usuarioModif==null)
+							{
+								System.out.print("\nNO SE ENCONTRO EL USUARIO");
+								Thread.sleep(2000);
+							}else
+							{
+								Usuario userAux=new Usuario();
+								userAux.setName(Dentre.texto("\n INGRESE NOMBRE A MODIFICAR: "));								
+								userAux.setEmail(Dentre.texto("\n INGRESE MAIL A MODIFICAR: "));								
+								userAux.setUsername(Dentre.texto("\n INGRESE APODO A MODIFICAR: "));								
+								userAux.setPassword(Dentre.texto("\n INGRESE PASSWORD USUARIO: "));
+								userAux.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA USUARIO: "));						
+								userAux.setId(usuarioModif.getId());
+								
+								if(metgral.crearUsuario(userAux))
+								{
+									System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
+									Thread.sleep(2000);
+								}else
+								{
+									System.out.print("\nFALLO MODIFICACION USUARIO");
+									Thread.sleep(2000);
+								}
+							}
+						}catch(Exception e)
+						{
+							throw new MiException("MODIFICACION USER EXCEPTION: "+e);							
+						}
+						break;
+					case 4:			
+						try
+						{
+							user=Dentre.texto("\n INGRESE SU USUARIO: ");
+							pass=Dentre.texto("\nINGRESE SU CONTRASEÑA: ");		
+													
+							if((usuario=metgral.loginUser(user,pass))==null)
+							{
+								System.out.print("\nUSUARIO O CONTRASEÑA INCORRECTA, VUELVA A INGRESAR");
+								Thread.sleep(2000);
+							}else
+							{
+								System.out.print("\nUSUARIO LOGUEADO");
+								Thread.sleep(2000);
+								login=true;
+								return usuario;
+							}
+						}catch(Exception e)
+						{							
+							throw new MiException("LOGIN USER EXCEPTION: "+e);
+						}
+						
+					break;
+					case 99:
+						return null;						
+						
+					default:
+						break;
+				}
+				
+			}
+			return null;
+		}
 	}
 }

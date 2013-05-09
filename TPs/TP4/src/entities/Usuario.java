@@ -6,6 +6,28 @@ public class Usuario {
 	private String username;
 	private String password;
 	private String name;
+	private int id;
+	private char logueado;
+	
+	public char getLogueado() {
+		return logueado;
+	}
+	public void setLogueado(char logueado) {
+		this.logueado = logueado;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getJerarquia() {
+		return jerarquia;
+	}
+	public void setJerarquia(String jerarquia) {
+		this.jerarquia = jerarquia;
+	}
+	private String jerarquia;
 
 	public String getName() {
 		return name;
