@@ -1,10 +1,14 @@
 package main;
 
+import utils.Definiciones;
 import utils.MiException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
-import entities.SQLCarga;
-import entities.SQLClass;
+import SQL.SQLCarga;
+import SQL.SQLClass;
+
 import entities.Usuario;
 import main.Menu;;
 
@@ -15,9 +19,10 @@ public class Main {
 		// TODO Auto-generated method stub
 		
 		boolean salir=false;
-		SQLCarga sqlcarga=new SQLCarga();		
-		
+		SQLCarga sqlcarga=new SQLCarga();
 		SQLClass.crearTablas();		//INICIAL
+		
+		List<Usuario> usuariosL=new ArrayList<Usuario>();
 		
 		Menu menu= new Menu();
 		Menu.MenuPrincipal menuprinc=menu.getMenuPrincipal();
@@ -25,26 +30,45 @@ public class Main {
 		try
 		{
 			while(!salir)
-			{
-								
-				Usuario[] usuarios=new Usuario[]{};
+			{	
 				
-				sqlcarga.cargarUsuarios(usuarios);
+				usuariosL=sqlcarga.cargarUsuarios();		//Podria solo cargarlo una vez //TODO
 						
-				
-				Usuario usuarioLogueado=menuInicio.empezarMenuInicio(usuarios);
-			
-				if(usuarioLogueado==null)
+				switch(menuInicio.menuTipoSistema())
 				{
-					salir=true;
-					System.exit(0);
+					case Definiciones.MODO_TECNICO:
+						if(menuInicio.validarSenha())
+						{
+							menuInicio.empezarMenuTecnico(usuariosL);
+						}else
+						{
+							
+						}	
+					break;
+					case Definiciones.MODO_SISTEMA:
+						Usuario usuarioLogueado=menuInicio.empezarLogginUsuario(usuariosL);
+						
+						if(usuarioLogueado==null)
+						{							
+						}else
+						{
+							if(menuprinc.empezarMenu(usuarioLogueado)=="salir")
+							{							
+							}
+						}
+					break;
+					case Definiciones.MODO_SALIR:
+						salir=true;
+						System.exit(0);
+					break;
+					default:
+						
+						break;
 				}
 				
-				if(menuprinc.empezarMenu(usuarioLogueado)=="salir")
-				{
-					salir=true;
-					System.exit(0);	
-				}
+							
+					
+				
 				/*query="DROP jdbc:hsqldb:file:C:\\Android3\\P1\\UP\\filedb";			
 				System.out.print("[main] DROP DB: "+query);
 				stmt.executeUpdate(query);

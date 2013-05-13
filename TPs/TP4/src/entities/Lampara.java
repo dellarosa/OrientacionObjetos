@@ -4,18 +4,19 @@ public class Lampara extends Autoparte{
 
 	private String tamaño;
 	private String color;
-	private int id;
+	private int lampara_ID;
 	private int autoparteID;
 	//float voltaje;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public int getAutoparteID() {
 		return autoparteID;
+	}
+	public int getLampara_ID() {
+		return lampara_ID;
+	}
+	public void setLampara_ID(int lampara_ID) {
+		this.lampara_ID = lampara_ID;
 	}
 	public void setAutoparteID(int autoparte_ID) {
 		this.autoparteID = autoparte_ID;

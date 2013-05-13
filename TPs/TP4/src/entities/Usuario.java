@@ -7,12 +7,13 @@ public class Usuario {
 	private String password;
 	private String name;
 	private int id;
-	private char logueado;
+	private int logueado;
+	private String jerarquia;
 	
-	public char getLogueado() {
+	public int getLogueado() {
 		return logueado;
 	}
-	public void setLogueado(char logueado) {
+	public void setLogueado(int logueado) {
 		this.logueado = logueado;
 	}
 	public int getId() {
@@ -26,8 +27,7 @@ public class Usuario {
 	}
 	public void setJerarquia(String jerarquia) {
 		this.jerarquia = jerarquia;
-	}
-	private String jerarquia;
+	}	
 
 	public String getName() {
 		return name;

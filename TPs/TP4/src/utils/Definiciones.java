@@ -19,4 +19,11 @@ public class Definiciones {
 	public static final String ACEITE_STRING="aceite";
 	public static final String LAMPARA_STRING="lampara";
 	
+	public static final int PASS_TECNICO=9999;
+	
+	public static final int MODO_TECNICO=1;
+	public static final int MODO_SISTEMA=2;
+	
+	public static final int MODO_SALIR=99;
+	
 }

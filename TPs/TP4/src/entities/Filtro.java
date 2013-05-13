@@ -4,20 +4,21 @@ public class Filtro extends Autoparte{
 
 	private String tamaño;
 	private String material;
-	private int id;
+	private int filtro_ID;
 	private int autoparteID;
 	
+	
+	public int getFiltro_ID() {
+		return filtro_ID;
+	}
+	public void setFiltro_ID(int filtro_ID) {
+		this.filtro_ID = filtro_ID;
+	}
 	public int getAutoparteID() {
 		return autoparteID;
 	}
 	public void setAutoparteID(int autoparteID) {
 		this.autoparteID = autoparteID;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
 	}
 	public String getTamaño() {
 		return tamaño;

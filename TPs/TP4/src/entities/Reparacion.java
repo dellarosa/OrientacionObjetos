@@ -1,11 +1,13 @@
 package entities;
 
+import java.util.List;
+
 public class Reparacion {
 	private double costo;	
 	private String fechainicio;
 	private String fechaentrega;
 	private Cliente cliente;
-	private Autoparte autopartes[][];
+	private List<Autoparte> autopartes;
 	//private Usuario	usuario;		//POR AHORA NO
 	private int id;
 	private int entregado;
@@ -50,10 +52,10 @@ public class Reparacion {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	public Autoparte[][] getAutopartes() {
+	public List<Autoparte> getAutopartes() {
 		return autopartes;
 	}
-	public void setAutopartes(Autoparte[][] autopartes) {
+	public void setAutopartes(List<Autoparte> autopartes) {
 		this.autopartes = autopartes;
 	}
 	/*public Usuario getUsuario() {

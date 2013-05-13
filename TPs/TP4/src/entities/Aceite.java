@@ -2,7 +2,7 @@ package entities;
 
 public class Aceite extends Autoparte {
 
-	private int id;
+	private int aceite_ID;
 	private int autoparteID;
 	private int cantidadlitros;
 	private String tipoAceite;
@@ -10,12 +10,15 @@ public class Aceite extends Autoparte {
 	public int getCantidadlitros() {
 		return cantidadlitros;
 	}
-	public int getId() {
-		return id;
+
+	public int getAceite_ID() {
+		return aceite_ID;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+	public void setAceite_ID(int aceite_ID) {
+		this.aceite_ID = aceite_ID;
 	}
+
 	public int getAutoparteID() {
 		return autoparteID;
 	}

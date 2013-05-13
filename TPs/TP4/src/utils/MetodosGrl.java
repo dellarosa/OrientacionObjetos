@@ -5,14 +5,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import SQL.SQLClass;
+import SQL.SQLSelects;
+
 import entities.Aceite;
 import entities.Autoparte;
 import entities.Cliente;
 import entities.Filtro;
 import entities.Lampara;
 import entities.Reparacion;
-import entities.SQLClass;
-import entities.SQLSelects;
 import entities.Usuario;
 
 public class MetodosGrl {
@@ -102,133 +103,10 @@ public class MetodosGrl {
 		return usuario;
 	}
 
-	public boolean crearUsuario(Usuario user) throws SQLException,MiException {
-		
-		boolean created=false;
-		String query;
-		Connection conn=null;
-		Statement stmt = null;
-		try
-		{			
-			conn=SQLClass.getConnection();
-			conn.setAutoCommit(false);
-			stmt = conn.createStatement();
-		
-			try
-			{
-				query="INSERT INTO Usuario(usuario_ID,name,mail,user,pass,logueado,jerarquia) VALUES ("+user.getId()+","+user.getName()+
-						","+user.getEmail()+","+user.getUsername()+","+user.getPassword()+","+"N,"+user.getJerarquia()+")";
-				stmt.executeUpdate(query);
-				conn.commit();
-				System.out.print("\n[main] "+query);
-				created=true;
-			}catch(SQLException e)
-			{
-				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
-				created=false;
-				conn.rollback();
-				//throw new MiException("[Login] SQL Exception: "+e);
-			}						
-		}catch(SQLException e)
-		{
-			throw new MiException("[login] EXCEPTION AL CONECTAR: "+e);
-		}
-		catch(Exception e)
-		{
-			throw new MiException("[login] EXCEPTION AL CONECTAR: "+e);
-		}finally
-		{
-			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-			conn.close();										//CIERRO BD
-		}
-		return created;
-	}
 	
+
 	
-	
-	//################################## BUSCAR ULTIMO ... ###################################################################
-	public int buscarUltimoUsuario(Usuario[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x;
-	}
-	public int buscarUltimoCliente(Cliente[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x+1;
-	}
-	public int buscarUltimaReparacion(Reparacion[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x;
-	}
-	
-	
-	public int buscarUltimaAutoparteId(Autoparte[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x+1;
-	}
-	/*public int buscarUltimoIdFiltro(Autoparte[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x+1;
-	}
-	public int buscarUltimoIdAceite(Autoparte[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x;
-	}
-	public int buscarUltimoIdLampara(Autoparte[] obj)
-	{
-		int x=0;
-		while(obj[x]!=null)
-		{
-			x++;
-		}
-		return x;
-	}*/
-	public int buscarUltimaAutoparte(Autoparte[][] obj)
-	{
-		int x=0;
-		int y=0;
-		int c=0;
-		while(x<obj[x].length)
-		{	
-			y=0;
-			while(obj[x][y]!=null)
-			{
-				y++;
-				c++;
-			}
-			x++;
-		}
-		return c+1;
-	}
+
 	
 	
 }
