@@ -72,20 +72,29 @@ public class Menu {
 			//Lampara[] lamparasG=new Lampara[]{};
 			//Aceite[] aceitesG=new Aceite[]{};
 			
+			try
+			{	
+				System.out.print("\n\n***CARGA DE ENTIDADES***\n");
+				clientesG=sqlcarga.cargaClientes();
+				reparacionesG=sqlcarga.cargaReparaciones();
+				autopartesG=sqlcarga.cargaAutopartes();
+			}
+			catch(MiException e)
+			{
+				throw  e;
+			}
+			catch(SQLException e)
+			{
+				throw new MiException("[MENU] SQL Error al cargar: "+e);
+			}catch(Exception e)
+			{
+				throw new MiException("[MENU] Error al cargar: "+e);
+			}
+			
 			sigo=false;
 			while(!sigo)
 			{
-				
-				try
-				{
-					autopartesG=sqlcarga.cargaAutopartes();
-					clientesG=sqlcarga.cargaClientes();
-					reparacionesG=sqlcarga.cargaReparaciones();
-					
-				}catch(SQLException e)
-				{
-					throw new MiException("Error de conexión SQL");
-				}
+								
 				System.out.print("\n\n\n***MENU PRINCIPAL***");
 				System.out.print("\n1-CARGAR CLIENTE");
 				System.out.print("\n2-MODIFICACION CLIENTE");
@@ -95,7 +104,7 @@ public class Menu {
 				System.out.print("\n6-BAJA AUTOPARTE");
 				System.out.print("\n7-CARGAR REPARACION");
 				System.out.print("\n8-FINALIZAR REPARACION");
-				System.out.print("\n9-VER REPARACIONES");				
+				//System.out.print("\n9-MODIFICAR REPARACION");			//POR AHORA NO MODIFICO REPARACIONES				
 				System.out.print("\n10-MOSTRAR DATOS");				
 				
 				//System.out.print("\n98-CAMBIAR DE USUARIO");
@@ -115,17 +124,17 @@ public class Menu {
 							cliente.setNombre(Dentre.texto("\nINGRESE NOMBRE: "));
 							cliente.setMail(Dentre.texto("\nINGRESE MAIL: "));
 							cliente.setAuto(Dentre.texto("\nINGRESE AUTO: "));
-							
+							cliente.setId(sqlselects.buscarUltimoClienteId(cliente.getId()));
 							if(sqlinserts.insertarCliente(cliente))
 							{
 								System.out.print("\nCLIENTE INGRESADO CORRECTAMENTE");
 								Thread.sleep(2000);
+								clientesG.add(cliente);
 							}else
 							{
 								System.out.print("\nFALLO INGRESO CLIENTE");
 								Thread.sleep(2000);
 							}
-							
 						}
 						catch(MiException e)
 						{
@@ -142,23 +151,31 @@ public class Menu {
 					case 2:			//MODIFICAR CLIENTE
 							try
 							{
-								Cliente cliente=sqlselects.buscarClientePorApodo(Dentre.texto("\n INGRESE APODO CLIENTE A MODIFICAR: "));
-																
-								//PODRIA VALIDAR Y PREGUNTAR SI QUIERE DEJAR IGUAL O CAMBIAR
-								//EJ
-								
-								if(Dentre.texto("\nMODIFICAR NOMBRE CLIENTE? (yes - not): "+cliente.getNombre())=="yes")
+								//Cliente cliente=sqlselects.buscarClientePorApodo(Dentre.texto("\n INGRESE APODO CLIENTE A MODIFICAR: "));
+								Cliente cliente=metgral.buscarClientePorApodo(Dentre.texto("\n INGRESE NOMBRE CLIENTE A MODIFICAR: "),clientesG);
+								if(cliente==null)
 								{
-									cliente.setNombre(Dentre.texto("\nMODIFIQUE NOMBRE: "));	
+									System.out.print("\nCLIENTE NO ENCONTRADO");
+									Thread.sleep(2000);
+									break;
+								}
+								Cliente clienteAux=cliente;
+								//PODRIA VALIDAR Y PREGUNTAR SI QUIERE DEJAR IGUAL O CAMBIAR
+								//EJ								
+								if(Dentre.texto("\nMODIFICAR NOMBRE CLIENTE? (yes - not): "+cliente.getNombre()).equals("yes"))
+								{
+									clienteAux.setNombre(Dentre.texto("\nMODIFIQUE NOMBRE: "));	
 								}
 								//...
-								cliente.setMail(Dentre.texto("\nMODIFIQUE MAIL: "));
-								cliente.setAuto(Dentre.texto("\nMODIFIQUE AUTO: "));
+								clienteAux.setMail(Dentre.texto("\nMODIFIQUE MAIL: "));
+								clienteAux.setAuto(Dentre.texto("\nMODIFIQUE AUTO: "));
 								
-								if(sqlinserts.insertarCliente(cliente))
+								if(sqlmodif.updateCliente(clienteAux))
 								{
 									System.out.print("\nCLIENTE MODIFICADO CORRECTAMENTE");
 									Thread.sleep(2000);
+									clientesG=metgral.eliminarClienteDeLista(clientesG,cliente);									
+									clientesG.add(clienteAux);
 								}else
 								{
 									System.out.print("\nFALLO MODIFICACION CLIENTE");
@@ -178,11 +195,19 @@ public class Menu {
 					case 3:			//ELIMINAR CLIENTE
 						try
 						{
-							Cliente cliente=sqlselects.buscarClientePorApodo(Dentre.texto("\n INGRESE APODO CLIENTE A DAR DE BAJA: "));
+							//Cliente cliente=sqlselects.buscarClientePorApodo(Dentre.texto("\n INGRESE APODO CLIENTE A DAR DE BAJA: "));
+							Cliente cliente=metgral.buscarClientePorApodo(Dentre.texto("\n INGRESE NOMBRE CLIENTE A DAR DE BAJA: "),clientesG);
+							if(cliente==null)
+							{
+								System.out.print("\nCLIENTE NO ENCONTRADO");
+								Thread.sleep(2000);
+								break;
+							}
 							if(sqldelete.eliminarCliente(cliente))
 							{
 								System.out.print("\nCLIENTE ELIMINADO CORRECTAMENTE");
 								Thread.sleep(2000);
+								clientesG=metgral.eliminarClienteDeLista(clientesG,cliente);								
 							}else
 							{
 								System.out.print("\nFALLO BAJA CLIENTE");
@@ -210,9 +235,8 @@ public class Menu {
 								case Definiciones.FILTRO_INDICE:
 									Filtro filtro =new Filtro();
 									
-									filtro.setAutoparteID(sqlselects.buscarUltimaAutoparteId());
-									
-									filtro.setId(sqlselects.buscarUltimoFiltroId());
+									filtro.setId(sqlselects.buscarUltimaAutoparteId());									
+									filtro.setFiltro_ID(sqlselects.buscarUltimoFiltroId());
 									filtro.setMaterial(Dentre.texto("\nINGRESE TIPO MATERIAL: "));
 									filtro.setTamaño(Dentre.texto("\nINGRESE TAMAÑO: "));
 									filtro.setMarca(Dentre.texto("\nINGRESE MARCA: "));
@@ -222,49 +246,51 @@ public class Menu {
 									filtro.setCosto(Dentre.doble("\nINGRESE COSTO: "));
 									
 									sqlinserts.insertarFiltro(filtro);
-									sqlinserts.insertarAutoparte(filtro.getAutoparteID(),filtro.getTipoAutoparte(),filtro.getMarca(),filtro.getModelo(),filtro.getCosto(),filtro.getCantDisponible());
-										
+									//sqlinserts.insertarAutoparte(filtro.getAutoparteID(),filtro.getTipoAutoparte(),filtro.getMarca(),filtro.getModelo(),filtro.getCosto(),filtro.getCantDisponible());
+									sqlinserts.insertarAutoparte(filtro);
+									autopartesG.add(filtro);
 									break;
 									
 								case Definiciones.ACEITE_INDICE:
 									Aceite aceite =new Aceite();
 									
-									aceite.setAutoparteID(sqlselects.buscarUltimaAutoparteId());
+									aceite.setId(sqlselects.buscarUltimaAutoparteId());
 									
-									aceite.setId(sqlselects.buscarUltimoAceiteId());
+									aceite.setAceite_ID(sqlselects.buscarUltimoAceiteId());
 									aceite.setCantidadlitros(Dentre.entero("\nINGRESE CANTIDAD LITROS: "));
 									aceite.setTipoAceite(Dentre.texto("\nINGRESE TAMAÑO: "));
 									aceite.setMarca(Dentre.texto("\nINGRESE MARCA: "));
 									aceite.setModelo(Dentre.texto("\nINGRESE MODELO: "));
-									aceite.setTipoAutoparte("filtro");
+									aceite.setTipoAutoparte("aceite");
 									aceite.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
 									aceite.setCosto(Dentre.doble("\nINGRESE COSTO: "));
 									
 									sqlinserts.insertarAceite(aceite);
-									sqlinserts.insertarAutoparte(aceite.getAutoparteID(),aceite.getTipoAutoparte(),aceite.getMarca(),aceite.getModelo(),aceite.getCosto(),aceite.getCantDisponible());
+									//sqlinserts.insertarAutoparte(aceite.getAutoparteID(),aceite.getTipoAutoparte(),aceite.getMarca(),aceite.getModelo(),aceite.getCosto(),aceite.getCantDisponible());
+									sqlinserts.insertarAutoparte(aceite);
+									autopartesG.add(aceite);
 									break;
 									
 								case Definiciones.LAMPARA_INDICE:
 									Lampara lampara =new Lampara();
 									
-									lampara.setAutoparteID(sqlselects.buscarUltimaAutoparteId());
+									lampara.setId(sqlselects.buscarUltimaAutoparteId());
 									
-									lampara.setId(sqlselects.buscarUltimoLamparaId());
+									lampara.setLampara_ID(sqlselects.buscarUltimoLamparaId());
 									lampara.setColor(Dentre.texto("\nINGRESE COLOR: "));
 									lampara.setTamaño(Dentre.texto("\nINGRESE TAMAÑO: "));
 									lampara.setMarca(Dentre.texto("\nINGRESE MARCA: "));
 									lampara.setModelo(Dentre.texto("\nINGRESE MODELO: "));
-									lampara.setTipoAutoparte("filtro");
+									lampara.setTipoAutoparte("lampara");
 									lampara.setCantDisponible(Dentre.entero("\nINGRESE CANTIDAD: "));
 									lampara.setCosto(Dentre.doble("\nINGRESE COSTO: "));
 									
 									sqlinserts.insertarLampara(lampara);
-									sqlinserts.insertarAutoparte(lampara.getAutoparteID(),lampara.getTipoAutoparte(),lampara.getMarca(),lampara.getModelo(),lampara.getCosto(),lampara.getCantDisponible());
-									
+									//sqlinserts.insertarAutoparte(lampara.getAutoparteID(),lampara.getTipoAutoparte(),lampara.getMarca(),lampara.getModelo(),lampara.getCosto(),lampara.getCantDisponible());
+									sqlinserts.insertarAutoparte(lampara);
+									autopartesG.add(lampara);
 									break;
 								
-								case 4:
-									break;
 								default:
 									break;
 							}
@@ -305,11 +331,12 @@ public class Menu {
 										if(autoparte instanceof Filtro)
 										{												
 											filtro=(Filtro)autoparte;
-											System.out.print("\nID: "+filtro.getFiltro_ID()+" - Marca: "+filtro.getMarca()+" - Modelo:"+filtro.getModelo());
+											//System.out.print("\nID: "+filtro.getFiltro_ID()+" - Marca: "+filtro.getMarca()+" - Modelo:"+filtro.getModelo());
+											System.out.print("\n"+filtro.toString());
 										}
 									}
 																		
-									opcionmodif=Dentre.entero("\nINGRESE FILTRO A MODIFICAR: ");
+									opcionmodif=Dentre.entero("\nINGRESE ID FILTRO A MODIFICAR: ");
 									
 									index=0;
 									for(Autoparte autoparte : autopartesG)
@@ -319,27 +346,25 @@ public class Menu {
 											filtro=(Filtro)autoparte;
 											if(opcionmodif==filtro.getFiltro_ID())
 											{
+												//PODRIA PREGUNTAR SI DESEA MODIFICAR...
+												if(Dentre.texto("\nMODIFICAR MATERIAL (S-N): "+filtro.getMaterial()).toString().getBytes()[0]=='N')
+												{
+													filtro.setMaterial(Dentre.texto("\nMODIFIQUE TIPO MATERIAL: "));
+												}
+												//....
+												filtro.setTamaño(Dentre.texto("\nMODIFIQUE TAMAÑO: "));
+												filtro.setMarca(Dentre.texto("\nMODIFIQUE MARCA: "));
+												filtro.setModelo(Dentre.texto("\nMODIFIQUE MODELO: "));
+												//filtro.setTipoAutoparte("filtro");
+												filtro.setCantDisponible(Dentre.entero("\nMODIFIQUE CANTIDAD: "));
+												filtro.setCosto(Dentre.doble("\nMODIFIQUE COSTO: "));
+												//filtro.setAutoparteID(filtro.getAutoparteID());
 												break;
 											}
 										}
 										index++;
 									}									
-									
-									
-									//PODRIA PREGUNTAR SI DESEA MODIFICAR...
-									if(Dentre.texto("\nMODIFICAR MATERIAL (S-N): "+filtro.getMaterial()).toString().getBytes()[0]=='N')
-									{
-										filtro.setMaterial(Dentre.texto("\nMODIFIQUE TIPO MATERIAL: "));
-									}
-									//....
-									filtro.setTamaño(Dentre.texto("\nMODIFIQUE TAMAÑO: "));
-									filtro.setMarca(Dentre.texto("\nMODIFIQUE MARCA: "));
-									filtro.setModelo(Dentre.texto("\nMODIFIQUE MODELO: "));
-									//filtro.setTipoAutoparte("filtro");
-									filtro.setCantDisponible(Dentre.entero("\nMODIFIQUE CANTIDAD: "));
-									filtro.setCosto(Dentre.doble("\nMODIFIQUE COSTO: "));
-									//filtro.setAutoparteID(filtro.getAutoparteID());
-											
+																				
 									sqlmodif.updateFiltro(filtro);
 									sqlmodif.updateAutoparte(filtro);
 									
@@ -356,11 +381,12 @@ public class Menu {
 										if(autoparte instanceof Aceite)
 										{												
 											aceite=(Aceite)autoparte;
-											System.out.print("\nID: "+aceite.getAceite_ID()+" - Marca: "+aceite.getMarca()+" - Modelo:"+aceite.getModelo());
+											//System.out.print("\nID: "+aceite.getAceite_ID()+" - Marca: "+aceite.getMarca()+" - Modelo:"+aceite.getModelo());
+											System.out.print("\n"+aceite.toString());
 										}
 									}
 																		
-									opcionmodif=Dentre.entero("\nINGRESE FILTRO A MODIFICAR: ");
+									opcionmodif=Dentre.entero("\nINGRESE ID ACEITE A MODIFICAR: ");
 									
 									index=0;
 									for(Autoparte autoparte : autopartesG)
@@ -370,19 +396,19 @@ public class Menu {
 											aceite=(Aceite)autoparte;
 											if(opcionmodif==aceite.getAceite_ID())
 											{
+												//PODRIA PREGUNTAR SI DESEA MODIFICAR...
+												aceite.setCantidadlitros(Dentre.entero("\nACTUAL("+aceite.getCantidadlitros()+") - MODIFIQUE CANTIDAD LITROS: "));
+												aceite.setTipoAceite(Dentre.texto("\nACTUAL("+aceite.getTipoAceite()+") - MODIFIQUE TIPO ACEITE: "));
+												aceite.setMarca(Dentre.texto("\nACTUAL("+aceite.getMarca()+") - MODIFIQUE MARCA: "));
+												aceite.setModelo(Dentre.texto("\nACTUAL("+aceite.getModelo()+") - MODIFIQUE MODELO: "));
+												aceite.setCantDisponible(Dentre.entero("\nACTUAL("+aceite.getCantDisponible()+") - MODIFIQUE CANTIDAD: "));
+												aceite.setCosto(Dentre.doble("\nACTUAL("+aceite.getCosto()+") - MODIFIQUE COSTO: "));
+												
 												break;
 											}
 										}
 										index++;
-									}							
-									
-									//PODRIA PREGUNTAR SI DESEA MODIFICAR...
-									aceite.setCantidadlitros(Dentre.entero("\nACTUAL("+aceite.getCantidadlitros()+") - MODIFIQUE CANTIDAD LITROS: "));
-									aceite.setTipoAceite(Dentre.texto("\nACTUAL("+aceite.getTipoAceite()+") - MODIFIQUE TIPO ACEITE: "));
-									aceite.setMarca(Dentre.texto("\nACTUAL("+aceite.getMarca()+") - MODIFIQUE MARCA: "));
-									aceite.setModelo(Dentre.texto("\nACTUAL("+aceite.getModelo()+") - MODIFIQUE MODELO: "));
-									aceite.setCantDisponible(Dentre.entero("\nACTUAL("+aceite.getCantDisponible()+") - MODIFIQUE CANTIDAD: "));
-									aceite.setCosto(Dentre.doble("\nACTUAL("+aceite.getCosto()+") - MODIFIQUE COSTO: "));
+									}				
 									
 									sqlmodif.updateAceite(aceite);
 									sqlmodif.updateAutoparte(aceite);
@@ -400,11 +426,12 @@ public class Menu {
 										if(autoparte instanceof Lampara)
 										{												
 											lampara=(Lampara)autoparte;
-											System.out.print("\nID: "+lampara.getLampara_ID()+" - Marca: "+lampara.getMarca()+" - Modelo:"+lampara.getModelo());
+											//System.out.print("\nID: "+lampara.getLampara_ID()+" - Marca: "+lampara.getMarca()+" - Modelo:"+lampara.getModelo());
+											System.out.print("\n"+lampara.toString());
 										}
 									}
 																		
-									opcionmodif=Dentre.entero("\nINGRESE FILTRO A MODIFICAR: ");
+									opcionmodif=Dentre.entero("\nINGRESE ID LAMPARA A MODIFICAR: ");
 									
 									index=0;
 									for(Autoparte autoparte : autopartesG)
@@ -472,11 +499,12 @@ public class Menu {
 											if(autoparte instanceof Filtro)
 											{												
 												filtro=(Filtro)autoparte;
-												System.out.print("\nID: "+filtro.getFiltro_ID()+" - Marca: "+filtro.getMarca()+" - Modelo:"+filtro.getModelo());
+												//System.out.print("\nID: "+filtro.getFiltro_ID()+" - Marca: "+filtro.getMarca()+" - Modelo:"+filtro.getModelo());
+												System.out.print("\n"+filtro.toString());
 											}
 										}
 																			
-										opcionmodif=Dentre.entero("\nINGRESE FILTRO A DAR DE BAJA: ");
+										opcionmodif=Dentre.entero("\nINGRESE ID FILTRO A DAR DE BAJA: ");
 										index=0;
 										for(Autoparte autoparte : autopartesG)
 										{
@@ -485,7 +513,7 @@ public class Menu {
 												filtro=(Filtro)autoparte;
 												if(opcionmodif==filtro.getFiltro_ID())
 												{
-													if(sqldelete.eliminarAutoparte(autoparte))
+													if(sqldelete.eliminarAutoparte(filtro))
 													{
 														System.out.print("\nAUTOPARTE ELIMINADA CORRECTAMENTE");
 														Thread.sleep(2000);
@@ -518,11 +546,12 @@ public class Menu {
 											if(autoparte instanceof Aceite)
 											{												
 												aceite=(Aceite)autoparte;
-												System.out.print("\nID: "+aceite.getAceite_ID()+" - Marca: "+aceite.getMarca()+" - Modelo:"+aceite.getModelo());
+												//System.out.print("\nID: "+aceite.getAceite_ID()+" - Marca: "+aceite.getMarca()+" - Modelo:"+aceite.getModelo());
+												System.out.print("\n"+aceite.toString());
 											}
 										}
 																			
-										opcionmodif=Dentre.entero("\nINGRESE ACEITE A DAR DE BAJA: ");
+										opcionmodif=Dentre.entero("\nINGRESE ID ACEITE A DAR DE BAJA: ");
 										index=0;
 										for(Autoparte autoparte : autopartesG)
 										{
@@ -531,7 +560,7 @@ public class Menu {
 												aceite=(Aceite)autoparte;
 												if(opcionmodif==aceite.getAceite_ID())
 												{
-													if(sqldelete.eliminarAutoparte(autoparte))
+													if(sqldelete.eliminarAutoparte(aceite))
 													{
 														System.out.print("\nAUTOPARTE ELIMINADA CORRECTAMENTE");
 														Thread.sleep(2000);
@@ -564,11 +593,12 @@ public class Menu {
 											if(autoparte instanceof Lampara)
 											{												
 												lampara=(Lampara)autoparte;
-												System.out.print("\nID: "+lampara.getLampara_ID()+" - Marca: "+lampara.getMarca()+" - Modelo:"+lampara.getModelo());
+												//System.out.print("\nID: "+lampara.getLampara_ID()+" - Marca: "+lampara.getMarca()+" - Modelo:"+lampara.getModelo());
+												System.out.print("\n"+lampara.toString());
 											}
 										}
 																			
-										opcionmodif=Dentre.entero("\nINGRESE ACEITE A DAR DE BAJA: ");
+										opcionmodif=Dentre.entero("\nINGRESE ID LAMPARA A DAR DE BAJA: ");
 										index=0;
 										for(Autoparte autoparte : autopartesG)
 										{
@@ -577,7 +607,7 @@ public class Menu {
 												lampara=(Lampara)autoparte;
 												if(opcionmodif==lampara.getLampara_ID())
 												{
-													if(sqldelete.eliminarAutoparte(autoparte))
+													if(sqldelete.eliminarAutoparte(lampara))
 													{
 														System.out.print("\nAUTOPARTE ELIMINADA CORRECTAMENTE");
 														Thread.sleep(2000);
@@ -619,8 +649,8 @@ public class Menu {
 					case 7:										//CARGAR REPARACION
 							try
 							{		
-								Cliente clientereparacion=sqlselects.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "));
-								
+								//Cliente clientereparacion=sqlselects.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "));
+								Cliente clientereparacion=metgral.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "),clientesG);
 								if(clientereparacion==null)
 								{
 									System.out.print("\nCLIENTE NO REGISTRADO, REGISTRE CLIENTE");
@@ -635,6 +665,8 @@ public class Menu {
 								nuevareparacion.setCliente(clientereparacion);
 								nuevareparacion.setEntregado(0);								
 								nuevareparacion.setId(sqlselects.buscarUltimaReparacionId());
+								
+								sqlinserts.insertarReparacionInicio(nuevareparacion);
 								
 								reparacionesG.add(nuevareparacion);
 								
@@ -651,6 +683,90 @@ public class Menu {
 							}
 						break;
 					case 8:
+						try
+						{
+							double totalCosto=0;
+							Cliente cliente= metgral.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "), clientesG);
+							int index=0;
+							boolean hayReparacion=false;
+							
+							for(Reparacion reparacion:reparacionesG)
+							{
+								if(reparacion.getCliente().getId()==cliente.getId())
+								{									
+									Calendar c = new GregorianCalendar();
+								    Date d1 = c.getTime(); 
+									reparacion.setFechaentrega(d1.toString());
+									reparacion.setEntregado(1);
+									
+									Filtro filtro=new Filtro();
+									Aceite aceite=new Aceite();
+									Lampara lampara=new Lampara();
+									
+									boolean salir=false;
+									while(!salir)
+									{
+									
+										for (Autoparte autoparte : autopartesG)
+										{										
+											if(autoparte instanceof Filtro)
+											{	
+												filtro=(Filtro)autoparte;
+												System.out.print("\n"+filtro.toString());
+											}
+											else if(autoparte instanceof Aceite)
+											{	
+												aceite=(Aceite)autoparte;
+												System.out.print("\n"+aceite.toString());
+											}
+											else if(autoparte instanceof Lampara)
+											{	
+												lampara=(Lampara)autoparte;
+												System.out.print("\n"+lampara.toString());
+											}
+										}										
+										int opcionmodif=Dentre.entero("\nINGRESE ID AUTOPARTE PARA AGREGAR ('99' para salir): ");
+										if(opcionmodif==99)
+										{
+											break;
+										}
+										
+										for (Autoparte autoparte : autopartesG)
+										{										
+											if(autoparte.getId()==opcionmodif)
+											{
+												reparacion.getAutopartes().add(autoparte);
+												reparacion.setCosto(reparacion.getCosto()+autoparte.getCosto());
+											}
+										
+										}	
+									}
+									sqlinserts.insertarupdateReparacionFinal(reparacion,sqlselects.buscarUltimaReparacionAutoparteId());
+									reparacionesG.remove(index);
+									reparacionesG.add(reparacion);	
+									hayReparacion=true;
+								}
+								index++;
+							}
+							if(hayReparacion)
+							{}else
+							{
+								System.out.print("\nNO SE ENCONTRO CLIENTE CON REPARACION");
+							}
+							
+						}
+						catch(MiException e)
+						{
+							throw e;
+						}catch(SQLException e)
+						{
+							e.printStackTrace();
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+						}
+						
 						
 						break;
 					case 9:
@@ -662,43 +778,90 @@ public class Menu {
 								System.out.print("\n1-MOSTRAR CLIENTES");
 								System.out.print("\n2-MOSTRAR REPARACIONES");
 								System.out.print("\n3-MOSTRAR AUTOPARTES");
-								switch(Dentre.entero("\nINGRESE TIPO AUTOPARTE A DAR DE BAJA: "))
+								switch(Dentre.entero("\nINGRESE OPCION: "))
 								{
 									case 1:									
 										System.out.print("\n***CLIENTES***");
 										for (Cliente cliente : clientesG)
 										{	
-											System.out.print("\nID: "+cliente.getId()+" - Nombre: "+cliente.getNombre()+" - Mail: "+cliente.getMail()+" - Auto: "+cliente.getAuto());											
+											System.out.print("\n"+cliente.toString());											
 										}
 										Thread.sleep(2000);
 									break;
 									
 									case 2:
-										System.out.print("\n***REPARACIONES***");
-										System.out.print("\n********FINALIZADOS********");
-										for(Reparacion reparacion : reparacionesG)
-										{				
-											if(reparacion.getEntregado()==1)
-											{												
-												System.out.print("\nID: "+reparacion.getId()+" - Cliente: "+reparacion.getCliente()+" - Fecha I: "+reparacion.getFechainicio()+" - Fecha F: "+reparacion.getFechaentrega()+" - Costo: "+reparacion.getCosto());
-												System.out.print("\n    AUTOPARTES: ");
-												for(Autoparte autoparte: reparacion.getAutopartes()){
-													System.out.print("\n      Tipo: "+autoparte.getTipoAutoparte()+" - ID: "+autoparte.getId()+" - Marca: "+autoparte.getMarca()+" - Modelo: "+autoparte.getModelo());
+										try
+										{
+											System.out.print("\n***REPARACIONES***");
+											System.out.print("\n********FINALIZADOS********");
+											for(Reparacion reparacion : reparacionesG)
+											{				
+												if(reparacion.getEntregado()==1)
+												{												
+													System.out.print("\n"+reparacion.toString());
+													System.out.print("\n    AUTOPARTES: ");
+													for(Autoparte autoparte: reparacion.getAutopartes()){
+														System.out.print("\n"+autoparte.toString());
+													}
+															
 												}
-														
 											}
+											
+											System.out.print("\n********EN REPARACION********");
+											for(Reparacion reparacion : reparacionesG)
+											{				
+												if(reparacion.getEntregado()==0)
+												{
+													System.out.print("\n"+reparacion.toString());
+												}
+											}
+											Thread.sleep(2000);
+											System.out.print("\n\n");
+											
 										}
-										
-										System.out.print("\n********EN REPARACION********");
-										for(Reparacion reparacion : reparacionesG)
-										{				
-											if(reparacion.getEntregado()==0)
-											{
-												System.out.print("\nID: "+reparacion.getId()+" - Cliente: "+reparacion.getCliente()+" - Fecha I: "+reparacion.getFechainicio());
-											}
+										catch(MiException e)
+										{
+											throw e;
+										}
+										catch(Exception e)
+										{
+											throw new MiException("[CARGA REPARACION] Exception : "+e);
 										}
 									break;
 									case 3:
+										System.out.print("\n***AUTOPARTES***");
+										Filtro filtro=new Filtro();
+										Aceite aceite=new Aceite();
+										Lampara lampara=new Lampara();
+										
+										for (Autoparte autoparte : autopartesG)
+										{										
+											if(autoparte instanceof Filtro)
+											{
+												System.out.print("\n***FILTROS***");
+												filtro=(Filtro)autoparte;
+												System.out.print("\n"+filtro.toString());
+											}											
+										}
+										for (Autoparte autoparte : autopartesG)
+										{										
+											if(autoparte instanceof Aceite)
+											{
+												System.out.print("\n***ACEITES***");
+												aceite=(Aceite)autoparte;
+												System.out.print("\n"+aceite.toString());
+											}
+										}
+										for (Autoparte autoparte : autopartesG)
+										{										
+											if(autoparte instanceof Lampara)
+											{
+												System.out.print("\n***LAMPARAS***");
+												lampara=(Lampara)autoparte;
+												System.out.print("\n"+lampara.toString());
+											}
+										}
+										Thread.sleep(2000);
 									break;
 									case 4:
 									break;
@@ -766,16 +929,18 @@ public class Menu {
 							userCreate.setUsername(Dentre.texto("\n INGRESE APODO: "));							
 							userCreate.setPassword(Dentre.texto("\n INGRESE PASSWORD: "));							
 							userCreate.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA: "));
-							userCreate.setId(sqlselects.buscarUltimoUsuarioId());
+							userCreate.setId(sqlselects.buscarUltimoUsuarioId());			//podria buscar en la lista, pero ...
 							if(sqlinserts.insertarUsuario(userCreate))
 							{
 								System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
 								Thread.sleep(2000);
+								usuarios.add(userCreate);
 							}else
 							{
 								System.out.print("\nFALLO MODIFICACION USUARIO");
 								Thread.sleep(2000);
 							}
+							
 						}
 						catch(MiException e)
 						{							
@@ -790,17 +955,17 @@ public class Menu {
 							
 						try
 						{
-							Usuario usuarioModif=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
+							//Usuario usuarioModif=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
+							Usuario usuarioModif=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "),usuarios);
 							if(usuarioModif==null)
 							{
 								System.out.print("\nNO SE ENCONTRO EL USUARIO");
 								Thread.sleep(2000);
 							}else
 							{
-								Usuario userAux=new Usuario();
+								Usuario userAux=usuarioModif;
 								//PODRIA MEJORARSE PREGUNTANDO SI DESEA MODIFICAR
-								//TODO: AGREGAR JERARQUIAS DE USUARIO
-								userAux=usuarioModif;
+								//TODO: AGREGAR JERARQUIAS DE USUARIO								
 								userAux.setName(Dentre.texto("\n INGRESE NOMBRE A MODIFICAR: "));								
 								userAux.setEmail(Dentre.texto("\n INGRESE MAIL A MODIFICAR: "));								
 								userAux.setUsername(Dentre.texto("\n INGRESE APODO A MODIFICAR: "));								
@@ -812,6 +977,10 @@ public class Menu {
 								{
 									System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
 									Thread.sleep(2000);
+									usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioModif);
+																		
+									usuarios.add(userAux);
+									
 								}else
 								{
 									System.out.print("\nFALLO MODIFICACION USUARIO");
@@ -830,11 +999,14 @@ public class Menu {
 					case 3:
 						try
 						{
-							Usuario usuarioBaja=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
+							//Usuario usuarioBaja=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
+							Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "),usuarios);
 							if(sqldelete.eliminarUsuario(usuarioBaja))
 							{
 								System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
 								Thread.sleep(2000);
+								usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioBaja);						
+								
 							}else
 							{
 								System.out.print("\nFALLO BAJA USUARIO");
@@ -858,7 +1030,7 @@ public class Menu {
 							Thread.sleep(2000);
 							for(Usuario usuario : usuarios)
 							{
-								System.out.print("\nID: "+usuario.getId()+" - Nombre: "+usuario.getName()+" - Apodo: "+usuario.getUsername()+" - Pass: "+usuario.getPassword()+" - Jerarquia: "+usuario.getJerarquia() + " - Email: "+usuario.getEmail());
+								System.out.print("\n"+usuario.toString());
 							}
 							Thread.sleep(2000);
 						}
@@ -868,7 +1040,7 @@ public class Menu {
 						}
 						catch(Exception e)
 						{							
-							throw new MiException("[empezarMenuTecnico]DELETE USER EXCEPTION: "+e);
+							throw new MiException("[empezarMenuTecnico]MOSTRAR USER EXCEPTION: "+e);
 						}	
 						break;
 					case 99:
@@ -910,7 +1082,7 @@ public class Menu {
 								{
 									usuarioLoggin=usuario;
 									System.out.print("\nUSUARIO LOGUEADO");
-									Thread.sleep(2000);
+									Thread.sleep(1000);
 									return usuarioLoggin;
 								}else
 								{	

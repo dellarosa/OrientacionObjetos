@@ -47,6 +47,6 @@ public class Autoparte {
 	
 	public String toString()
 	{
-		return "Marca: "+this.getMarca()+"\n Modelo: "+this.getModelo();
+		return "TIPO AUTOPARTE: "+this.getTipoAutoparte()+" - ID_AUTOPARTE: "+this.getId()+" - MARCA: "+this.getMarca()+" - Modelo: "+this.getModelo()+" - COSTO: "+this.getCosto()+" - CANT: "+this.getCantDisponible();
 	}
 }

@@ -109,7 +109,7 @@ public class SQLCreate {
 		
 			try
 			{		
-				query="CREATE TABLE Reparacion(reparacion_ID int NOT NULL PRIMARY KEY,reparacionAutoparte_ID int NOT NULL ,cliente_ID int NOT NULL,costo double NOT NULL,fechaInicio varchar(12) NOT NULL, fechaEntrega varchar(12) NOT NULL,entregado int NOT NULL)";							
+				query="CREATE TABLE Reparacion(reparacion_ID int NOT NULL PRIMARY KEY,cliente_ID int NOT NULL,costo double ,fechaInicio varchar(12) NOT NULL, fechaEntrega varchar(12),entregado int NOT NULL)";							
 				stmt.executeUpdate(query);			
 				conn.commit();
 								

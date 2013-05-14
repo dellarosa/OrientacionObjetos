@@ -43,7 +43,7 @@ public class Lampara extends Autoparte{
 	 */
 	public String toString()
 	{
-		return Lampara.class.getCanonicalName()+"\n"+super.toString()+"\n Tamaño: "+
-				this.getTamaño()+"\n Color: "+this.getColor()+"\n";
+		return super.toString()+" - LAMPARA_ID: "+this.getLampara_ID()+" - Tamaño: "+
+				this.getTamaño()+" - Color: "+this.getColor();
 	}
 }

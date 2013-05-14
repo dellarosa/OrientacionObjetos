@@ -67,7 +67,7 @@ public class SQLCarga {
 				}						
 			}catch(SQLException e)
 			{
-				throw new MiException("[cargaClientes] EXCEPTION AL CONECTAR: "+e);
+				throw new MiException("[cargaClientes] SQL EXCEPTION AL CONECTAR: "+e);
 			}
 			catch(Exception e)
 			{
@@ -96,35 +96,78 @@ public class SQLCarga {
 				{				
 					query="SELECT * FROM Autoparte";
 					ResultSet rsAutopart=stmt.executeQuery(query);			
-					conn.commit();												
+					conn.commit();					
+					stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+					conn.close();
+					List<Filtro> filtros=cargarFiltros();
+					List<Aceite> aceites=cargarAceites();
+					List<Lampara> lamparas=cargarLamparas();
 						while(rsAutopart.next())
 						{
-							System.out.print("\n[cargarUsuarios] HAY AUTOPARTES: ");		//DEBUG
-							if(rsAutopart.getString("tipoAutoparte")=="filtro")
-							{										
-								List<Filtro> filtros=cargarFiltros();
+							
+							//System.out.print("\n[cargaAutopartes] TIPO AUTOPARTE:"+rsAutopart.getString("tipoAutoparte"));		//DEBUG
+							String tipoAutoparte=rsAutopart.getString("tipoAutoparte");
+							//PODRIA CARGAR TODAS LAS AUTOPARTES PRIMERO Y DESPUES UNIR pero, ahora esta es la solucion
+							if(tipoAutoparte.equals("filtro"))		//Podría preguntar por ID tipo y tener otra tabla mas
+							{
+								
 								for(Filtro filtro : filtros)
 								{
-									autopartes.add(filtro);
-								}
-								//Autoparte[Definiciones.FILTRO_INDICE]=cargarFiltros();
-								
-							}else if(rsAutopart.getString("tipoAutoparte")=="aceite")
+									if(rsAutopart.getInt("autoparte_ID")==filtro.getAutoparteID())
+									{
+										filtro.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));									
+										filtro.setCosto(rsAutopart.getFloat("costo"));
+										filtro.setModelo(rsAutopart.getString("modelo"));
+										filtro.setMarca(rsAutopart.getString("marca"));
+										filtro.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+										//filtro.setAutoparteID(rsAutopart.getInt("autoparte_ID"));
+										filtro.setId(rsAutopart.getInt("autoparte_ID"));
+										autopartes.add(filtro);
+										//System.out.print("\n[cargaAutopartes] CARGA FILTRO: "+filtro.toString());		//DEBUG
+									}
+								}								
+							}
+							
+							if(tipoAutoparte.equals("aceite"))		//Podría preguntar por ID tipo
 							{								
-								List<Aceite> aceites=cargarAceites();
+								
 								for(Aceite aceite : aceites)
 								{
-									autopartes.add(aceite);
+									if(rsAutopart.getInt("autoparte_ID")==aceite.getAutoparteID())
+									{
+										aceite.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+										aceite.setCosto(rsAutopart.getFloat("costo"));
+										aceite.setModelo(rsAutopart.getString("modelo"));
+										aceite.setMarca(rsAutopart.getString("marca"));
+										aceite.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+										//aceite.setAutoparteID(rsAutopart.getInt("autoparte_ID"));
+										aceite.setId(rsAutopart.getInt("autoparte_ID"));
+										autopartes.add(aceite);
+										//System.out.print("\n[cargaAutopartes] CARGA ACEITE: "+aceite.toString());		//DEBUG
+									}
 								}
 								//cargarAceites(aceites);
-							}else if(rsAutopart.getString("tipoAutoparte")=="lampara")
+							}
+							
+							if(tipoAutoparte.equals("lampara"))
 							{	
-								List<Lampara> lamparas=cargarLamparas();
+								
 								for(Lampara lampara : lamparas)
-								{
-									autopartes.add(lampara);
+								{	
+									if(rsAutopart.getInt("autoparte_ID")==lampara.getAutoparteID())
+									{
+										lampara.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+										lampara.setCosto(rsAutopart.getFloat("costo"));
+										lampara.setModelo(rsAutopart.getString("modelo"));
+										lampara.setMarca(rsAutopart.getString("marca"));
+										lampara.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+										//lampara.setAutoparteID(rsAutopart.getInt("autoparte_ID"));
+										lampara.setId(rsAutopart.getInt("autoparte_ID"));
+										autopartes.add(lampara);
+										//System.out.print("\n[cargaAutopartes] CARGA LAMPARA: "+lampara.toString());		//DEBUG
+									}
 								}
-								//Autoparte[Definiciones.LAMPARA_INDICE]=cargarLamparas();
+								
 							}else
 							{}
 						}
@@ -135,17 +178,14 @@ public class SQLCarga {
 					conn.rollback();
 					//throw new MiException("[Login] SQL Exception: "+e);
 				}						
+				
 			}catch(SQLException e)
 			{
-				throw new MiException("[cargaAutopartes] EXCEPTION AL CONECTAR: "+e);
+				throw new MiException("[cargaAutopartes]SQL EXCEPTION AL CONECTAR: "+e);
 			}
 			catch(Exception e)
 			{
 				throw new MiException("[cargaAutopartes] EXCEPTION AL CONECTAR: "+e);
-			}finally
-			{
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD
 			}
 			return autopartes;
 			
@@ -215,7 +255,7 @@ public class SQLCarga {
 			String query;
 			Connection conn=null;
 			Statement stmt=null;
-			int x=0;
+			
 			List<Reparacion> reparaciones=new ArrayList<Reparacion>();
 			
 			try
@@ -316,8 +356,7 @@ public class SQLCarga {
 									indiceAutoPart++;
 								}
 								reparacion.setAutopartes(autopartes);
-								
-								x++;
+																
 						}while(rs.next());
 					}else
 					{	
@@ -428,11 +467,12 @@ public class SQLCarga {
 					System.out.print("\n[cargarAceites] HAY Aceite ");		//DEBUG
 					do {										
 						Aceite aceite=new Aceite();
-						aceite.setAceite_ID(rs.getInt("filtro_ID"));					
+						aceite.setAceite_ID(rs.getInt("aceite_ID"));					
 						aceite.setAutoparteID(rs.getInt("autoparte_ID"));
 						aceite.setCantidadlitros(rs.getInt("litros"));
 						aceite.setTipoAceite(rs.getString("tipo"));
-												
+									
+						aceites.add(aceite);
 					}while(rs.next());
 				}else
 				{	
@@ -483,11 +523,12 @@ public class SQLCarga {
 					System.out.print("\n[cargarLamparas] HAY Lampara ");		//DEBUG
 					do {										
 						Lampara lampara=new Lampara();
-						lampara.setLampara_ID(rs.getInt("filtro_ID"));					
+						lampara.setLampara_ID(rs.getInt("lampara_ID"));					
 						lampara.setAutoparteID(rs.getInt("autoparte_ID"));
 						lampara.setColor(rs.getString("color"));
 						lampara.setTamaño(rs.getString("tamaño"));
 						
+						lamparas.add(lampara);
 					}while(rs.next());
 					
 				}else

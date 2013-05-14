@@ -29,4 +29,9 @@ public class Cliente {
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
+	
+	public String toString()
+	{
+		return "CLIENTE_ID: "+this.getId()+" - NOMBRE: "+this.getNombre()+" - AUTO: "+this.getAuto()+" - MAIL: "+this.getMail();
+	}
 }

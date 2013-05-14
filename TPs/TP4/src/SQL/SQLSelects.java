@@ -36,25 +36,27 @@ public class SQLSelects {
 				
 				if(rs.next())
 				{
-					System.out.print("\n[buscarFiltroPorId] HAY Filtro ");		//DEBUG
+					//System.out.print("\n[buscarFiltroPorId] HAY Filtro ");		//DEBUG
+					do {										
+						
+						filtro.setId(rs.getInt("filtro_ID"));					
+						filtro.setAutoparteID(rs.getInt("autoparte_ID"));
+						filtro.setMaterial(rs.getString("material"));
+						filtro.setTamaño(rs.getString("tamaño"));
+						
+					}while(rs.next());
 				}else
 				{	
 					filtro=null;
 					System.out.print("\n[buscarFiltroPorId]NO HAY Filtros CARGADOS : ");		//DEBUG
 				}
-				do {										
-					
-					filtro.setId(rs.getInt("filtro_ID"));					
-					filtro.setAutoparteID(rs.getInt("autoparte_ID"));
-					filtro.setMaterial(rs.getString("material"));
-					filtro.setTamaño(rs.getString("tamaño"));
-					
-				}while(rs.next());
+				
 							
 			}catch(SQLException e)
 			{
 				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -92,25 +94,27 @@ public class SQLSelects {
 				
 				if(rs.next())
 				{
-					System.out.print("\n[buscarFiltroPorId] HAY aceite ");		//DEBUG
+					//System.out.print("\n[buscarFiltroPorId] HAY aceite ");		//DEBUG
+					do {										
+						
+						aceite.setId(rs.getInt("aceite_ID"));					
+						aceite.setAutoparteID(rs.getInt("autoparte_ID"));
+						aceite.setCantidadlitros(rs.getInt("litros"));
+						aceite.setTipoAceite(rs.getString("tipo"));
+						
+					}while(rs.next());
+
 				}else
 				{	
 					aceite=null;
 					System.out.print("\n[buscarFiltroPorId]NO HAY aceite CARGADOS : ");		//DEBUG
 				}
-				do {										
-					
-					aceite.setId(rs.getInt("aceite_ID"));					
-					aceite.setAutoparteID(rs.getInt("autoparte_ID"));
-					aceite.setCantidadlitros(rs.getInt("litros"));
-					aceite.setTipoAceite(rs.getString("tipo"));
-					
-				}while(rs.next());
-							
+											
 			}catch(SQLException e)
 			{
 				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -147,25 +151,27 @@ public class SQLSelects {
 				
 				if(rs.next())
 				{
-					System.out.print("\n[buscarFiltroPorId] HAY lampara ");		//DEBUG
+					//System.out.print("\n[buscarFiltroPorId] HAY lampara ");		//DEBUG
+					do {										
+						
+						lampara.setId(rs.getInt("lampara_ID"));					
+						lampara.setColor(rs.getString("color"));
+						lampara.setTamaño(rs.getString("tamaño"));
+						lampara.setAutoparteID(rs.getInt("autoparte_ID"));
+						
+					}while(rs.next());
 				}else
 				{	
 					lampara=null;
 					System.out.print("\n[buscarFiltroPorId]NO HAY lampara CARGADOS : ");		//DEBUG
 				}
-				do {										
-					
-					lampara.setId(rs.getInt("lampara_ID"));					
-					lampara.setColor(rs.getString("color"));
-					lampara.setTamaño(rs.getString("tamaño"));
-					lampara.setAutoparteID(rs.getInt("autoparte_ID"));
-					
-				}while(rs.next());
+				
 							
 			}catch(SQLException e)
 			{
 				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -220,6 +226,7 @@ public class SQLSelects {
 			{
 				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG						
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -271,6 +278,7 @@ public class SQLSelects {
 				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
 				
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -310,7 +318,7 @@ public class SQLSelects {
 				if(rs.next()) {									
 					inLastID=rs.getInt("autoparte_ID");
 					inLastID++;
-					System.out.print("\n[buscarUltimaAutoparteId] LAST ID: "+inLastID);	//DEBUG
+				//	System.out.print("\n[buscarUltimaAutoparteId] LAST ID: "+inLastID);	//DEBUG
 				}else
 				{	
 					System.out.print("\n[buscarUltimaAutoparteId] NO HAY COINCIDENCIAS");	//DEBUG
@@ -321,6 +329,7 @@ public class SQLSelects {
 			{
 				System.out.print("\n[buscarUltimaAutoparteId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -360,7 +369,7 @@ public class SQLSelects {
 				if(rs.next()) {									
 					inLastID=rs.getInt("filtro_ID");
 					inLastID++;
-					System.out.print("\n[buscarUltimoFiltroId] LAST ID: "+inLastID);	//DEBUG
+				//	System.out.print("\n[buscarUltimoFiltroId] LAST ID: "+inLastID);	//DEBUG
 				}else
 				{	
 					System.out.print("\n[buscarUltimoFiltroId] NO HAY COINCIDENCIAS");	//DEBUG
@@ -371,6 +380,7 @@ public class SQLSelects {
 			{
 				System.out.print("\n[buscarUltimoFiltroId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -409,7 +419,7 @@ public class SQLSelects {
 					if(rs.next()) {									
 						inLastID=rs.getInt("aceite_ID");
 						inLastID++;
-						System.out.print("\n[buscarUltimoAceiteId] LAST ID: "+inLastID);	//DEBUG
+				//		System.out.print("\n[buscarUltimoAceiteId] LAST ID: "+inLastID);	//DEBUG
 					}else
 					{	
 						System.out.print("\n[buscarUltimoAceiteId] NO HAY COINCIDENCIAS");	//DEBUG
@@ -420,6 +430,7 @@ public class SQLSelects {
 				{
 					System.out.print("\n[buscarUltimoAceiteId] SQL Exception: "+e);		//DEBUG				
 					conn.rollback();
+					
 					//throw new MiException("[Login] SQL Exception: "+e);
 				}						
 			}catch(SQLException e)
@@ -458,7 +469,7 @@ public class SQLSelects {
 				if(rs.next()) {									
 					inLastID=rs.getInt("lampara_ID");
 					inLastID++;
-					System.out.print("\n[buscarUltimoLamparaId] LAST ID: "+inLastID);	//DEBUG
+				//	System.out.print("\n[buscarUltimoLamparaId] LAST ID: "+inLastID);	//DEBUG
 				}else
 				{	
 					System.out.print("\n[buscarUltimoLamparaId] NO HAY COINCIDENCIAS");	//DEBUG
@@ -469,6 +480,7 @@ public class SQLSelects {
 			{
 				System.out.print("\n[buscarUltimoLamparaId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -508,7 +520,7 @@ public class SQLSelects {
 				if(rs.next()) {									
 					inLastID=rs.getInt("reparacion_ID");
 					inLastID++;
-					System.out.print("\n[buscarUltimaReparacionId] LAST ID: "+inLastID);	//DEBUG
+				//	System.out.print("\n[buscarUltimaReparacionId] LAST ID: "+inLastID);	//DEBUG
 				}else
 				{	
 					System.out.print("\n[buscarUltimaReparacionId] NO HAY COINCIDENCIAS");	//DEBUG
@@ -519,6 +531,7 @@ public class SQLSelects {
 			{
 				System.out.print("\n[buscarUltimaReparacionId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -535,8 +548,57 @@ public class SQLSelects {
 		}
 		return inLastID;
 	}
-	
-	//##################################### BUSCAR ULTIMO REPARACION ID ##########################################
+	//##################################### BUSCAR ULTIMO REPARACION AUTOPARTE ID ##########################################
+	public int buscarUltimaReparacionAutoparteId() throws SQLException, MiException
+	{
+		int inLastID = 0;
+		String query;						
+		Connection conn=null;
+		Statement stmt=null;
+		
+		
+		try
+		{			
+			conn = SQLClass.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			try
+			{	
+				query="SELECT reparacionAutoparte_ID FROM ReparacionAutoparte ORDER BY reparacionAutoparte_ID DESC LIMIT 1";
+				ResultSet rs=stmt.executeQuery(query);			
+				conn.commit();
+				if(rs.next()) {									
+					inLastID=rs.getInt("reparacionAutoparte_ID");
+					inLastID++;
+					//System.out.print("\n[buscarUltimaReparacionAutoparteId] LAST ID: "+inLastID);	//DEBUG
+				}else
+				{	
+					System.out.print("\n[buscarUltimaReparacionAutoparteId] NO HAY COINCIDENCIAS");	//DEBUG
+					inLastID=-1;
+					
+				}			
+			}catch(SQLException e)
+			{
+				System.out.print("\n[buscarUltimaReparacionAutoparteId] SQL Exception: "+e);		//DEBUG				
+				conn.rollback();
+				
+				//throw new MiException("[Login] SQL Exception: "+e);
+			}						
+		}catch(SQLException e)
+		{
+			throw new MiException("[buscarUltimaReparacionAutoparteId] SQL EXCEPTION AL CONECTAR: "+e);
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[buscarUltimaReparacionAutoparteId] EXCEPTION AL CONECTAR: "+e);
+		}finally
+		{
+			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+			conn.close();										//CIERRO BD
+		}
+		return inLastID;
+	}
+	//##################################### BUSCAR ULTIMO USUARIO ID ##########################################
 	public int buscarUltimoUsuarioId() throws SQLException, MiException
 	{
 		int inLastID = 0;
@@ -559,7 +621,7 @@ public class SQLSelects {
 				if(rs.next()) {									
 					inLastID=rs.getInt("usuario_ID");					
 					inLastID++;
-					System.out.print("\n[buscarUltimUsuarioId] LAST ID: "+inLastID);	//DEBUG
+					//System.out.print("\n[buscarUltimUsuarioId] LAST ID: "+inLastID);	//DEBUG
 				}else
 				{	
 					System.out.print("\n[buscarUltimUsuarioId] NO HAY COINCIDENCIAS");	//DEBUG
@@ -570,6 +632,7 @@ public class SQLSelects {
 			{
 				System.out.print("\n[buscarUltimUsuarioId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
+				
 				//throw new MiException("[Login] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -585,6 +648,56 @@ public class SQLSelects {
 			conn.close();										//CIERRO BD
 		}
 		return inLastID;
+	}
+	//##################################### BUSCAR ULTIMO CLIENTE ID ##########################################
+	public int buscarUltimoClienteId(int id) throws SQLException,MiException {
+		int inLastID = 0;
+		String query;						
+		Connection conn=null;
+		Statement stmt=null;
+				
+		try
+		{			
+			conn = SQLClass.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			try
+			{				
+				//query="SELECT MAX('usuario_ID') FROM Usuario";
+				query="SELECT cliente_ID FROM Cliente ORDER BY cliente_ID DESC LIMIT 1";
+				ResultSet rs=stmt.executeQuery(query);			
+				conn.commit();
+				if(rs.next()) {									
+					inLastID=rs.getInt("cliente_ID");					
+					inLastID++;
+					//System.out.print("\n[buscarUltimoClienteId] LAST ID: "+inLastID);	//DEBUG
+				}else
+				{	
+					System.out.print("\n[buscarUltimoClienteId] NO HAY COINCIDENCIAS");	//DEBUG
+					inLastID=-1;
+					
+				}			
+			}catch(SQLException e)
+			{
+				System.out.print("\n[buscarUltimoClienteId] SQL Exception: "+e);		//DEBUG				
+				conn.rollback();
+				
+				//throw new MiException("[Login] SQL Exception: "+e);
+			}						
+		}catch(SQLException e)
+		{
+			throw new MiException("[buscarUltimoClienteId] SQL EXCEPTION AL CONECTAR: "+e);
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[buscarUltimoClienteId] EXCEPTION AL CONECTAR: "+e);
+		}finally
+		{
+			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+			conn.close();										//CIERRO BD
+		}
+		return inLastID;
+		
 	}
 		
 }

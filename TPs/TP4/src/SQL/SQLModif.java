@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import entities.Aceite;
 import entities.Autoparte;
+import entities.Cliente;
 import entities.Filtro;
 import entities.Lampara;
 import entities.Usuario;
@@ -31,13 +32,14 @@ public class SQLModif {
 			
 				try
 				{					
-					query="UPDATE Usuario SET usuario_ID='"+usuario.getId()+"',name='"+usuario.getName()+"',mail='"+usuario.getEmail()+"',user='"+usuario.getUsername()+"',pass='"+usuario.getPassword()+"' WHERE usuario_ID='"+usuario.getId()+"'";
+					query="UPDATE Usuario SET usuario_ID="+usuario.getId()+",name='"+usuario.getName()+"',mail='"+usuario.getEmail()+"',user='"+usuario.getUsername()+"',pass='"+usuario.getPassword()+"' WHERE usuario_ID='"+usuario.getId()+"'";
 					stmt.executeUpdate(query);
 					conn.commit();
 					System.out.print("\n[updateUsuario] "+query);						//DEBUG
 					
 				}catch(SQLException e)
 				{
+					System.out.print("\n[updateUsuario] Exception SQL: "+e);					//DEBUG
 					conn.rollback();	
 				}
 			
@@ -79,6 +81,7 @@ public class SQLModif {
 				
 			}catch(SQLException e)
 			{
+				System.out.print("\n[updateFiltro] Exception SQL: "+e);					//DEBUG
 				conn.rollback();	
 			}
 		
@@ -119,6 +122,7 @@ public class SQLModif {
 				System.out.print("\n[updateAceite] "+query);					//DEBUG
 			}catch(SQLException e)
 			{
+				System.out.print("\n[updateAceite] Exception SQL: "+e);					//DEBUG
 				conn.rollback();	
 			}
 		
@@ -158,6 +162,7 @@ public class SQLModif {
 				System.out.print("\n[updateLampara] "+query);		//DEBUG
 			}catch(SQLException e)
 			{
+				System.out.print("\n[updateLampara] Exception SQL: "+e);					//DEBUG
 				conn.rollback();	
 			}
 		
@@ -198,6 +203,7 @@ public class SQLModif {
 				
 			}catch(SQLException e)
 			{
+				System.out.print("\n[updateAutoparte] Exception SQL: "+e);					//DEBUG
 				conn.rollback();	
 			}
 		
@@ -215,5 +221,47 @@ public class SQLModif {
 			conn.close();										//CIERRO BD			
 		}	
 		return true;
+	}
+
+	//###################################### MODIFICAR CLIENTE #############################################################################
+	public boolean updateCliente(Cliente cliente) throws MiException, SQLException {
+
+			String query;
+			Connection conn=null;
+			Statement stmt = null;
+			try
+			{
+				
+				conn=SQLClass.getConnection();
+				conn.setAutoCommit(false);
+				stmt = conn.createStatement();
+			
+				try
+				{	
+					query="UPDATE Cliente SET cliente_ID="+cliente.getId()+",nombre='"+cliente.getNombre()+"',auto='"+cliente.getAuto()+"',mail='"+cliente.getMail()+"' WHERE cliente_ID="+cliente.getId();
+					stmt.executeUpdate(query);
+					conn.commit();
+					System.out.print("\n[updateCliente] "+query);					//DEBUG
+					
+				}catch(SQLException e)
+				{
+					System.out.print("\n[updateCliente] Exception SQL: "+e);					//DEBUG
+					conn.rollback();	
+				}
+			
+			}catch(SQLException e)
+			{
+				throw new MiException("[updateCliente]SQL Connection EXCEPTION "+e.getMessage());
+			}catch(Exception e)
+			{
+			
+				throw new MiException("[updateCliente]ERROR AL CREAR TABLAS",e);
+			}
+			finally
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();										//CIERRO BD			
+			}	
+			return true;		
 	}
 }

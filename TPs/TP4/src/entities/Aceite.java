@@ -37,6 +37,6 @@ public class Aceite extends Autoparte {
 	
 	public String toString()
 	{
-		return super.toString()+"Cant. Litros: "+this.getCantidadlitros()+"\n Aceite: "+this.getTipoAceite();
+		return super.toString()+" - ACEITE_ID: "+this.getAceite_ID()+"- Cant. Litros: "+this.getCantidadlitros()+"\n Aceite: "+this.getTipoAceite();
 	}
 }

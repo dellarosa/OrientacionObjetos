@@ -32,4 +32,10 @@ public class Filtro extends Autoparte{
 	public void setMaterial(String material) {
 		this.material = material;
 	}
+	
+	public String toString()
+	{
+		return super.toString()+" - ID_FILTRO: "+this.getFiltro_ID()+" - TAMAÑO: "+this.getTamaño()+" - MATERIAL: "+
+	    this.getMaterial();
+	}
 }

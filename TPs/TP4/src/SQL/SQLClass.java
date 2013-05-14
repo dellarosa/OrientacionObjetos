@@ -88,12 +88,12 @@ public class SQLClass {
 			
 		}catch(SQLException e)
 		{
-			System.out.print("\n[SQLClass] SQLException CREANDO TABLAS: "+e);		//DEBUG					
-			throw new MiException("SQL Connection EXCEPTION "+e.getMessage());
+			System.out.print("\n[SQLClass][crearTablas] SQLException CREANDO TABLAS: "+e);		//DEBUG					
+			throw new MiException("[crearTablas]SQL Connection EXCEPTION "+e.getMessage());
 		}catch(Exception e)
 		{
 				
-			throw new MiException("ERROR AL CREAR TABLAS",e);
+			throw new MiException("[crearTablas]ERROR AL CREAR TABLAS",e);
 		}	
 	}
 }

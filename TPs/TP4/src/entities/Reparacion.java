@@ -7,6 +7,7 @@ public class Reparacion {
 	private String fechainicio;
 	private String fechaentrega;
 	private Cliente cliente;
+	
 	private List<Autoparte> autopartes;
 	//private Usuario	usuario;		//POR AHORA NO
 	private int id;
@@ -64,5 +65,10 @@ public class Reparacion {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}*/
-	
+
+	public String toString()
+	{
+		return "-ID: "+this.getId()+" -FECHA I: "+this.getFechainicio()+" -CLIENTE: "+this.getCliente().toString()+" AUTOPARTES: "+this.getAutopartes().toString()+
+				" - COSTO: "+this.getCosto()+" - ENTREGADO: "+this.getEntregado()+" - FECHA ENTREGA: "+this.getFechaentrega();
+	}
 }

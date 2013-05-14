@@ -70,14 +70,14 @@ public class SQLDelete {
 		
 			try
 			{
-				query="DELETE FROM Cliente WHERE user='"+cliente.getNombre()+"'";
+				query="DELETE FROM Cliente WHERE nombre='"+cliente.getNombre()+"'";
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[eliminarCliente] "+query);			//DEBUG
 				deleted=true;
 			}catch(SQLException e)
 			{
-				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+				System.out.print("\n[eliminarCliente] SQL Exception: "+e);		//DEBUG
 				deleted=false;
 				conn.rollback();
 				//throw new MiException("[Login] SQL Exception: "+e);

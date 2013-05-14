@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import SQL.SQLClass;
 import SQL.SQLSelects;
@@ -101,6 +102,56 @@ public class MetodosGrl {
 			conn.close();										//CIERRO BD
 		}
 		return usuario;
+	}
+	public Cliente buscarClientePorApodo(String nombre, List<Cliente> clientesG) {
+		
+		for(Cliente cliente:clientesG)
+		{
+			if(cliente.getNombre().equals(nombre))
+			{
+				return cliente;
+			}
+		}		
+		return null;
+	}
+	public Usuario buscarUsuarioPorApodo(String nombre, List<Usuario> usuarios) {
+		// TODO Auto-generated method stub
+		for(Usuario user:usuarios)
+		{
+			if(user.getUsername().equals(nombre))
+			{
+				return user;
+			}
+		}		
+		return null;
+	}
+	public List<Cliente> eliminarClienteDeLista(List<Cliente> clientesG,Cliente cliente) {
+		// TODO Auto-generated method stub
+		int i=0;
+		for(Cliente client: clientesG)
+		{
+			if(client.getNombre().equals(cliente.getNombre()))
+			{
+				break;
+			}
+			i++;
+		}
+		clientesG.remove(i);
+		return clientesG;
+	}
+	public List<Usuario> eliminarUsuarioDeLista(List<Usuario> usuarios,Usuario usuarioModif) {
+		
+		int i=0;
+		for(Usuario user:usuarios)
+		{
+			if(usuarioModif.getName().equals(user.getName()))
+			{
+				break;
+			}
+			i++;
+		}
+		usuarios.remove(i);
+		return usuarios;
 	}
 
 	

@@ -11,9 +11,9 @@ public class Definiciones {
 	public static final String DB_USERNAME = "sa";
 	public static final String DB_PASSWORD = "";
 	
-	public static final int FILTRO_INDICE=0;
-	public static final int ACEITE_INDICE=1;
-	public static final int LAMPARA_INDICE=2;
+	public static final int FILTRO_INDICE=1;
+	public static final int ACEITE_INDICE=2;
+	public static final int LAMPARA_INDICE=3;
 	
 	public static final String FILTRO_STRING="filtro";
 	public static final String ACEITE_STRING="aceite";
