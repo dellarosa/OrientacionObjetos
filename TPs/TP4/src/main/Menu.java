@@ -86,7 +86,7 @@ public class Menu {
 				{
 					throw new MiException("Error de conexión SQL");
 				}
-				
+				System.out.print("\n\n\n***MENU PRINCIPAL***");
 				System.out.print("\n1-CARGAR CLIENTE");
 				System.out.print("\n2-MODIFICACION CLIENTE");
 				System.out.print("\n3-BAJA CLIENTE");
@@ -901,12 +901,12 @@ public class Menu {
 						{
 							user=Dentre.texto("\n INGRESE SU USUARIO: ");
 							pass=Dentre.texto("\nINGRESE SU CONTRASEÑA: ");		
-													
+								
+														
 							//if((usuario=metgral.loginUser(user,pass))==null)
 							for(Usuario usuario : usuarios)
-							{
-								System.out.print("\nUSER: "+usuario.getUsername()+" - PASS: "+usuario.getPassword());
-								if(usuario.getUsername()==user.toString()&&usuario.getPassword()==pass)
+							{	
+								if(usuario.getUsername().equals(user)&&usuario.getPassword().equals(pass))
 								{
 									usuarioLoggin=usuario;
 									System.out.print("\nUSUARIO LOGUEADO");

@@ -47,7 +47,7 @@ public class SQLCarga {
 						do {										
 							Cliente cliente=new Cliente();
 							cliente.setNombre(rs.getString("nombre"));
-							cliente.setId(rs.getInt("usuario_ID"));
+							cliente.setId(rs.getInt("cliente_ID"));
 							cliente.setAuto(rs.getString("auto"));
 							cliente.setMail(rs.getString("mail"));
 							clientes.add(cliente);
@@ -94,11 +94,12 @@ public class SQLCarga {
 				stmt = conn.createStatement();
 				try
 				{				
-					query="SELECT * FROM 'Autoparte'";
+					query="SELECT * FROM Autoparte";
 					ResultSet rsAutopart=stmt.executeQuery(query);			
 					conn.commit();												
 						while(rsAutopart.next())
 						{
+							System.out.print("\n[cargarUsuarios] HAY AUTOPARTES: ");		//DEBUG
 							if(rsAutopart.getString("tipoAutoparte")=="filtro")
 							{										
 								List<Filtro> filtros=cargarFiltros();
