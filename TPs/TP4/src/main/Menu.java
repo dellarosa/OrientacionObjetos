@@ -482,6 +482,7 @@ public class Menu {
 								Filtro filtro = new Filtro();
 								Aceite aceite=new Aceite();
 								Lampara lampara=new Lampara();
+								boolean hayAutoparte=false;
 								int index=0;
 								//PODRIA SER MAS DINAMICO							
 								System.out.print("\n1-FILTROS");	
@@ -504,7 +505,7 @@ public class Menu {
 											}
 										}
 																			
-										opcionmodif=Dentre.entero("\nINGRESE ID FILTRO A DAR DE BAJA: ");
+										opcionmodif=Dentre.entero("\n\nINGRESE ID FILTRO A DAR DE BAJA: ");
 										index=0;
 										for(Autoparte autoparte : autopartesG)
 										{
@@ -530,11 +531,14 @@ public class Menu {
 														Thread.sleep(2000);
 													}
 													autopartesG.remove(index);
+													hayAutoparte=true;
 													break;
 												}
 											}
 											index++;
 										}										
+										if(!hayAutoparte)
+											System.out.print("\nNO HAY FILTRO CON ESE ID");
 										
 									break;
 									case Definiciones.ACEITE_INDICE:
@@ -551,7 +555,7 @@ public class Menu {
 											}
 										}
 																			
-										opcionmodif=Dentre.entero("\nINGRESE ID ACEITE A DAR DE BAJA: ");
+										opcionmodif=Dentre.entero("\n\nINGRESE ID ACEITE A DAR DE BAJA: ");
 										index=0;
 										for(Autoparte autoparte : autopartesG)
 										{
@@ -577,11 +581,15 @@ public class Menu {
 														Thread.sleep(2000);
 													}
 													autopartesG.remove(index);
-													break;
+													hayAutoparte=true;
+													break;													
 												}
 											}
 											index++;
 										}		
+										if(!hayAutoparte)
+											System.out.print("\nNO HAY ACEITE CON ESE ID");
+										
 										break;
 										
 									case Definiciones.LAMPARA_INDICE:
@@ -598,7 +606,7 @@ public class Menu {
 											}
 										}
 																			
-										opcionmodif=Dentre.entero("\nINGRESE ID LAMPARA A DAR DE BAJA: ");
+										opcionmodif=Dentre.entero("\n\nINGRESE ID LAMPARA A DAR DE BAJA: ");
 										index=0;
 										for(Autoparte autoparte : autopartesG)
 										{
@@ -624,11 +632,15 @@ public class Menu {
 														Thread.sleep(2000);
 													}
 													autopartesG.remove(index);
+													hayAutoparte=true;
 													break;
 												}
 											}
 											index++;
 										}	
+										if(!hayAutoparte)
+											System.out.print("\nNO HAY LAMPARA CON ESE ID");
+										
 										break;
 									default:
 										break;
@@ -666,10 +678,16 @@ public class Menu {
 								nuevareparacion.setEntregado(0);								
 								nuevareparacion.setId(sqlselects.buscarUltimaReparacionId());
 								
-								sqlinserts.insertarReparacionInicio(nuevareparacion);
-								
-								reparacionesG.add(nuevareparacion);
-								
+								if(sqlinserts.insertarReparacionInicio(nuevareparacion))
+								{
+									reparacionesG.add(nuevareparacion);
+									
+									System.out.print("\nCARGA DE NUEVA REPARACION CORRECTA\n");
+									Thread.sleep(2000);
+								}else{
+									System.out.print("\nFALLO CARGA DE NUEVA REPARACION\n");
+									Thread.sleep(2000);
+								}
 							}catch(MiException e)
 							{
 								throw e;
@@ -688,83 +706,97 @@ public class Menu {
 							double totalCosto=0;
 							Cliente cliente= metgral.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "), clientesG);
 							int index=0;
-							boolean hayReparacion=false;
+							if(cliente==null)
+							{
+								System.out.print("\nCLIENTE NO ENCONTRADO\n");
+								Thread.sleep(2000);
+								break;
+							}
 							
 							for(Reparacion reparacion:reparacionesG)
 							{
 								if(reparacion.getCliente().getId()==cliente.getId())
-								{									
-									Calendar c = new GregorianCalendar();
-								    Date d1 = c.getTime(); 
-									reparacion.setFechaentrega(d1.toString());
-									reparacion.setEntregado(1);
-									
-									Filtro filtro=new Filtro();
-									Aceite aceite=new Aceite();
-									Lampara lampara=new Lampara();
-									
-									boolean salir=false;
-									while(!salir)
+								{		
+									if(reparacion.getEntregado()==1)
 									{
-									
-										for (Autoparte autoparte : autopartesG)
-										{										
-											if(autoparte instanceof Filtro)
-											{	
-												filtro=(Filtro)autoparte;
-												System.out.print("\n"+filtro.toString());
-											}
-											else if(autoparte instanceof Aceite)
-											{	
-												aceite=(Aceite)autoparte;
-												System.out.print("\n"+aceite.toString());
-											}
-											else if(autoparte instanceof Lampara)
-											{	
-												lampara=(Lampara)autoparte;
-												System.out.print("\n"+lampara.toString());
-											}
-										}										
-										int opcionmodif=Dentre.entero("\nINGRESE ID AUTOPARTE PARA AGREGAR ('99' para salir): ");
-										if(opcionmodif==99)
-										{
-											break;
-										}
-										
-										for (Autoparte autoparte : autopartesG)
-										{										
-											if(autoparte.getId()==opcionmodif)
-											{
-												reparacion.getAutopartes().add(autoparte);
-												reparacion.setCosto(reparacion.getCosto()+autoparte.getCosto());
-											}
-										
-										}	
+										System.out.print("\nCLIENTE NO POSEE NINGUNA REPARACION ABIERTA\n");
+										break;
 									}
+									else
+									{
+										Calendar c = new GregorianCalendar();
+									    Date d1 = c.getTime(); 
+										reparacion.setFechaentrega(d1.toString());
+										reparacion.setEntregado(1);
+										
+										Filtro filtro=new Filtro();
+										Aceite aceite=new Aceite();
+										Lampara lampara=new Lampara();
+										
+										boolean salir=false;
+										while(!salir)
+										{
+										
+											for (Autoparte autoparte : autopartesG)
+											{										
+												if(autoparte instanceof Filtro)
+												{	
+													filtro=(Filtro)autoparte;
+													System.out.print("\n"+filtro.toString());
+												}
+												else if(autoparte instanceof Aceite)
+												{	
+													aceite=(Aceite)autoparte;
+													System.out.print("\n"+aceite.toString());
+												}
+												else if(autoparte instanceof Lampara)
+												{	
+													lampara=(Lampara)autoparte;
+													System.out.print("\n"+lampara.toString());
+												}
+											}										
+											int opcionmodif=Dentre.entero("\n\n**INGRESE ID AUTOPARTE PARA AGREGAR ('99' para salir): ");
+											if(opcionmodif==99)
+											{
+												salir=true;
+											}else
+											{
+											
+												List<Autoparte> autopartes=new ArrayList<Autoparte>();
+												for (Autoparte autoparte : autopartesG)
+												{										
+													if(autoparte.getId()==opcionmodif)
+													{
+														autopartes.add(autoparte);												
+														//reparacion.getAutopartes().add(autoparte);	//Null pointer exception
+														reparacion.setCosto(reparacion.getCosto()+autoparte.getCosto());
+													}
+												
+												}	
+												reparacion.setAutopartes(autopartes);
+											}
+										}
+									//Podria validar si se cargo autopartes o no se cargo nada
 									sqlinserts.insertarupdateReparacionFinal(reparacion,sqlselects.buscarUltimaReparacionAutoparteId());
 									reparacionesG.remove(index);
 									reparacionesG.add(reparacion);	
-									hayReparacion=true;
+									System.out.print("\n\nSE AGREGO AUTOPARTE\n");
+									Thread.sleep(2000);
+									}
+									index++;
 								}
-								index++;
 							}
-							if(hayReparacion)
-							{}else
-							{
-								System.out.print("\nNO SE ENCONTRO CLIENTE CON REPARACION");
-							}
-							
 						}
 						catch(MiException e)
 						{
 							throw e;
 						}catch(SQLException e)
 						{
-							e.printStackTrace();
+							throw new MiException("[Exception al finalizar reparación] SQL Exception: "+e);
 						}
 						catch(Exception e)
 						{
-							e.printStackTrace();
+							throw new MiException("[Exception al finalizar reparación] Exception: "+e);
 						}
 						
 						
@@ -799,9 +831,9 @@ public class Menu {
 												if(reparacion.getEntregado()==1)
 												{												
 													System.out.print("\n"+reparacion.toString());
-													System.out.print("\n    AUTOPARTES: ");
+													System.out.print("\n    ºAUTOPARTESº: \n");
 													for(Autoparte autoparte: reparacion.getAutopartes()){
-														System.out.print("\n"+autoparte.toString());
+														System.out.print("    "+autoparte.toString());
 													}
 															
 												}
@@ -810,9 +842,11 @@ public class Menu {
 											System.out.print("\n********EN REPARACION********");
 											for(Reparacion reparacion : reparacionesG)
 											{				
+												
 												if(reparacion.getEntregado()==0)
 												{
-													System.out.print("\n"+reparacion.toString());
+													//System.out.print("\n"+reparacion.toString());
+													System.out.print("\nID: "+reparacion.getId()+" - FECHA I: "+reparacion.getFechainicio()+" NOMBRE CLIENTE: "+reparacion.getCliente().getNombre());
 												}
 											}
 											Thread.sleep(2000);

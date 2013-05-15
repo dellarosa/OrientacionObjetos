@@ -251,6 +251,8 @@ public class SQLCarga {
 			}	
 			return usuarios;
 		}
+		
+	//####################################################### CARGAR REPARACIONES ################################
 		public List<Reparacion> cargaReparaciones() throws SQLException, MiException {
 			String query;
 			Connection conn=null;
@@ -269,20 +271,34 @@ public class SQLCarga {
 					ResultSet rs=stmt.executeQuery(query);			
 					conn.commit();
 					
+					stmt.execute("SHUTDOWN");							
+					conn.close();
+					
+					//System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG
 					if(rs.next())
 					{
-						System.out.print("\n[cargaReparaciones] HAY REPARACIONES ");		//DEBUG
-						do {										
-							Reparacion reparacion = new Reparacion();
-							reparacion.setId(rs.getInt("reparacion_ID"));					
-							reparacion.setCosto(rs.getDouble("costo"));
-							reparacion.setEntregado(rs.getInt("entregado"));
-							
-							//######################CLIENTE###############					
-							query="SELECT * FROM Cliente WHERE cliente_ID='"+rs.getInt("cliente_ID")+"'";
-							ResultSet rsclient=stmt.executeQuery(query);			
-							conn.commit();
 						
+						//	System.out.print("\n[cargaReparaciones] HAY REPARACIONES ");		//DEBUG
+							do {
+								
+								
+								conn = SQLClass.getConnection();
+								conn.setAutoCommit(false);
+								stmt = conn.createStatement();
+								
+								Reparacion reparacion = new Reparacion();
+								
+								reparacion.setId(rs.getInt("reparacion_ID"));
+								//######################CLIENTE###############					
+								query="SELECT * FROM Cliente WHERE cliente_ID="+rs.getInt("cliente_ID");
+								ResultSet rsclient=stmt.executeQuery(query);			
+								conn.commit();
+								
+								stmt.execute("SHUTDOWN");							
+								conn.close();
+							
+							//	System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG
+								
 								Cliente client=new Cliente();
 								while(rsclient.next())
 								{
@@ -292,72 +308,110 @@ public class SQLCarga {
 									client.setNombre(rsclient.getString("nombre"));
 								}
 								reparacion.setCliente(client);
+								//#########################################
+								reparacion.setFechainicio(rs.getString("fechaInicio"));
 								
-							
-							//######################AUTOPARTE###############					
-							
-							List<Autoparte> autopartes=new ArrayList<Autoparte>();
-							Filtro filtro=new Filtro();
-							Aceite aceite=new Aceite();
-							Lampara lampara=new Lampara();
-							
-							query="SELECT * FROM 'ReparacionAutoparte' WHERE ReparacionAutoparte_ID='"+rs.getInt("reparacion_ID")+"'";
-							ResultSet rsRepAuto=stmt.executeQuery(query);			
-							conn.commit();
-							int inAutopartes[] = new int[]{};
-							int i=0;
-							while(rsRepAuto.next())
-							{
-								inAutopartes[i]=rsRepAuto.getInt("autoparte_ID");
-								i++;
-							}
-							if(inAutopartes==null)
-							{}
-													
-								int indiceAutoPart=0;								
-								while(indiceAutoPart<=i)
+								
+								if(rs.getInt("entregado")!=0)
 								{
-									query="SELECT * FROM 'Autoparte' WHERE autoparte_ID='"+inAutopartes[indiceAutoPart]+"'";
-									ResultSet rsAutopart=stmt.executeQuery(query);			
-									conn.commit();		
+														
+									reparacion.setCosto(rs.getDouble("costo"));
+									reparacion.setEntregado(rs.getInt("entregado"));	
+									reparacion.setFechaentrega(rs.getString("fechaEntrega"));
 									
-									if(rsAutopart.getString("tipoAutoparte")==Definiciones.FILTRO_STRING)							{
-										filtro=sqlselects.buscarFiltroPorIdAutoParte(inAutopartes[indiceAutoPart]);
-										if(filtro!=null)
-										{
-											filtro.setMarca(rsAutopart.getString("marca"));
-											filtro.setModelo(rsAutopart.getString("modelo"));
-											autopartes.add(filtro);											
-											
-											
-										}
-								
-									}else if(rsAutopart.getString("tipoAutoparte")==Definiciones.ACEITE_STRING)
-									{
-										aceite=sqlselects.buscarAceitePorIdAutoParte(inAutopartes[indiceAutoPart]);
-										if(aceite!=null)
-										{
-											aceite.setMarca(rsAutopart.getString("marca"));
-											aceite.setModelo(rsAutopart.getString("modelo"));
-											autopartes.add(aceite);											
-										}
+									//######################AUTOPARTE###############					
+									
+									List<Autoparte> autopartes=new ArrayList<Autoparte>();
+									Filtro filtro=new Filtro();
+									Aceite aceite=new Aceite();
+									Lampara lampara=new Lampara();
 										
-									}else if(rsAutopart.getString("tipoAutoparte")==Definiciones.LAMPARA_STRING)
+									conn = SQLClass.getConnection();
+									conn.setAutoCommit(false);
+									stmt = conn.createStatement();
+																		
+									query="SELECT * FROM ReparacionAutoparte WHERE ReparacionAutoparte_ID="+rs.getInt("reparacion_ID");
+									ResultSet rsRepAuto=stmt.executeQuery(query);			
+									conn.commit();
+									
+									//System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG									
+										
+									stmt.execute("SHUTDOWN");							
+									conn.close();	
+									
+									
+									while(rsRepAuto.next())
 									{
-										lampara=sqlselects.buscarLamparaPorIdAutoParte(inAutopartes[indiceAutoPart]);
-										if(lampara!=null)
+										conn = SQLClass.getConnection();
+										conn.setAutoCommit(false);
+										stmt = conn.createStatement();
+										
+										query="SELECT * FROM Autoparte WHERE autoparte_ID="+rsRepAuto.getInt("autoparte_ID");	//VA a traer uno solo
+										ResultSet rsAutopart=stmt.executeQuery(query);			
+										conn.commit();		
+										
+									//	System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG
+										
+										stmt.execute("SHUTDOWN");							
+										conn.close();	
+										if(rsAutopart.next())
 										{
-											autopartes.add(lampara);
-											lampara.setMarca(rsAutopart.getString("marca"));
-											lampara.setModelo(rsAutopart.getString("modelo"));											
-										}	
-									}else
-									{}
-									indiceAutoPart++;
-								}
-								reparacion.setAutopartes(autopartes);
-																
-						}while(rs.next());
+											if(rsAutopart.getString("tipoAutoparte").equals(Definiciones.FILTRO_STRING))							{
+												filtro=sqlselects.buscarFiltroPorIdAutoParte(rsAutopart.getInt("autoparte_ID"));		//POdria usar la lista de filtros
+												if(filtro!=null)
+												{	
+													filtro.setCosto(rsAutopart.getDouble("costo"));
+													filtro.setId(rsAutopart.getInt("autoparte_ID"));
+													filtro.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+													filtro.setMarca(rsAutopart.getString("marca"));
+													filtro.setModelo(rsAutopart.getString("modelo"));
+													filtro.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+													autopartes.add(filtro);											
+													
+													
+												}
+										
+											}else if(rsAutopart.getString("tipoAutoparte").equals(Definiciones.ACEITE_STRING))
+											{
+												aceite=sqlselects.buscarAceitePorIdAutoParte(rsAutopart.getInt("autoparte_ID"));
+												if(aceite!=null)
+												{
+													aceite.setCosto(rsAutopart.getDouble("costo"));
+													aceite.setId(rsAutopart.getInt("autoparte_ID"));
+													aceite.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+													aceite.setMarca(rsAutopart.getString("marca"));
+													aceite.setModelo(rsAutopart.getString("modelo"));
+													aceite.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+													autopartes.add(aceite);											
+												}
+												
+											}else if(rsAutopart.getString("tipoAutoparte").equals(Definiciones.LAMPARA_STRING))
+											{
+												lampara=sqlselects.buscarLamparaPorIdAutoParte(rsAutopart.getInt("autoparte_ID"));
+												if(lampara!=null)
+												{
+													
+													lampara.setCosto(rsAutopart.getDouble("costo"));
+													lampara.setId(rsAutopart.getInt("autoparte_ID"));
+													lampara.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+													lampara.setMarca(rsAutopart.getString("marca"));
+													lampara.setModelo(rsAutopart.getString("modelo"));
+													lampara.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+													
+													autopartes.add(lampara);
+												}	
+											}else
+											{}
+										}										
+									}
+									reparacion.setAutopartes(autopartes);
+								}else
+								{
+									
+								}					
+								reparaciones.add(reparacion);
+							}while(rs.next());
+						
 					}else
 					{	
 						System.out.print("\n[cargaReparaciones]NO HAY REPARACIONES CARGADOS : ");		//DEBUG
@@ -369,7 +423,7 @@ public class SQLCarga {
 				{
 					System.out.print("\n[cargaReparaciones] SQL Exception al cargar: "+e);		//DEBUG
 					conn.rollback();
-					//throw new MiException("[Login] SQL Exception: "+e);
+					//throw new MiException("[cargaReparaciones] SQL Exception: "+e);
 				}						
 			}catch(SQLException e)
 			{
@@ -380,8 +434,7 @@ public class SQLCarga {
 				throw new MiException("[cargaReparaciones] EXCEPTION: "+e);
 			}finally
 			{
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD
+				
 			}	
 			return reparaciones;
 		}
@@ -428,7 +481,7 @@ public class SQLCarga {
 			{
 				System.out.print("\n[cargaFiltros] SQL Exception al cargar: "+e);		//DEBUG
 				conn.rollback();
-				//throw new MiException("[Login] SQL Exception: "+e);
+				//throw new MiException("[cargaFiltros] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
 		{

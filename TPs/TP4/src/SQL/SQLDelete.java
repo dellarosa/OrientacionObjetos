@@ -36,7 +36,7 @@ public class SQLDelete {
 				deleted=true;
 			}catch(SQLException e)
 			{
-				//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+				System.out.print("\n[eliminarUsuario] SQL Exception: "+e);		//DEBUG
 				deleted=false;
 				conn.rollback();
 				//throw new MiException("[Login] SQL Exception: "+e);
@@ -113,6 +113,12 @@ public class SQLDelete {
 				try
 				{
 					query="DELETE FROM Autoparte WHERE autoparte_ID='"+autoparte.getId()+"'";
+					stmt.executeUpdate(query);
+					conn.commit();
+					System.out.print("\n[eliminarAutoparte] "+query);			//DEBUG
+					
+					stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+					conn.close();	
 					if(autoparte instanceof Filtro)
 					{
 						eliminarFiltro((Filtro)autoparte);
@@ -124,29 +130,25 @@ public class SQLDelete {
 					{
 						eliminarLampara((Lampara)autoparte);
 					}else
-					{}
-					stmt.executeUpdate(query);
-					conn.commit();
-					System.out.print("\n[eliminarAutoparte] "+query);			//DEBUG
+					{}					
 					deleted=true;
 				}catch(SQLException e)
 				{
-					//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+					System.out.print("\n[eliminarAutoparte] SQL Exception: "+e);		//DEBUG
 					deleted=false;
 					conn.rollback();
 					//throw new MiException("[Login] SQL Exception: "+e);
 				}						
 			}catch(SQLException e)
 			{
-				throw new MiException("[eliminarAutoparte] EXCEPTION AL CONECTAR: "+e);
+				throw new MiException("[eliminarAutoparte] SQL EXCEPTION AL CONECTAR: "+e);
 			}
 			catch(Exception e)
 			{
 				throw new MiException("[eliminarAutoparte] EXCEPTION AL CONECTAR: "+e);
 			}finally
 			{
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();										//CIERRO BD
+												
 			}
 			return deleted;
 		}
@@ -166,14 +168,14 @@ public class SQLDelete {
 			
 				try
 				{
-					query="DELETE FROM Filtro WHERE filtro_ID='"+filtro.getFiltro_ID()+"'";
+					query="DELETE FROM Filtro WHERE filtro_ID="+filtro.getFiltro_ID();
 					stmt.executeUpdate(query);
 					conn.commit();
 					System.out.print("\n[eliminarFiltro] "+query);			//DEBUG
 					deleted=true;
 				}catch(SQLException e)
 				{
-					//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+					System.out.print("\n[eliminarFiltro] SQL Exception: "+e);		//DEBUG
 					deleted=false;
 					conn.rollback();
 					//throw new MiException("[Login] SQL Exception: "+e);
@@ -207,21 +209,21 @@ public class SQLDelete {
 			
 				try
 				{
-					query="DELETE FROM Aceite WHERE aceite_ID='"+aceite.getAceite_ID()+"'";
+					query="DELETE FROM Aceite WHERE aceite_ID="+aceite.getAceite_ID();
 					stmt.executeUpdate(query);
 					conn.commit();
 					System.out.print("\n[eliminarAceite] "+query);			//DEBUG
 					deleted=true;
 				}catch(SQLException e)
 				{
-					//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+					System.out.print("\n[eliminarFiltro] SQL Exception: "+e);		//DEBUG
 					deleted=false;
 					conn.rollback();
 					//throw new MiException("[Login] SQL Exception: "+e);
 				}						
 			}catch(SQLException e)
 			{
-				throw new MiException("[eliminarFiltro] EXCEPTION AL CONECTAR: "+e);
+				throw new MiException("[eliminarFiltro] SQL EXCEPTION AL CONECTAR: "+e);
 			}
 			catch(Exception e)
 			{
@@ -235,44 +237,44 @@ public class SQLDelete {
 		}
 		
 		//############################## DELETE ACEITE ###################################################
-			public boolean eliminarLampara(Lampara lampara) throws SQLException,MiException {
-				
-				boolean deleted=false;
-				String query;
-				Connection conn=null;
-				Statement stmt = null;
+		public boolean eliminarLampara(Lampara lampara) throws SQLException,MiException {
+			
+			boolean deleted=false;
+			String query;
+			Connection conn=null;
+			Statement stmt = null;
+			try
+			{			
+				conn=SQLClass.getConnection();
+				conn.setAutoCommit(false);
+				stmt = conn.createStatement();
+			
 				try
-				{			
-					conn=SQLClass.getConnection();
-					conn.setAutoCommit(false);
-					stmt = conn.createStatement();
-				
-					try
-					{
-						query="DELETE FROM Lampara WHERE lampara_ID='"+lampara.getLampara_ID()+"'";
-						stmt.executeUpdate(query);
-						conn.commit();
-						System.out.print("\n[eliminarLampara] "+query);			//DEBUG
-						deleted=true;
-					}catch(SQLException e)
-					{
-						//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
-						deleted=false;
-						conn.rollback();
-						//throw new MiException("[Login] SQL Exception: "+e);
-					}						
+				{
+					query="DELETE FROM Lampara WHERE lampara_ID="+lampara.getLampara_ID();
+					stmt.executeUpdate(query);
+					conn.commit();
+					System.out.print("\n[eliminarLampara] "+query);			//DEBUG
+					deleted=true;
 				}catch(SQLException e)
 				{
-					throw new MiException("[eliminarLampara] EXCEPTION AL CONECTAR: "+e);
-				}
-				catch(Exception e)
-				{
-					throw new MiException("[eliminarLampara] EXCEPTION AL CONECTAR: "+e);
-				}finally
-				{
-					stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-					conn.close();										//CIERRO BD
-				}
-				return deleted;
+					System.out.print("\n[eliminarLampara] SQL Exception: "+e);		//DEBUG
+					deleted=false;
+					conn.rollback();
+					//throw new MiException("[Login] SQL Exception: "+e);
+				}						
+			}catch(SQLException e)
+			{
+				throw new MiException("[eliminarLampara] SQL EXCEPTION AL CONECTAR: "+e);
 			}
+			catch(Exception e)
+			{
+				throw new MiException("[eliminarLampara] EXCEPTION AL CONECTAR: "+e);
+			}finally
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();										//CIERRO BD
+			}
+			return deleted;
+		}
 }

@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import entities.Reparacion;
 
 import utils.Definiciones;
 import utils.MiException;
@@ -82,9 +87,9 @@ public class SQLClass {
 
 			//########################## REPARACIONES #################################
 			sqlcreate.crearTablaReparacion();
-			sqlCreateIndex.crearIndex("reparacionAutoparte_ID","Reparacion","reparacionAutoparte_ID");
+			//sqlCreateIndex.crearIndex("reparacionAutoparte_ID","Reparacion","reparacionAutoparte_ID");
 			sqlCreateIndex.crearIndex("cliente_ID","Reparacion","cliente_ID");
-							
+									
 			
 		}catch(SQLException e)
 		{

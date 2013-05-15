@@ -531,7 +531,7 @@ public class SQLInserts {
 				try
 				{				
 					query="INSERT INTO Reparacion (reparacion_ID,cliente_ID,fechaInicio,entregado) VALUES ("+
-					nuevareparacion.getId()+",'"+nuevareparacion.getFechainicio()+"','"+nuevareparacion.getEntregado()+")";
+					nuevareparacion.getId()+","+nuevareparacion.getCliente().getId()+",'"+nuevareparacion.getFechainicio()+"',"+nuevareparacion.getEntregado()+")";
 					
 					stmt.executeUpdate(query);
 					conn.commit();
@@ -578,15 +578,18 @@ public class SQLInserts {
 					{
 						
 						query="INSERT INTO ReparacionAutoparte (reparacionAutoparte_ID,reparacion_ID,autoparte_ID) VALUES ("+
-						inLastIdRA+","+reparacion.getId()+autoparte.getId();
+						inLastIdRA+","+reparacion.getId()+","+autoparte.getId()+")";
 						stmt.executeUpdate(query);
 						conn.commit();
-						System.out.print("\n[insertarReparacionFinal] "+query);				//DEBUG
+						System.out.print("\n[insertarReparacionFinal] "+query);				//DEBUG									
 						
 						inLastIdRA++;
 					}
-					
-					query="UPDATE Reparacion SET reparacion_ID="+reparacion.getId()+",costo='"+reparacion.getCosto()+"',fechaEntrega='"+reparacion.getFechaentrega()+"',entregado="+reparacion.getEntregado()+" WHERE reparacion_ID="+reparacion.getId();
+										
+					query="UPDATE Reparacion SET reparacion_ID="+reparacion.getId()+",costo='"+reparacion.getCosto()+"',fechaEntrega='"+reparacion.getFechaentrega()+"',entregado="+reparacion.getEntregado()+" WHERE reparacion_ID="+reparacion.getId();					
+					stmt.executeUpdate(query);					
+					conn.commit();
+					System.out.print("\n[insertarReparacionFinal] "+query);				//DEBUG
 					
 				}catch(SQLException e)
 				{

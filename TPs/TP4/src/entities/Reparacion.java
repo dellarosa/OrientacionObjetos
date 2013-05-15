@@ -21,7 +21,7 @@ public class Reparacion {
 	}
 	public Reparacion()
 	{
-		
+		this.setCosto(0);
 	}
 	public int getId() {
 		return id;
@@ -68,7 +68,8 @@ public class Reparacion {
 
 	public String toString()
 	{
-		return "-ID: "+this.getId()+" -FECHA I: "+this.getFechainicio()+" -CLIENTE: "+this.getCliente().toString()+" AUTOPARTES: "+this.getAutopartes().toString()+
-				" - COSTO: "+this.getCosto()+" - ENTREGADO: "+this.getEntregado()+" - FECHA ENTREGA: "+this.getFechaentrega();
+		return "-ID: "+this.getId()+" -FECHA I: "+this.getFechainicio()+" - COSTO: "+this.getCosto()+" - ENTREGADO: "+this.getEntregado()+" - FECHA ENTREGA: "+this.getFechaentrega()+
+		" - CLIENTE: "+this.getCliente().toString()+" AUTOPARTES: "+this.getAutopartes().toString();
+				
 	}
 }
