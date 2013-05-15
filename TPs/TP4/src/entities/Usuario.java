@@ -54,5 +54,8 @@ public class Usuario {
 		this.password = password;
 	}
 	
-	
+	public String toString()
+	{
+		return "ID_USUARIO: "+this.getId()+" - NOMBRE: "+this.getName()+" - USER: "+this.getUsername()+" - PASS: "+this.getPassword()+" - EMAIL: "+this.getEmail();
+	}
 }
