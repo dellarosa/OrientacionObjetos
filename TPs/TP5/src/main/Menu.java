@@ -1,5 +1,12 @@
 package main;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,6 +16,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
 
 import SQL.SQLCarga;
 import SQL.SQLDelete;
@@ -33,7 +47,9 @@ public class Menu {
 	
 	MenuPrincipal menuprinc;
 	MetodosGrl metgral;
-	MenuInicio menuinicio;
+	MenuAdministrador menuAdministrador;
+	MenuTecnico menuTecnico;
+	MenuInicio menuInicio;
 	
 	SQLInserts sqlinserts=new SQLInserts();
 	SQLSelects sqlselects=new SQLSelects();
@@ -43,7 +59,8 @@ public class Menu {
 	public Menu()
 	{
 		menuprinc=new MenuPrincipal();
-		menuinicio=new MenuInicio();
+		menuTecnico=new MenuTecnico();
+		//menuInicio=new MenuInicio();
 		
 	}
 	public MenuPrincipal getMenuPrincipal()
@@ -51,10 +68,29 @@ public class Menu {
 		return this.menuprinc;
 	}
 	//////////////
+	public MenuTecnico getMenuTecnico() {
+		return menuTecnico;
+	}
+	public void setMenuTecnico(MenuTecnico menuTecnico) {
+		this.menuTecnico = menuTecnico;
+	}
+	
+	public MenuAdministrador getMenuAdministrador() {
+		return menuAdministrador;
+	}
+	public void setMenuAdministrador(MenuAdministrador menuAdministrador) {
+		this.menuAdministrador = menuAdministrador;
+	}
+	
 	public MenuInicio getMenuInicio()
 	{
-		return this.menuinicio;
+		return this.menuInicio;
 	}
+	public void setMenuInicio(MenuInicio menuInicio)
+	{
+		this.menuInicio=menuInicio;
+	}
+	
 	public class MenuPrincipal
 	{
 		boolean sigo;		
@@ -932,160 +968,431 @@ public class Menu {
 		
 	}
 	//#######################################################################################
-	public class MenuInicio
-	{
-		public MenuInicio()
-		{
-			metgral=new MetodosGrl();
+	public class MenuAdministrador
+	{	
+		
+		JPanel panelOp;
+		JPanel panelSalir;
+		JPanel panel;
+		JTextField fieldNameUser, fieldApodoUser,fieldPassUser,fieldMailUser,fieldJerarquiaUser,fieldLogginUser;
+		JFrame frameAdmin;
+		JButton  btCrearUsuario,btModificarUsuario,btBajaUsuario,btMostrarUsuarios;
+		JButton btAtras;		
+		JButton btSalir;
+
+		public JFrame getFrameAdmin() {
+			return frameAdmin;
 		}
-		public String empezarMenuTecnico(List<Usuario> usuarios) throws MiException
-		{
-			boolean salir=false;			
-			while(!salir) //GENERAL
-			{
+
+		public void setFrameAdmin(JFrame frameAdmin) {
+			this.frameAdmin = frameAdmin;
+		}
+
+		public MenuAdministrador(final List<Usuario> usuarios,JFrame frame)
+		{				
+			try
+			{	
+				metgral=new MetodosGrl();				
+						
+				this.setFrameAdmin(frame);		
+				this.getFrameAdmin().getContentPane().removeAll();
+				this.getFrameAdmin().getContentPane().repaint();
 				
+				panel=new JPanel();					
+		        panel =(JPanel) this.getFrameAdmin().getContentPane();
+		        panel.removeAll();
+		        panel.setBackground(Color.cyan);
+		        panel.setLayout(new BorderLayout());
+		        
+		        panelOp = new JPanel();
+		        panelOp.setBackground(Color.black);
+		        panelOp.setLayout(new GridLayout(6, 1));
+		        panelOp.setBorder(new EmptyBorder(4, 4, 4, 4));
+		        panelOp.removeAll();
+		        
+		        panelSalir = new JPanel();
+		        panelSalir.setLayout(new GridLayout(2, 1));
+		        panelSalir.setBorder(new EmptyBorder(4, 4, 4, 4));
+		        panelSalir.setBackground(Color.blue);
+		        panelSalir.removeAll();
+		        
+			}catch(MiException e)
+			{
+				throw e;
+			}
+			catch(Exception e)
+			{
+				throw new MiException("[MENU ADMINISTRADOR] Exception : "+e);
+			}
+	        try
+			{
+	        	
+		        ///################### CREAR USER #############
+		        btCrearUsuario=new JButton();
+				btCrearUsuario.setText("Crear Usuario");
+				btCrearUsuario.addMouseListener(new MouseAdapter() {
 								
-				System.out.print("\n\n****MENU TECNICO - BIENVENIDO TALLER 2013****");
-				System.out.print("\n1-CREAR USUARIO");
-				System.out.print("\n2-MODIFICAR USUARIO");
-				System.out.print("\n3-BAJA USUARIO");				
-				System.out.print("\n4-MOSTRAR USUARIOS");
-				System.out.print("\n99-SALIR");
-				switch(Dentre.entero("\n\n INGRESE OPCIÓN: "))
-				{
-					case 1:
-						try
-						{
-							Usuario userCreate=new Usuario();
-							
-							userCreate.setName(Dentre.texto("\n INGRESE NOMBRE: "));
-							userCreate.setEmail(Dentre.texto("\n INGRESE MAIL: "));							
-							userCreate.setUsername(Dentre.texto("\n INGRESE APODO: "));							
-							userCreate.setPassword(Dentre.texto("\n INGRESE PASSWORD: "));							
-							userCreate.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA: "));
-							userCreate.setId(sqlselects.buscarUltimoUsuarioId());			//podria buscar en la lista, pero ...
-							if(sqlinserts.insertarUsuario(userCreate))
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	try
 							{
-								System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
-								Thread.sleep(2000);
-								usuarios.add(userCreate);
-							}else
-							{
-								System.out.print("\nFALLO MODIFICACION USUARIO");
-								Thread.sleep(2000);
-							}
-							
-						}
-						catch(MiException e)
-						{							
-							throw e;
-						}
-						catch(Exception e)
-						{							
-							throw new MiException("[empezarMenuTecnico]CREATE USER EXCEPTION: "+e);
-						}
-						break;					
-					case 2:
-							
-						try
-						{
-							//Usuario usuarioModif=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
-							Usuario usuarioModif=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "),usuarios);
-							if(usuarioModif==null)
-							{
-								System.out.print("\nNO SE ENCONTRO EL USUARIO");
-								Thread.sleep(2000);
-							}else
-							{
-								Usuario userAux=usuarioModif;
-								//PODRIA MEJORARSE PREGUNTANDO SI DESEA MODIFICAR
-								//TODO: AGREGAR JERARQUIAS DE USUARIO								
-								userAux.setName(Dentre.texto("\n INGRESE NOMBRE A MODIFICAR: "));								
-								userAux.setEmail(Dentre.texto("\n INGRESE MAIL A MODIFICAR: "));								
-								userAux.setUsername(Dentre.texto("\n INGRESE APODO A MODIFICAR: "));								
-								userAux.setPassword(Dentre.texto("\n INGRESE PASSWORD USUARIO: "));
-								userAux.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA USUARIO: "));						
-								userAux.setLogueado(0);
+								Usuario userCreate=new Usuario();
 								
-								if(sqlmodif.updateUsuario(userAux))
+								userCreate.setName(Dentre.texto("\n INGRESE NOMBRE: "));
+								userCreate.setEmail(Dentre.texto("\n INGRESE MAIL: "));							
+								userCreate.setUsername(Dentre.texto("\n INGRESE APODO: "));							
+								userCreate.setPassword(Dentre.texto("\n INGRESE PASSWORD: "));							
+								userCreate.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA: "));
+								userCreate.setId(sqlselects.buscarUltimoUsuarioId());			//podria buscar en la lista, pero ...
+								if(sqlinserts.insertarUsuario(userCreate))
 								{
 									System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
-									Thread.sleep(2000);
-									usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioModif);
-																		
-									usuarios.add(userAux);
-									
+									Thread.sleep(2000);							
+									usuarios.add(userCreate);
 								}else
 								{
 									System.out.print("\nFALLO MODIFICACION USUARIO");
 									Thread.sleep(2000);
 								}
-							}
-						
-						}catch(MiException e)
-						{
-							throw e;							
-						}catch(Exception e)
-						{
-							throw new MiException("[empezarMenuTecnico]MODIFICACION USER EXCEPTION: "+e);							
-						}
-						break;
-					case 3:
-						try
-						{
-							//Usuario usuarioBaja=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
-							Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "),usuarios);
-							if(sqldelete.eliminarUsuario(usuarioBaja))
-							{
-								System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
-								Thread.sleep(2000);
-								usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioBaja);						
 								
+							}
+							catch(MiException e)
+							{							
+								throw e;
+							}
+							catch(Exception e)
+							{							
+								throw new MiException("[btCrearUsuario]CREATE USER EXCEPTION: "+e);
+							}
+			            }
+			        });
+					panelOp.add(btCrearUsuario);
+					
+					///###################### MODIFICAR USER ##########################
+					btModificarUsuario=new JButton();
+					btModificarUsuario.setText("Modificar Usuario");
+					btModificarUsuario.addMouseListener(new MouseAdapter() {
+						 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	try
+							{
+								//Usuario usuarioModif=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
+								Usuario usuarioModif=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "),usuarios);
+								if(usuarioModif==null)
+								{
+									System.out.print("\nNO SE ENCONTRO EL USUARIO");
+									Thread.sleep(2000);
+								}else
+								{
+									Usuario userAux=usuarioModif;
+									//PODRIA MEJORARSE PREGUNTANDO SI DESEA MODIFICAR
+									//TODO: AGREGAR JERARQUIAS DE USUARIO								
+									userAux.setName(Dentre.texto("\n INGRESE NOMBRE A MODIFICAR: "));								
+									userAux.setEmail(Dentre.texto("\n INGRESE MAIL A MODIFICAR: "));								
+									userAux.setUsername(Dentre.texto("\n INGRESE APODO A MODIFICAR: "));								
+									userAux.setPassword(Dentre.texto("\n INGRESE PASSWORD USUARIO: "));
+									userAux.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA USUARIO: "));						
+									userAux.setLogueado(0);
+									
+									if(sqlmodif.updateUsuario(userAux))
+									{
+										System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
+										Thread.sleep(2000);
+										int i=0;
+										for(Usuario user:usuarios)
+										{
+											if(usuarioModif.getName().equals(user.getName()))
+											{
+												break;
+											}
+											i++;
+										}
+										usuarios.remove(i);								
+										//usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioModif);										
+										usuarios.add(userAux);
+										
+									}else
+									{
+										System.out.print("\nFALLO MODIFICACION USUARIO");
+										Thread.sleep(2000);
+									}
+								}
+							
+							}catch(MiException e)
+							{
+								throw e;							
+							}catch(Exception e)
+							{
+								throw new MiException("[btModificarUsuario]MODIFICACION USER EXCEPTION: "+e);							
+							}
+			            }
+			        });
+					panelOp.add(btModificarUsuario);
+					
+					///###################### ELIMINAR USER ##########################
+					btBajaUsuario=new JButton();
+					btBajaUsuario.setText("Baja Usuario");
+					btBajaUsuario.addMouseListener(new MouseAdapter() {				 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	try
+							{
+								//Usuario usuarioBaja=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
+								Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "),usuarios);
+								if(usuarioBaja==null)
+								{
+									System.out.print("\nNO SE ENCONTRO USER");
+									return;
+								}
+								if(sqldelete.eliminarUsuario(usuarioBaja))
+								{
+									System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
+									Thread.sleep(2000);
+									int i=0;
+									for(Usuario user:usuarios)
+									{
+										if(usuarioBaja.getName().equals(user.getName()))
+										{
+											break;
+										}
+										i++;
+									}
+									usuarios.remove(i);
+									
+									//usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioBaja);						
+									
+								}else
+								{
+									System.out.print("\nFALLO BAJA USUARIO");
+									Thread.sleep(2000);
+								}	
+							}
+							catch(MiException e)
+							{							
+								throw e;
+							}
+							catch(Exception e)
+							{							
+								throw new MiException("[btBajaUsuario]DELETE USER EXCEPTION: "+e);
+							}	
+			            }
+			        });
+					panelOp.add(btBajaUsuario);
+						
+					///###################### MOSTRAR USER ##########################
+					btMostrarUsuarios=new JButton();
+					btMostrarUsuarios.setText("Mostrar Usuarios");
+					btMostrarUsuarios.addMouseListener(new MouseAdapter() {				 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	try
+							{
+								System.out.print("\n***USUARIOS***");
+								Thread.sleep(2000);
+								for(Usuario usuario : usuarios)
+								{
+									System.out.print("\n"+usuario.toString());
+								}
+								Thread.sleep(2000);
+							}
+							catch(MiException e)
+							{							
+								throw e;
+							}
+							catch(Exception e)
+							{							
+								throw new MiException("[btMostrarUsuarios]MOSTRAR USER EXCEPTION: "+e);
+							}	
+			            }
+			        });
+					panelOp.add(btMostrarUsuarios);					
+
+					/////#########################################
+					btAtras=new JButton();
+					btAtras.setText("VOLVER");			
+					btAtras.addMouseListener(new MouseAdapter() {						 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	
+			            	MenuInicio menuInicio=new MenuInicio(getFrameAdmin(),usuarios);
+			            	menuInicio.mostrar(getFrameAdmin());
+			            }
+			        });	
+					
+			        /////#########################################
+					btSalir=new JButton();
+					btSalir.setText("SALIR");			
+					btSalir.addMouseListener(new MouseAdapter() {
+						 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			                System.exit(0);
+			            }
+			        });
+					
+					panelSalir.add(btAtras);
+					panelSalir.add(btSalir);
+					
+					panel.add("South",panelSalir);
+					//panelOperaciones.add(btSalir);
+					panel.add("North",panelOp);
+					
+			}catch(MiException e)
+			{							
+				throw e;
+			}
+			catch(Exception e)
+			{							
+				throw new MiException("[MENU ADMINISTRADOR]ADMINISTRADOR EXCEPTION: "+e);
+			}	
+			return;
+		}
+
+		public void mostrar() {
+			  
+	           this.getFrameAdmin().setVisible(true);
+				  
+       }
+		
+	}
+	
+////////######################################### MENU INICIO ##################################################################
+	public class MenuInicio 
+	{
+		private static final long serialVersionUID = 1L;
+		private int respuestaModo;
+		JButton  btModoTecnico,btModoSistema, btSalir;
+		
+		public int getRespuestaModo()
+		{
+			return this.respuestaModo;
+		}
+		public void setRespuestaModo(int respuestaModo)
+		{
+			this.respuestaModo=respuestaModo;
+		}
+		public MenuInicio(final JFrame frame,final List<Usuario> usuariosL)
+		{
+			JPanel panelOperaciones;					
+			JTextField fieldModo=new JTextField();					
+			frame.getContentPane().removeAll();			
+			
+	        //JPanel panel = (JPanel) this.getContentPane();
+			JPanel panel = (JPanel)frame.getContentPane();
+	        panel.setLayout(new BorderLayout());	        
+	        panel.setBackground(Color.cyan);
+	        
+	        panelOperaciones = new JPanel();
+	        panelOperaciones.setLayout(new GridLayout(4, 1));
+	        panelOperaciones.setBorder(new EmptyBorder(4, 4, 4, 4));
+	        panelOperaciones.setBackground(Color.cyan);
+	        
+				try
+				{										
+					
+					fieldModo.setText("MODO DE USO");
+					panel.add("North",fieldModo);
+					
+					//###################################### BOTON TECNICO
+					btModoTecnico=new JButton();
+					btModoTecnico.setText("MODO TECNICO");			
+					//btModoTecnico.addActionListener(this);
+					btModoTecnico.addMouseListener(new MouseAdapter() {						 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	System.out.print("\n MODO TECNICO");
+							
+							if(menuTecnico.validarSenha())
+							{
+								//menuInicio.empezarMenuTecnico(usuariosL);
+							 MenuAdministrador menuAdmin= new MenuAdministrador(usuariosL,frame); 
+							 menuAdmin.mostrar();
 							}else
 							{
-								System.out.print("\nFALLO BAJA USUARIO");
-								Thread.sleep(2000);
-							}	
-						}
-						catch(MiException e)
-						{							
-							throw e;
-						}
-						catch(Exception e)
-						{							
-							throw new MiException("[empezarMenuTecnico]DELETE USER EXCEPTION: "+e);
-						}	
-													
-					break;
-					case 4:
-						try
-						{
-							System.out.print("\n***USUARIOS***");
-							Thread.sleep(2000);
-							for(Usuario usuario : usuarios)
+								
+							}			                
+			            }
+			        });
+					panelOperaciones.add(btModoTecnico);
+					
+					//########################################## BOTON SISTEMA
+					btModoSistema=new JButton();
+					btModoSistema.setText("MODO SISTEMA");			
+					//btModoSistema.addActionListener(this);
+					btModoSistema.addMouseListener(new MouseAdapter() {						 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	System.out.print("\nMODO SISTEMA");
+							Usuario usuarioLogueado=menuTecnico.empezarLogginUsuario(usuariosL);
+							
+							if(usuarioLogueado==null)
+							{							
+							}else
 							{
-								System.out.print("\n"+usuario.toString());
-							}
-							Thread.sleep(2000);
-						}
-						catch(MiException e)
-						{							
-							throw e;
-						}
-						catch(Exception e)
-						{							
-							throw new MiException("[empezarMenuTecnico]MOSTRAR USER EXCEPTION: "+e);
-						}	
-						break;
-					case 99:
-						return "salir";						
-						
-					default:
-						break;
+								try 
+								{
+									if(menuprinc.empezarMenu(usuarioLogueado)=="salir")
+									{							
+									}
+								}catch(MiException  e) {
+									System.out.print("\nEXCEPTION SISTEMA : "+e);
+									throw e;
+								}
+								catch(Exception  e) {
+									System.out.print("\nEXCEPTION GENERAL SISTEMA : "+e);
+									throw new MiException("\nEXCEPTION GENERAL SISTEMA : "+e);
+								}
+							}   
+			            }
+			        });
+					
+					panelOperaciones.add(btModoSistema);
+					panel.add("Center",panelOperaciones);
+
+					//################################################### BOTON SALIR
+					btSalir=new JButton();
+					btSalir.setText("SALIR");			
+					//btSalir.addActionListener(this);
+					btSalir.addMouseListener(new MouseAdapter() {						 
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			        		System.out.print("\nSALIR");
+							setRespuestaModo(-1);
+							System.exit(0);
+			            }
+			        });
+					
+					
+					panel.add("South",btSalir);
+			
+					//frame.setVisible(true);
+					
+				}catch(MiException e)
+				{
+					throw e;
 				}
-				
-			}
-			return null;
+				catch(Exception e)
+				{							
+					throw new MiException("[menuTipoSistema]MENU TIPO SISTEMA EXCEPTION: "+e);
+				}
+			
+		}	
+	   public void mostrar(JFrame frame) {
+		  
+           frame.setVisible(true);
+			  
+       }
+
+        
+	}
+	
+	public class MenuTecnico extends JFrame
+	{		
+		private static final long serialVersionUID = 1L;
+		public MenuTecnico()
+		{
+			
 		}
 		public Usuario empezarLogginUsuario(List<Usuario> usuarios) throws MiException
 		{
@@ -1142,31 +1449,7 @@ public class Menu {
 			}
 			return null;
 		}
-		public int menuTipoSistema() {
-			try
-			{
-				System.out.print("\n\n1-MODO TECNICO");
-				System.out.print("\n2-MODO SISTEMA");
-				System.out.print("\n99-SALIR SISTEMA");
-				switch(Dentre.entero("\n INGRESE MODO DE USO DEL SISTEMA: "))
-				{
-					case Definiciones.MODO_TECNICO:
-						return Definiciones.MODO_TECNICO;
-						
-					case Definiciones.MODO_SISTEMA:
-						return Definiciones.MODO_SISTEMA;
-					case Definiciones.MODO_SALIR:
-						return Definiciones.MODO_SALIR;
-						
-						default:
-							return -1;
-				}				
-				
-			}catch(Exception e)
-			{							
-				throw new MiException("[menuTipoSistema]MENU TIPO SISTEMA EXCEPTION: "+e);
-			}
-		}
+		
 		public boolean validarSenha() {
 			try
 			{
