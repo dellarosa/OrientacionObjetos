@@ -33,7 +33,7 @@ public class Main {
 		
 		final JFrame frame = new JFrame();
 		
-		frame.setSize(400, 600);
+		frame.setSize(600, 600);
         frame.setTitle("TALLER MECANICO 2013");
         //frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -51,7 +51,7 @@ public class Main {
 		{				
 			usuariosL=sqlcarga.cargarUsuarios();		
 			Menu.MenuInicio menuInicio=menu.new MenuInicio(frame,usuariosL);
-			menuInicio.mostrar(frame);
+			menuInicio.mostrar();
 
 				
 		}catch(SQLException e)

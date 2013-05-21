@@ -2,6 +2,8 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,9 +19,12 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
@@ -43,7 +48,8 @@ import utils.Dentre;
 import utils.MetodosGrl;
 import utils.MiException;
 
-public class Menu {
+public class Menu 
+{
 	
 	MenuPrincipal menuprinc;
 	MetodosGrl metgral;
@@ -967,7 +973,8 @@ public class Menu {
 		}
 		
 	}
-	//#######################################################################################
+	//#############################################################################################################
+	//################################### MENU ADMINISTRADOR ####################################################
 	public class MenuAdministrador
 	{	
 		
@@ -980,15 +987,17 @@ public class Menu {
 		JButton btAtras;		
 		JButton btSalir;
 
-		public JFrame getFrameAdmin() {
+		public JFrame getFrameAdmin() 
+		{
 			return frameAdmin;
 		}
 
-		public void setFrameAdmin(JFrame frameAdmin) {
+		public void setFrameAdmin(JFrame frameAdmin) 
+		{
 			this.frameAdmin = frameAdmin;
 		}
 
-		public MenuAdministrador(final List<Usuario> usuarios,JFrame frame)
+		public MenuAdministrador(JFrame frame,final List<Usuario> usuarios)
 		{				
 			try
 			{	
@@ -1036,25 +1045,134 @@ public class Menu {
 			            public void mouseReleased(MouseEvent evt) {
 			            	try
 							{
-								Usuario userCreate=new Usuario();
+			            		getFrameAdmin().getContentPane().removeAll();
+			    				getFrameAdmin().getContentPane().repaint();
+			    				
+			    				JPanel panelCrearUser=new JPanel();					
+								panelCrearUser =(JPanel) getFrameAdmin().getContentPane();
+								panelCrearUser.removeAll();
+								panelCrearUser.setBackground(Color.lightGray);
+								panelCrearUser.setLayout(new BorderLayout());
 								
-								userCreate.setName(Dentre.texto("\n INGRESE NOMBRE: "));
-								userCreate.setEmail(Dentre.texto("\n INGRESE MAIL: "));							
-								userCreate.setUsername(Dentre.texto("\n INGRESE APODO: "));							
-								userCreate.setPassword(Dentre.texto("\n INGRESE PASSWORD: "));							
-								userCreate.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA: "));
-								userCreate.setId(sqlselects.buscarUltimoUsuarioId());			//podria buscar en la lista, pero ...
-								if(sqlinserts.insertarUsuario(userCreate))
-								{
-									System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
-									Thread.sleep(2000);							
-									usuarios.add(userCreate);
-								}else
-								{
-									System.out.print("\nFALLO MODIFICACION USUARIO");
-									Thread.sleep(2000);
-								}
+								JPanel panelGridUser=new JPanel();			
+								panelGridUser.setLayout(new GridLayout(6, 2));
+								panelGridUser.setBorder(new EmptyBorder(4, 4, 4, 4));
+								panelGridUser.setBackground(Color.pink);
+								panelGridUser.removeAll();
+											
+								JPanel panelGridUserEnd = new JPanel();
+								panelGridUserEnd.setLayout(new GridLayout(3, 1));
+								panelGridUserEnd.setBorder(new EmptyBorder(4, 4, 4, 4));
+								panelGridUserEnd.setBackground(Color.blue);
+								panelGridUserEnd.removeAll();
 								
+								final JTextArea areaName=new JTextArea();
+								areaName.setBorder(Definiciones.line_blackline);
+								JTextField fieldName=new JTextField("Nombre");
+								final JTextArea areaEmail=new JTextArea();
+								areaEmail.setBorder(Definiciones.line_blackline);
+								JTextField fieldEmail=new JTextField("Email");
+								final JTextArea areaUserName=new JTextArea();
+								areaUserName.setBorder(Definiciones.line_blackline);
+								JTextField fieldUserName=new JTextField("Nombre de Usuario");
+								final JTextArea areaPassword=new JTextArea();
+								areaPassword.setBorder(Definiciones.line_blackline);
+								JTextField fieldPassword=new JTextField("Contraseña");
+								final JTextArea areaJerarquia=new JTextArea();
+								areaJerarquia.setBorder(Definiciones.line_blackline);
+								JTextField fieldJerarquia=new JTextField("Jerarquia");
+																								
+								panelGridUser.add(areaName);
+								panelGridUser.add(fieldName);
+								
+								panelGridUser.add(areaEmail);
+								panelGridUser.add(fieldEmail);
+								
+								panelGridUser.add(areaUserName);
+								panelGridUser.add(fieldUserName);
+								
+								panelGridUser.add(areaPassword);
+								panelGridUser.add(fieldPassword);
+								
+								panelGridUser.add(areaJerarquia);
+								panelGridUser.add(fieldJerarquia);
+								
+								JButton btSubmitCreate=new JButton();
+								btSubmitCreate.setText("SUBMIT");								
+								btSubmitCreate.addMouseListener(new MouseAdapter() {												
+					            @Override
+					            public void mouseReleased(MouseEvent evt) {
+					            	Usuario userCreate=new Usuario();
+					            	
+					            	userCreate.setName(areaName.getText());							            	
+									userCreate.setEmail(areaEmail.getText());							
+									userCreate.setUsername(areaUserName.getText());							
+									userCreate.setPassword(areaPassword.getText());							
+									userCreate.setJerarquia(areaJerarquia.getText());
+									userCreate.setLogueado(0);
+									
+					            	try {
+					            		userCreate.setId(sqlselects.buscarUltimoUsuarioId());			//podria buscar en la lista, pero ...
+					            		if(userCreate.getName().equals("")||userCreate.getPassword().equals("")||userCreate.getUsername().equals(""))
+					            		{
+					            			System.out.print("\nDATOS VACIOS");				//DESPUES HACER CUADROS INFORMATIVOS
+					            			Thread.sleep(2000);
+					            			MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+											menuAdministrador.mostrar();
+					            		}else
+					            		{
+											if(sqlinserts.insertarUsuario(userCreate))
+											{
+												System.out.print("\nUSUARIO CREADO CORRECTAMENTE");
+												Thread.sleep(2000);							
+												usuarios.add(userCreate);
+												MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+												menuAdministrador.mostrar();
+											}else
+											{
+												System.out.print("\nFALLO CREACION USUARIO");
+												Thread.sleep(2000);
+											}
+					            		}
+									} catch (MiException e) {
+											throw e;
+									} catch (SQLException e) {
+											throw new MiException("[CREATE USER] SQL EXCEPTION : "+e);
+									} catch (InterruptedException e) {
+										throw new MiException("[CREATE USER] INTERRUPTED EXCEPTION : "+e);
+						            } catch (Exception e) {
+										throw new MiException("[CREATE USER]EXCEPTION : "+e);												
+									}
+					            }
+							});
+									
+								JButton btVolver=new JButton();
+								btVolver.setText("VOLVER");								
+								btVolver.addMouseListener(new MouseAdapter() {												
+					            @Override
+					            public void mouseReleased(MouseEvent evt) {
+					            	MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+									menuAdministrador.mostrar();					            	
+					            }
+								});
+								
+								JButton btSalir=new JButton();
+								btSalir.setText("SALIR");								
+								btSalir.addMouseListener(new MouseAdapter() {												
+					            @Override
+					            public void mouseReleased(MouseEvent evt) {
+					            	System.exit(0);					            	
+					            }
+								});
+								
+								//panelGridUser.add(btSubmitCreate);
+								panelCrearUser.add("North",panelGridUser);
+								panelGridUserEnd.add(btSubmitCreate);
+								panelGridUserEnd.add(btVolver);
+								panelGridUserEnd.add(btSalir);
+								panelCrearUser.add("South",panelGridUserEnd);
+								
+								getFrameAdmin().setContentPane(panelCrearUser);
 							}
 							catch(MiException e)
 							{							
@@ -1075,57 +1193,238 @@ public class Menu {
 						 
 			            @Override
 			            public void mouseReleased(MouseEvent evt) {
+			            	
 			            	try
 							{
-								//Usuario usuarioModif=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "));
-								Usuario usuarioModif=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A MODIFICAR: "),usuarios);
-								if(usuarioModif==null)
-								{
-									System.out.print("\nNO SE ENCONTRO EL USUARIO");
-									Thread.sleep(2000);
-								}else
-								{
-									Usuario userAux=usuarioModif;
-									//PODRIA MEJORARSE PREGUNTANDO SI DESEA MODIFICAR
-									//TODO: AGREGAR JERARQUIAS DE USUARIO								
-									userAux.setName(Dentre.texto("\n INGRESE NOMBRE A MODIFICAR: "));								
-									userAux.setEmail(Dentre.texto("\n INGRESE MAIL A MODIFICAR: "));								
-									userAux.setUsername(Dentre.texto("\n INGRESE APODO A MODIFICAR: "));								
-									userAux.setPassword(Dentre.texto("\n INGRESE PASSWORD USUARIO: "));
-									userAux.setJerarquia(Dentre.texto("\n INGRESE JERARQUIA USUARIO: "));						
-									userAux.setLogueado(0);
+			            		getFrameAdmin().getContentPane().removeAll();
+			    				getFrameAdmin().getContentPane().repaint();
+			    				
+			    				JPanel panelModificarUser=new JPanel();					
+			    				panelModificarUser =(JPanel) getFrameAdmin().getContentPane();			    				
+			    				panelModificarUser.setBackground(Color.lightGray);
+			    				panelModificarUser.setLayout(new BorderLayout());
+								
+								JPanel panelGridUserEnd = new JPanel();
+								panelGridUserEnd.setLayout(new GridLayout(3, 1));
+								panelGridUserEnd.setBorder(new EmptyBorder(4, 4, 4, 4));
+								panelGridUserEnd.setBackground(Color.blue);
+								
+								JPanel panelGridModif=new JPanel();			
+								panelGridModif.setLayout(new GridLayout(1,2));
+								panelGridModif.setBorder(new EmptyBorder(4, 4, 4, 4));
+								panelGridModif.setBackground(Color.pink);
+								
+								final JTextArea areaToSeek=new JTextArea();
+								JTextField fieldToSeek=new JTextField("INGRESE APODO USUARIO A MODIFICAR");
+																	
+								panelGridModif.add(areaToSeek);
+								panelGridModif.add(fieldToSeek);
 									
-									if(sqlmodif.updateUsuario(userAux))
-									{
-										System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
-										Thread.sleep(2000);
-										int i=0;
-										for(Usuario user:usuarios)
-										{
-											if(usuarioModif.getName().equals(user.getName()))
-											{
-												break;
+								JButton btSubmitModif=new JButton();
+								btSubmitModif.setText("SUBMIT");								
+								btSubmitModif.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	try
+						            	{
+							            	if(areaToSeek.getText().equals(""))
+							            	{
+							            		System.out.print("[SUBMIT MODIFICAR] DATOS VACIOS");		//DEBUG AGREGAR VENTANA EMERG.
+							            		Thread.sleep(2000);
+							            		return;
+							            	}else
+							            	{
+							            		final Usuario usuarioModif=metgral.buscarUsuarioPorApodo(areaToSeek.getText(),usuarios);
+							            		if(usuarioModif==null)
+												{
+													System.out.print("\nNO SE ENCONTRO EL USUARIO");
+													Thread.sleep(2000);
+													return;
+												}else
+												{
+													getFrameAdmin().getContentPane().removeAll();
+								    				getFrameAdmin().getContentPane().repaint();
+								    				
+								    				JPanel panelModificacion=new JPanel();					
+								    				panelModificacion =(JPanel) getFrameAdmin().getContentPane();
+								    				panelModificacion.removeAll();
+								    				panelModificacion.setBackground(Color.lightGray);
+								    				panelModificacion.setLayout(new BorderLayout());
+								    				
+													final JPanel panelGridModifUser=new JPanel();			
+													panelGridModifUser.setLayout(new GridLayout(5,2));
+													panelGridModifUser.setBorder(new EmptyBorder(4, 4, 4, 4));
+													panelGridModifUser.setBackground(Color.pink);				
+													
+													final JPanel panelGridUserEnd = new JPanel();
+													panelGridUserEnd.setLayout(new GridLayout(3, 1));
+													panelGridUserEnd.setBorder(new EmptyBorder(4, 4, 4, 4));
+													panelGridUserEnd.setBackground(Color.blue);
+													
+													
+													final JTextArea areaName=new JTextArea();
+													areaName.setBorder(Definiciones.line_blackline);
+													JTextField fieldName=new JTextField("Nombre ("+usuarioModif.getName()+")");
+													final JTextArea areaEmail=new JTextArea();
+													areaEmail.setBorder(Definiciones.line_blackline);
+													JTextField fieldEmail=new JTextField("Email ("+usuarioModif.getEmail()+")");
+													final JTextArea areaUserName=new JTextArea();
+													areaUserName.setBorder(Definiciones.line_blackline);
+													JTextField fieldUserName=new JTextField("Nombre de Usuario ("+usuarioModif.getUsername()+")");
+													final JTextArea areaPassword=new JTextArea();
+													areaPassword.setBorder(Definiciones.line_blackline);
+													JTextField fieldPassword=new JTextField("Contraseña ("+usuarioModif.getPassword()+")");
+													final JTextArea areaJerarquia=new JTextArea();
+													areaJerarquia.setBorder(Definiciones.line_blackline);
+													JTextField fieldJerarquia=new JTextField("Jerarquia ("+usuarioModif.getJerarquia()+")");
+																													
+													panelGridModifUser.add(areaName);
+													panelGridModifUser.add(fieldName);
+													
+													panelGridModifUser.add(areaEmail);
+													panelGridModifUser.add(fieldEmail);
+													
+													panelGridModifUser.add(areaUserName);
+													panelGridModifUser.add(fieldUserName);
+													
+													panelGridModifUser.add(areaPassword);
+													panelGridModifUser.add(fieldPassword);
+													
+													panelGridModifUser.add(areaJerarquia);
+													panelGridModifUser.add(fieldJerarquia);
+													
+													final JButton btSubmitModificar=new JButton();
+													btSubmitModificar.setText("SUBMIT");								
+													btSubmitModificar.addMouseListener(new MouseAdapter() {												
+														@Override
+														public void mouseReleased(MouseEvent evt) {
+															try
+															{
+											            		//PODRIA MEJORARSE PREGUNTANDO SI DESEA MODIFICAR
+																//TODO: AGREGAR JERARQUIAS DE USUARIO
+																Usuario userAux=new Usuario();		
+																userAux=usuarioModif;
+																userAux.setName(areaName.getText());							            	
+																userAux.setEmail(areaEmail.getText());							
+																userAux.setUsername(areaUserName.getText());							
+																userAux.setPassword(areaPassword.getText());							
+																userAux.setJerarquia(areaJerarquia.getText());
+																userAux.setLogueado(0);
+																userAux.setId(usuarioModif.getId());
+																
+																if(sqlmodif.updateUsuario(userAux))
+																{
+																	System.out.print("\nUSUARIO MODIFICADO CORRECTAMENTE");
+																	Thread.sleep(2000);
+																	int i=0;
+																	for(Usuario user:usuarios)
+																	{
+																		if(usuarioModif.getName().equals(user.getName()))
+																		{
+																			break;
+																		}
+																		i++;
+																	}
+																	usuarios.remove(i);								
+																	//usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioModif);										
+																	usuarios.add(userAux);
+																	
+																	MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+																	menuAdministrador.mostrar();
+																	
+																}else
+																{
+																	System.out.print("\nFALLO MODIFICACION USUARIO");
+																	Thread.sleep(2000);
+																	return;
+																}
+															}catch(MiException e)
+															{
+																throw e;
+															}catch(Exception e)
+															{
+																throw new MiException("[MODIFICAR USER] EXCEPTION : "+e);
+															}
+										            	
+										            	}
+													});
+													JButton btVolver=new JButton();
+													btVolver.setText("VOLVER");								
+													btVolver.addMouseListener(new MouseAdapter() {												
+										            @Override
+										            public void mouseReleased(MouseEvent evt) {
+										            	MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+														menuAdministrador.mostrar();				            	
+										            }
+													});
+													
+													JButton btSalir=new JButton();
+													btSalir.setText("SALIR");								
+													btSalir.addMouseListener(new MouseAdapter() {												
+										            @Override
+										            public void mouseReleased(MouseEvent evt) {
+										            	System.exit(0);					            	
+										            }
+													});
+													
+													panelModificacion.add("North",panelGridModifUser);
+													panelGridUserEnd.add(btSubmitModificar);
+													panelGridUserEnd.add(btVolver);
+													panelGridUserEnd.add(btSalir);
+													panelModificacion.add("South",panelGridUserEnd);												
+													getFrameAdmin().setContentPane(panelModificacion);
+													
+													
+													
+												}
+											
 											}
-											i++;
-										}
-										usuarios.remove(i);								
-										//usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioModif);										
-										usuarios.add(userAux);
-										
-									}else
-									{
-										System.out.print("\nFALLO MODIFICACION USUARIO");
-										Thread.sleep(2000);
-									}
+						            	}
+						            	catch(MiException e)
+						            	{
+						            		throw e;
+						            	}catch(Exception e)
+						            	{
+						            		throw new MiException("[BAJA USUARIO] MI EXCEPTION : "+e);
+						            	} 
+						            }
+									});
+									JButton btVolver=new JButton();
+									btVolver.setText("VOLVER");								
+									btVolver.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+										menuAdministrador.mostrar();				            	
+						            }
+									});
+									
+									JButton btSalir=new JButton();
+									btSalir.setText("SALIR");								
+									btSalir.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	System.exit(0);					            	
+						            }
+									});
+									
+									//panelGridUser.add(btSubmitCreate);
+									panelModificarUser.add("North",panelGridModif);
+									panelGridUserEnd.add(btSubmitModif);
+									panelGridUserEnd.add(btVolver);
+									panelGridUserEnd.add(btSalir);
+									panelModificarUser.add("South",panelGridUserEnd);
+									
+									getFrameAdmin().setContentPane(panelModificarUser);
 								}
-							
-							}catch(MiException e)
-							{
-								throw e;							
-							}catch(Exception e)
-							{
-								throw new MiException("[btModificarUsuario]MODIFICACION USER EXCEPTION: "+e);							
-							}
+								catch(MiException e)
+								{							
+									throw e;
+								}
+								catch(Exception e)
+								{							
+									throw new MiException("[btCrearUsuario]CREATE USER EXCEPTION: "+e);
+								}			            				            	
 			            }
 			        });
 					panelOp.add(btModificarUsuario);
@@ -1136,46 +1435,128 @@ public class Menu {
 					btBajaUsuario.addMouseListener(new MouseAdapter() {				 
 			            @Override
 			            public void mouseReleased(MouseEvent evt) {
-			            	try
-							{
-								//Usuario usuarioBaja=sqlselects.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "));
-								Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(Dentre.texto("\n INGRESE APODO USUARIO A DAR DE BAJA: "),usuarios);
-								if(usuarioBaja==null)
+			            									
+			            		try
 								{
-									System.out.print("\nNO SE ENCONTRO USER");
-									return;
+				            		getFrameAdmin().getContentPane().removeAll();
+				    				getFrameAdmin().getContentPane().repaint();
+				    				
+				    				JPanel panelBajaUser=new JPanel();					
+				    				panelBajaUser =(JPanel) getFrameAdmin().getContentPane();
+				    				panelBajaUser.removeAll();
+				    				panelBajaUser.setBackground(Color.lightGray);
+				    				panelBajaUser.setLayout(new BorderLayout());
+									
+									JPanel panelGridUserEnd = new JPanel();
+									panelGridUserEnd.setLayout(new GridLayout(3, 1));
+									panelGridUserEnd.setBorder(new EmptyBorder(4, 4, 4, 4));
+									panelGridUserEnd.setBackground(Color.blue);
+									panelGridUserEnd.removeAll();
+									
+									
+									JPanel panelGridSeek=new JPanel();			
+									panelGridSeek.setLayout(new GridLayout(1,2));
+									panelGridSeek.setBorder(new EmptyBorder(4, 4, 4, 4));
+									panelGridSeek.setBackground(Color.pink);
+									panelGridSeek.removeAll();
+									
+									final JTextArea areaToSeek=new JTextArea();
+									areaToSeek.setBorder(Definiciones.line_blackline);
+									JTextField fieldToSeek=new JTextField("INGRESE APODO USUARIO A DAR DE BAJA");
+																		
+									panelGridSeek.add(areaToSeek);
+									panelGridSeek.add(fieldToSeek);
+										
+									JButton btSubmitBaja=new JButton();
+									btSubmitBaja.setText("SUBMIT");								
+									btSubmitBaja.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	try
+						            	{
+							            	if(areaToSeek.getText().equals(""))
+							            	{
+							            		System.out.print("[SUBMIT BAJA] DATOS VACIOS");		//DEBUG AGREGAR VENTANA EMERG.
+							            		Thread.sleep(2000);
+							            		return;
+							            	}else
+							            	{
+							            		Usuario usuarioBaja=metgral.buscarUsuarioPorApodo(areaToSeek.getText(),usuarios);
+							            		if(usuarioBaja==null)
+												{
+													System.out.print("\nNO SE ENCONTRO USER");
+													return;
+												}
+							            		//SE PUEDE AGREGAR PREGUNTA DE SI ES EL USUARIO BUSCADO
+							            		if(sqldelete.eliminarUsuario(usuarioBaja))
+												{
+													System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");		//DEBUG AGREGAR VENTANA EMERG.
+													Thread.sleep(2000);
+													int i=0;
+													for(Usuario user:usuarios)
+													{
+														if(usuarioBaja.getName().equals(user.getName()))
+														{
+															break;
+														}
+														i++;
+													}
+													usuarios.remove(i);												
+													//usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioBaja);						
+													MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+													menuAdministrador.mostrar();
+												}else
+												{
+													System.out.print("\nFALLO BAJA USUARIO");
+													Thread.sleep(2000);
+												}
+							            	}
+						            	}
+						            	catch(MiException e)
+						            	{
+						            		throw e;
+						            	}catch(Exception e)
+						            	{
+						            		throw new MiException("[BAJA USUARIO] MI EXCEPTION : "+e);
+						            	} 
+						            }
+									});
+									JButton btVolver=new JButton();
+									btVolver.setText("VOLVER");								
+									btVolver.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+										menuAdministrador.mostrar();				            	
+						            }
+									});
+									
+									JButton btSalir=new JButton();
+									btSalir.setText("SALIR");								
+									btSalir.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	System.exit(0);					            	
+						            }
+									});
+									
+									//panelGridUser.add(btSubmitCreate);
+									panelBajaUser.add("North",panelGridSeek);
+									panelGridUserEnd.add(btSubmitBaja);
+									panelGridUserEnd.add(btVolver);
+									panelGridUserEnd.add(btSalir);
+									panelBajaUser.add("South",panelGridUserEnd);
+									
+									getFrameAdmin().setContentPane(panelBajaUser);
 								}
-								if(sqldelete.eliminarUsuario(usuarioBaja))
-								{
-									System.out.print("\nUSUARIO ELIMINADO CORRECTAMENTE");
-									Thread.sleep(2000);
-									int i=0;
-									for(Usuario user:usuarios)
-									{
-										if(usuarioBaja.getName().equals(user.getName()))
-										{
-											break;
-										}
-										i++;
-									}
-									usuarios.remove(i);
-									
-									//usuarios=metgral.eliminarUsuarioDeLista(usuarios,usuarioBaja);						
-									
-								}else
-								{
-									System.out.print("\nFALLO BAJA USUARIO");
-									Thread.sleep(2000);
-								}	
-							}
-							catch(MiException e)
-							{							
-								throw e;
-							}
-							catch(Exception e)
-							{							
-								throw new MiException("[btBajaUsuario]DELETE USER EXCEPTION: "+e);
-							}	
+								catch(MiException e)
+								{							
+									throw e;
+								}
+								catch(Exception e)
+								{							
+									throw new MiException("[btCrearUsuario]CREATE USER EXCEPTION: "+e);
+								}			            				            	
 			            }
 			        });
 					panelOp.add(btBajaUsuario);
@@ -1188,13 +1569,69 @@ public class Menu {
 			            public void mouseReleased(MouseEvent evt) {
 			            	try
 							{
-								System.out.print("\n***USUARIOS***");
-								Thread.sleep(2000);
+			            		getFrameAdmin().getContentPane().removeAll();
+			    				getFrameAdmin().getContentPane().repaint();
+			    				
+			    				JPanel panelCrearUser=new JPanel();					
+								panelCrearUser =(JPanel) getFrameAdmin().getContentPane();
+								panelCrearUser.removeAll();
+								panelCrearUser.setBackground(Color.lightGray);
+								panelCrearUser.setLayout(new BorderLayout());
+								
+								JPanel panelGridUserEnd = new JPanel();
+								panelGridUserEnd.setLayout(new GridLayout(2, 1));
+								panelGridUserEnd.setBorder(new EmptyBorder(4, 4, 4, 4));
+								panelGridUserEnd.setBackground(Color.blue);
+								panelGridUserEnd.removeAll();
+								
+								int cantUser=0;
 								for(Usuario usuario : usuarios)
 								{
+									cantUser++;
 									System.out.print("\n"+usuario.toString());
 								}
-								Thread.sleep(2000);
+								
+								JPanel panelGridUser=new JPanel();			
+								panelGridUser.setLayout(new GridLayout(cantUser,1));
+								panelGridUser.setBorder(new EmptyBorder(4, 4, 4, 4));
+								panelGridUser.setBackground(Color.pink);
+								panelGridUser.removeAll();
+											
+								for(Usuario usuario : usuarios)
+								{
+									JTextField fieldUser=new JTextField();
+									fieldUser.setText(usuario.toString());
+									panelGridUser.add(fieldUser);
+								}
+								
+									
+								JButton btVolver=new JButton();
+								btVolver.setText("VOLVER");								
+								btVolver.addMouseListener(new MouseAdapter() {												
+					            @Override
+					            public void mouseReleased(MouseEvent evt) {
+					            	MenuAdministrador menuAdministrador=new MenuAdministrador(getFrameAdmin(),usuarios);
+									menuAdministrador.mostrar();				            	
+					            }
+								});
+								
+								JButton btSalir=new JButton();
+								btSalir.setText("SALIR");								
+								btSalir.addMouseListener(new MouseAdapter() {												
+					            @Override
+					            public void mouseReleased(MouseEvent evt) {
+					            	System.exit(0);					            	
+					            }
+								});
+								
+								//panelGridUser.add(btSubmitCreate);
+								panelCrearUser.add("North",panelGridUser);
+								
+								panelGridUserEnd.add(btVolver);
+								panelGridUserEnd.add(btSalir);
+								panelCrearUser.add("South",panelGridUserEnd);
+								
+								getFrameAdmin().setContentPane(panelCrearUser);
 							}
 							catch(MiException e)
 							{							
@@ -1202,13 +1639,13 @@ public class Menu {
 							}
 							catch(Exception e)
 							{							
-								throw new MiException("[btMostrarUsuarios]MOSTRAR USER EXCEPTION: "+e);
-							}	
+								throw new MiException("[btCrearUsuario]CREATE USER EXCEPTION: "+e);
+							}
 			            }
 			        });
 					panelOp.add(btMostrarUsuarios);					
 
-					/////#########################################
+					/////##################### VOLVER ####################
 					btAtras=new JButton();
 					btAtras.setText("VOLVER");			
 					btAtras.addMouseListener(new MouseAdapter() {						 
@@ -1216,11 +1653,11 @@ public class Menu {
 			            public void mouseReleased(MouseEvent evt) {
 			            	
 			            	MenuInicio menuInicio=new MenuInicio(getFrameAdmin(),usuarios);
-			            	menuInicio.mostrar(getFrameAdmin());
+			            	menuInicio.mostrar();
 			            }
 			        });	
 					
-			        /////#########################################
+			        /////###################### SALIR ###################
 					btSalir=new JButton();
 					btSalir.setText("SALIR");			
 					btSalir.addMouseListener(new MouseAdapter() {
@@ -1229,8 +1666,7 @@ public class Menu {
 			            public void mouseReleased(MouseEvent evt) {
 			                System.exit(0);
 			            }
-			        });
-					
+			        });					
 					panelSalir.add(btAtras);
 					panelSalir.add(btSalir);
 					
@@ -1249,7 +1685,8 @@ public class Menu {
 			return;
 		}
 
-		public void mostrar() {
+		public void mostrar() 
+		{
 			  
 	           this.getFrameAdmin().setVisible(true);
 				  
@@ -1260,26 +1697,28 @@ public class Menu {
 ////////######################################### MENU INICIO ##################################################################
 	public class MenuInicio 
 	{
-		private static final long serialVersionUID = 1L;
-		private int respuestaModo;
-		JButton  btModoTecnico,btModoSistema, btSalir;
 		
-		public int getRespuestaModo()
+		JButton  btModoTecnico,btModoSistema, btSalir;
+		JFrame frameInicio;
+
+		public void setFrameInicio(JFrame frameInicio)
 		{
-			return this.respuestaModo;
+			this.frameInicio=frameInicio;
 		}
-		public void setRespuestaModo(int respuestaModo)
+		public JFrame getFrameInicio()
 		{
-			this.respuestaModo=respuestaModo;
+			return this.frameInicio;
 		}
 		public MenuInicio(final JFrame frame,final List<Usuario> usuariosL)
 		{
+			
+			this.setFrameInicio(frame);
+			
 			JPanel panelOperaciones;					
 			JTextField fieldModo=new JTextField();					
-			frame.getContentPane().removeAll();			
-			
-	        //JPanel panel = (JPanel) this.getContentPane();
-			JPanel panel = (JPanel)frame.getContentPane();
+			this.getFrameInicio().getContentPane().removeAll();			
+
+			JPanel panel = (JPanel)this.getFrameInicio().getContentPane();
 	        panel.setLayout(new BorderLayout());	        
 	        panel.setBackground(Color.cyan);
 	        
@@ -1294,7 +1733,7 @@ public class Menu {
 					fieldModo.setText("MODO DE USO");
 					panel.add("North",fieldModo);
 					
-					//###################################### BOTON TECNICO
+					//###################################### BOTON TECNICO	//##########################
 					btModoTecnico=new JButton();
 					btModoTecnico.setText("MODO TECNICO");			
 					//btModoTecnico.addActionListener(this);
@@ -1303,20 +1742,20 @@ public class Menu {
 			            public void mouseReleased(MouseEvent evt) {
 			            	System.out.print("\n MODO TECNICO");
 							
-							if(menuTecnico.validarSenha())
-							{
+							//if(menuTecnico.validarSenha(frame,usuariosL))
+							
+			            	ValidarSenha validarSenha=new ValidarSenha(frame,usuariosL);
+			            	validarSenha.mostrar();
+							
 								//menuInicio.empezarMenuTecnico(usuariosL);
-							 MenuAdministrador menuAdmin= new MenuAdministrador(usuariosL,frame); 
-							 menuAdmin.mostrar();
-							}else
-							{
-								
-							}			                
+								//MenuAdministrador menuAdmin= new MenuAdministrador(frame,usuariosL); 
+								//menuAdmin.mostrar();
+								                
 			            }
 			        });
 					panelOperaciones.add(btModoTecnico);
 					
-					//########################################## BOTON SISTEMA
+					//########################################## BOTON SISTEMA ################################
 					btModoSistema=new JButton();
 					btModoSistema.setText("MODO SISTEMA");			
 					//btModoSistema.addActionListener(this);
@@ -1350,23 +1789,21 @@ public class Menu {
 					panelOperaciones.add(btModoSistema);
 					panel.add("Center",panelOperaciones);
 
-					//################################################### BOTON SALIR
+					//################################################### BOTON SALIR ####################
 					btSalir=new JButton();
 					btSalir.setText("SALIR");			
 					//btSalir.addActionListener(this);
 					btSalir.addMouseListener(new MouseAdapter() {						 
 			            @Override
 			            public void mouseReleased(MouseEvent evt) {
-			        		System.out.print("\nSALIR");
-							setRespuestaModo(-1);
+			        		System.out.print("\nSALIR");							
 							System.exit(0);
 			            }
 			        });
 					
 					
-					panel.add("South",btSalir);
-			
-					//frame.setVisible(true);
+					panel.add("South",btSalir);			
+					
 					
 				}catch(MiException e)
 				{
@@ -1378,22 +1815,32 @@ public class Menu {
 				}
 			
 		}	
-	   public void mostrar(JFrame frame) {
+	   public void mostrar() 
+	   {
 		  
-           frame.setVisible(true);
+           this.getFrameInicio().setVisible(true);
 			  
        }
 
         
 	}
 	
-	public class MenuTecnico extends JFrame
+	public class MenuTecnico 
 	{		
-		private static final long serialVersionUID = 1L;
+		JFrame frameTecnico;
+		
 		public MenuTecnico()
 		{
 			
 		}
+		public JFrame getFrameTecnico() {
+			return frameTecnico;
+		}
+
+		public void setFrameTecnico(JFrame frameTecnico) {
+			this.frameTecnico = frameTecnico;
+		}
+		
 		public Usuario empezarLogginUsuario(List<Usuario> usuarios) throws MiException
 		{
 			boolean salir=false;
@@ -1450,24 +1897,154 @@ public class Menu {
 			return null;
 		}
 		
-		public boolean validarSenha() {
+		
+	}
+	
+	//############### VALIDAR SENHA ####################################################################################
+	public class ValidarSenha	
+	{
+		JFrame frameSenha;
+		public void setFrameSenha(JFrame frameSenha)
+		{
+			this.frameSenha=frameSenha;
+		}
+		public JFrame getFrameSenha()
+		{
+			return this.frameSenha;
+		}
+		public ValidarSenha()
+		{
+			
+		}
+		public ValidarSenha(final JFrame frame,final List<Usuario> usuariosL)throws MiException
+		{
 			try
 			{
-				System.out.print("\n**VALIDACIÓN TÉCNICA**");				
-				if(Dentre.entero("\nINGRESE SU CONTRASEÑA TÉCNICA: ")==Definiciones.PASS_TECNICO)
-				{
-					System.out.print("\nCONTRASEÑA CORRECTA");
-					return true; 
-				}else
-				{
-					System.out.print("\nCONTRASEÑA INCORRECTA");		//DEBUG
-					return false;
-				}
+				this.setFrameSenha(frame);
+									
+				//frame.getContentPane().removeAll();			
+				this.getFrameSenha().getContentPane().removeAll();
+				this.getFrameSenha().getContentPane().repaint();
 				
-			}catch(Exception e)
-			{							
-				throw new MiException("[validarSenha]VALIDACION MENU TECNICO EXCEPTION: "+e);
-			}			
+				JPanel panel = (JPanel)this.getFrameSenha().getContentPane();
+		        panel.setLayout(new BorderLayout());	        
+		        panel.setBackground(Color.cyan);
+		        
+		        JPanel panelOperaciones = new JPanel();
+		        panelOperaciones.setLayout(new GridLayout(1, 2));
+		        panelOperaciones.setBorder(new EmptyBorder(4, 4, 4, 4));
+		        panelOperaciones.setBackground(Color.cyan);
+		        
+		        JPanel panelEnd = new JPanel();
+		        panelEnd.setLayout(new GridLayout(3, 1));
+		        panelEnd.setBorder(new EmptyBorder(4, 4, 4, 4));
+		        panelEnd.setBackground(Color.cyan);
+		        
+		        JTextField fieldTitulo=new JTextField("VALIDACION DE CLAVE");
+		        
+		        JTextField fieldPass=new JTextField("PASS TECNICA: ");
+		        final JTextArea areaPass=new JTextArea("",3,8);
+		        areaPass.setBorder(Definiciones.line_blackline);
+		        
+		        ///############### SUBMIT ####################################
+		        JButton btSubmitSenha=new JButton();
+		        btSubmitSenha.setText("SUBMIT");								
+		        btSubmitSenha.addMouseListener(new MouseAdapter() {												
+		            @Override
+		            public void mouseReleased(MouseEvent evt) {
+		            	try
+		            	{
+		            		if((!areaPass.getText().equals(""))&&(Integer.valueOf(areaPass.getText())==Definiciones.PASS_TECNICO))
+							{
+		            			System.out.print("\nCONTRASEÑA CORRECTA");
+		            			MenuAdministrador menuAdministrador=new MenuAdministrador(frame,usuariosL);
+		            			menuAdministrador.mostrar();
+							}else
+							{
+								System.out.print("\nCONTRASEÑA INCORRECTA");
+								MenuInicio menuInicio=new MenuInicio(getFrameSenha(),usuariosL);
+				            	menuInicio.mostrar();
+							}
+		            	}
+		            	catch(MiException e)
+		            	{
+		            		throw e;
+		            	}catch(Exception e)
+		            	{
+		            		throw new MiException("[VALIDAR TECNICO] MI EXCEPTION : "+e);
+		            	} 
+		            }
+				});
+				
+		    	/////##################### VOLVER ####################
+				JButton btAtras=new JButton();
+				btAtras.setText("VOLVER");			
+				btAtras.addMouseListener(new MouseAdapter() {						 
+		            @Override
+		            public void mouseReleased(MouseEvent evt) {
+		            	
+		            	MenuInicio menuInicio=new MenuInicio(frame,usuariosL);
+		            	menuInicio.mostrar();
+		            }
+		        });	
+		        
+		    	//################################ SALIR ################### BOTON SALIR
+				JButton btSalir=new JButton();
+				btSalir.setText("SALIR");			
+				//btSalir.addActionListener(this);
+				btSalir.addMouseListener(new MouseAdapter() {						 
+		            @Override
+		            public void mouseReleased(MouseEvent evt) {
+		        		System.out.print("\nSALIR");					
+						System.exit(0);
+		            }
+		        });
+				
+				JPanel panelNorth = new JPanel();
+				panelNorth.setLayout(new GridLayout(2, 1));
+				fieldTitulo.setEnabled(false);
+				panelNorth.setAlignmentX(Component.CENTER_ALIGNMENT);				
+				panelNorth.add(fieldTitulo);				
+				
+				panelOperaciones.setMaximumSize(new Dimension(400,50));				
+				
+				fieldPass.setEnabled(false);
+				fieldPass.setAlignmentX(Component.CENTER_ALIGNMENT);
+				panelOperaciones.add(fieldPass);
+				panelOperaciones.add(areaPass);					
+				
+				panel.add("North",panelNorth);
+				
+				JPanel panelBox = new JPanel();
+		        panelBox.setLayout(new BoxLayout(panelBox,BoxLayout.Y_AXIS));	        
+		        panelBox.setBackground(Color.GREEN);
+		       
+		        panelBox.add(panelOperaciones);
+		        panelBox.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+				panel.add("Center",panelBox);
+			
+				
+				panelEnd.add(btSubmitSenha);
+				panelEnd.add(btAtras);
+				panelEnd.add(btSalir);
+				
+				panel.add("South",panelEnd);				
+				
+				
+				//getFrameSenha().setContentPane(panel);
+			}catch(MiException e)
+			{
+				throw e;
+			}
+			catch(Exception e)
+			{
+				throw new MiException("[VALIDAR SENHA] EXCEPTION : "+e);
+			}
 		}
+		public void mostrar()
+		{
+			this.getFrameSenha().setVisible(true);
+		}
+
 	}
 }

@@ -1,5 +1,11 @@
 package utils;
 
+import java.awt.Color;
+
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+
 
 public class Definiciones {
 
@@ -25,5 +31,13 @@ public class Definiciones {
 	public static final int MODO_SISTEMA=2;
 	
 	public static final int MODO_SALIR=99;
+	
+	public static final Border line_blackline = BorderFactory.createLineBorder(Color.black);
+	public static final Border line_raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
+	public static final Border line_loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+	public static final Border line_raisedbevel = BorderFactory.createRaisedBevelBorder();
+	public static final Border line_loweredbevel = BorderFactory.createLoweredBevelBorder();
+	public static final Border line_empty = BorderFactory.createEmptyBorder();
+	
 	
 }
