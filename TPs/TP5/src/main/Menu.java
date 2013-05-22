@@ -478,11 +478,11 @@ public class Menu
 									} catch (MiException e) {
 											throw e;
 									} catch (SQLException e) {
-											throw new MiException("[MODIFICAR USER] SQL EXCEPTION : "+e);
+											throw new MiException("[MODIFICAR CLIENTE] SQL EXCEPTION : "+e);
 									} catch (InterruptedException e) {
-										throw new MiException("[MODIFICAR USER] INTERRUPTED EXCEPTION : "+e);
+										throw new MiException("[MODIFICAR CLIENTE] INTERRUPTED EXCEPTION : "+e);
 						            } catch (Exception e) {
-										throw new MiException("[MODIFICAR USER]EXCEPTION : "+e);												
+										throw new MiException("[MODIFICAR CLIENTE]EXCEPTION : "+e);												
 									}
 					            }
 								});
@@ -527,11 +527,11 @@ public class Menu
 							} catch (MiException e) {
 									throw e;
 							} catch (SQLException e) {
-									throw new MiException("[MODIF USER] SQL EXCEPTION : "+e);
+									throw new MiException("[MODIF CLIENTE] SQL EXCEPTION : "+e);
 							} catch (InterruptedException e) {
-								throw new MiException("[MODIF USER] INTERRUPTED EXCEPTION : "+e);
+								throw new MiException("[MODIF CLIENTE] INTERRUPTED EXCEPTION : "+e);
 				            } catch (Exception e) {
-								throw new MiException("[MODIF USER]EXCEPTION : "+e);												
+								throw new MiException("[MODIF CLIENTE]EXCEPTION : "+e);												
 							}
 			            }
 						});
@@ -552,7 +552,7 @@ public class Menu
 								throw e;
 							}catch(SQLException e)
 							{
-								throw new MiException("[MENU SISTEMA] CREAR CLIENTE EXCEPTION :"+e);
+								throw new MiException("[MENU SISTEMA] MODIFICAR CLIENTE EXCEPTION :"+e);
 							}				            	
 			            }
 						});
@@ -580,7 +580,7 @@ public class Menu
 						throw e;
 					}catch(Exception e)
 					{
-						throw new MiException("[MENU SISTEMA] MODIFICAR EXCEPTION :"+e);
+						throw new MiException("[MENU SISTEMA] MODIFICAR CLIENTE EXCEPTION :"+e);
 					}
 	            }
 				});			
@@ -588,41 +588,219 @@ public class Menu
 				
 	//3-			//########################### BAJA CLIENTE ###########################
 				JButton btBajaCliente=new JButton();
-				btBajaCliente.setText("MODIFICAR CLIENTE");								
+				btBajaCliente.setText("BAJA CLIENTE");								
 				btBajaCliente.addMouseListener(new MouseAdapter() {												
 	            @Override
 	            public void mouseReleased(MouseEvent evt) {
+	            	
 	            	try
 					{
-						//Cliente cliente=sqlselects.buscarClientePorApodo(Dentre.texto("\n INGRESE APODO CLIENTE A DAR DE BAJA: "));
-						Cliente cliente=metgral.buscarClientePorApodo(Dentre.texto("\n INGRESE NOMBRE CLIENTE A DAR DE BAJA: "),clientesG);
-						if(cliente==null)
-						{
-							System.out.print("\nCLIENTE NO ENCONTRADO");
-							Thread.sleep(2000);
-							return;
-						}
-						if(sqldelete.eliminarCliente(cliente))
-						{
-							System.out.print("\nCLIENTE ELIMINADO CORRECTAMENTE");
-							Thread.sleep(2000);
-							clientesG=metgral.eliminarClienteDeLista(clientesG,cliente);								
-						}else
-						{
-							System.out.print("\nFALLO BAJA CLIENTE");
-							Thread.sleep(2000);
-						}	
+	            		getFrameSistema().getContentPane().removeAll();
+	            		getFrameSistema().getContentPane().repaint();
+	    				
+	    				JPanel panel=new JPanel();					
+						panel =(JPanel) getFrameSistema().getContentPane();						
+						panel.setBackground(Color.lightGray);
+						panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+						
+						JPanel panelGrid=new JPanel();			
+						panelGrid.setLayout(new GridLayout(1, 2));
+						panelGrid.setBorder(Definiciones.line_blackline);
+									
+						JPanel panelEnd = new JPanel();
+						panelEnd.setLayout(new GridLayout(3, 1));						
+						panelEnd.setBackground(Color.blue);
+						
+						 JPanel panelTitulo = new JPanel();
+				        panelTitulo.setLayout(new BorderLayout());	        
+				        panelTitulo.setBackground(Color.BLACK);
+				        panelTitulo.setMaximumSize(new Dimension(400,50));
+				        JLabel labelTitulo=new JLabel("BAJA CLIENTE",JLabel.CENTER);	        
+				        labelTitulo.setFont(new Font(Font.SERIF,Font.BOLD,15));
+				        labelTitulo.setForeground(Color.white);
+				        panelTitulo.add("Center",labelTitulo);
+						
+				        JPanel panelResto = new JPanel();
+				        panelResto.setLayout(new GridLayout(1,1));	        
+				        panelResto.setBackground(Color.cyan);
+				        panelResto.setPreferredSize(new Dimension(400,300));
+				        
+				        final JTextField fieldNombre=new JTextField();
+						fieldNombre.setBorder(Definiciones.line_blackline);	
+						
+						JLabel labelNombre=new JLabel("Ingrese Nombre cliente Baja");
+						labelNombre.setBorder(Definiciones.line_blackline);
+						
+						panelGrid.add(labelNombre);
+						panelGrid.add(fieldNombre);
+						
+						///################# SUBMIT ##########################
+						JButton btSubmit=new JButton();
+						btSubmit.setText("SUBMIT");								
+						btSubmit.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	try
+			            	{
+				            	final Cliente clienteEncontrado=metgral.buscarClientePorApodo(fieldNombre.getText(),clientesG);
+								if(clienteEncontrado==null)
+								{
+									System.out.print("\nCLIENTE NO ENCONTRADO");		//DEBUG
+									Thread.sleep(2000);
+									MenuSistema menuSistema=new MenuSistema(getFrameSistema(),user);
+									menuSistema.mostrar();
+								}else
+								{
+									
+									
+										getFrameSistema().getContentPane().removeAll();
+										getFrameSistema().getContentPane().repaint();
+										
+										JPanel panel = (JPanel)getFrameSistema().getContentPane();
+								        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));	        
+								        panel.setBackground(Color.cyan);
+								        
+								        JPanel panelOperaciones = new JPanel();
+								        panelOperaciones.setLayout(new GridLayout(1, 2));
+								        panelOperaciones.setBackground(Color.cyan);
+
+								        JPanel panelResto = new JPanel();
+								        panelResto.setLayout(new GridLayout(1,1));	        
+								        panelResto.setBackground(Color.cyan);
+								        panelResto.setPreferredSize(new Dimension(400,300));
+								        
+								        JPanel panelLabel = new JPanel();
+								        panelLabel.setLayout(new BoxLayout(panelLabel,BoxLayout.X_AXIS));	        
+								        panelLabel.setBackground(Color.black);
+								        
+								        JLabel labelCliente=new JLabel("BAJA DE 'CLIENTE' - '"+clienteEncontrado.getNombre()+"'",JLabel.CENTER);
+								        labelCliente.setForeground(Color.white);
+								        labelCliente.setFont(new Font(Font.SERIF,Font.BOLD,20));
+								        panelLabel.add(labelCliente);
+								        
+								        ///############### SUBMIT NO ####################################
+								        JButton btSubmitNo=new JButton();
+								        btSubmitNo.setText("NO");								
+								        btSubmitNo.addMouseListener(new MouseAdapter() {												
+								            @Override
+								            public void mouseReleased(MouseEvent evt) {
+								            	try
+								            	{
+									            	System.out.print("\nSE CANCELO BAJA CLIENTE");		//DEBUG
+													Thread.sleep(2000);
+													MenuSistema menuSistema=new MenuSistema(getFrameSistema(),user);
+													menuSistema.mostrar();
+								            	}catch(MiException e)
+												{
+													throw e;
+												}catch(Exception e)
+												{
+													throw new MiException("[MENU SISTEMA] SUBMIT NO BAJA CLIENTE EXCEPTION :"+e);
+												}
+												
+								            }
+										});
+								        panelOperaciones.add(btSubmitNo);
+								        
+								        
+								        ///############### SUBMIT YES####################################
+								        JButton btSubmitYes=new JButton();
+								        btSubmitYes.setText("YES");								
+								        btSubmitYes.addMouseListener(new MouseAdapter() {												
+								            @Override
+								            public void mouseReleased(MouseEvent evt) {								            	
+												try
+								            	{
+									            	if(sqldelete.eliminarCliente(clienteEncontrado))
+													{
+														System.out.print("\nCLIENTE ELIMINADO CORRECTAMENTE");		//DEBUG
+														Thread.sleep(2000);
+														clientesG=metgral.eliminarClienteDeLista(clientesG,clienteEncontrado);
+														MenuSistema menuSistema=new MenuSistema(getFrameSistema(),user);
+														menuSistema.mostrar();
+													}else
+													{
+														System.out.print("\nFALLO BAJA CLIENTE");		//DEBUG
+														Thread.sleep(2000);
+														MenuSistema menuSistema=new MenuSistema(getFrameSistema(),user);
+														menuSistema.mostrar();
+													}
+								            	}catch(MiException e)
+												{
+													throw e;
+												}catch(Exception e)
+												{
+													throw new MiException("[MENU SISTEMA] SUBMIT YES BAJA CLIENTE EXCEPTION :"+e);
+												}
+								            }
+										});
+								        panelOperaciones.add(btSubmitYes);
+								        
+								        panel.add(panelLabel);
+								        panel.add(panelResto);
+								        panel.add(panelOperaciones);
+								        getFrameSistema().setContentPane(panel);
+								}
+			            	}catch(MiException e)
+							{
+								throw e;
+							}catch(Exception e)
+							{
+								throw new MiException("[MENU SISTEMA] BAJA CLIENTE EXCEPTION :"+e);
+							}
+			            }
+			            });
+	            		panelEnd.add(btSubmit);
+	            		
+						///####################### VOLVER #############################
+						JButton btVolver=new JButton();
+						btVolver.setText("VOLVER");								
+						btVolver.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	MenuSistema menuSistema;
+							try {
+								menuSistema = new MenuSistema(getFrameSistema(),user);
+								menuSistema.mostrar();	
+							} catch (MiException e) {
+								throw e;
+							}catch(SQLException e)
+							{
+								throw new MiException("[MENU SISTEMA] BAJA CLIENTE EXCEPTION :"+e);
+							}				            	
+			            }
+						});
+						panelEnd.add(btVolver);
+						
+						///######################## SALIR ##########################
+						JButton btSalir=new JButton();
+						btSalir.setText("SALIR");								
+						btSalir.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	System.exit(0);					            	
+			            }
+						});
+						panelEnd.add(btSalir);
+						
+						panel.add(panelTitulo);
+						panel.add(panelGrid);
+						panel.add(panelResto);
+						panel.add(panelEnd);
+						
+						getFrameSistema().setContentPane(panel);
+						
 					}catch(MiException e)
 					{
 						throw e;
+					}catch(Exception e)
+					{
+						throw new MiException("[MENU SISTEMA] BAJA CLIENTE EXCEPTION :"+e);
 					}
-					catch(Exception e)
-					{							
-						throw new MiException("DELETE USER EXCEPTION: "+e);
-					}					            	
 	            }
 				});			
 				panelOperaciones.add(btBajaCliente);
+				
 	//4-			//########################### CARGA AUTOPARTE ###########################
 				JButton btCargaAutoparte=new JButton();
 				btCargaAutoparte.setText("CARGAR AUTOPARTES");								
@@ -2584,4 +2762,88 @@ public class Menu
 		}
 
 	}
+	
+	//############################## MENU YES OR NOT ###########################################################
+	//#########################################################################################POR EL MOMENTO NO IMPLEMENTADA
+	public class MenuYesOrNot
+	{
+		private boolean yesOrNot;
+		public boolean isYesOrNot() {
+			return yesOrNot;
+		}
+		public void setYesOrNot(boolean boYesOrNot) {
+			this.yesOrNot = boYesOrNot;
+		}
+		private JFrame frame;
+		public JFrame getFrame() {
+			return frame;
+		}
+		public void setFrame(JFrame frame) {
+			this.frame = frame;
+		}
+		public MenuYesOrNot()
+		{
+			JFrame frame=new JFrame();
+			frame.setSize(300, 200);
+	        frame.setTitle("YES OR NOT");		        
+	        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	        frame.setResizable(false);
+	        this.setFrame(frame);
+	        
+		}
+		public boolean menuYesOrNotBaja(String tipo,String info)
+		{
+			try
+			{
+				this.getFrame().getContentPane().removeAll();
+				this.getFrame().getContentPane().repaint();
+				
+				JPanel panel = (JPanel)this.getFrame().getContentPane();
+		        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));	        
+		        panel.setBackground(Color.cyan);
+		        
+		        JPanel panelOperaciones = new JPanel();
+		        panelOperaciones.setLayout(new GridLayout(1, 2));
+		        panelOperaciones.setBackground(Color.cyan);
+
+		        JLabel labelCliente=new JLabel("BAJA DE '"+tipo+"' - '"+info+"'",JLabel.CENTER);
+
+		        ///############### SUBMIT NO ####################################
+		        JButton btSubmitNo=new JButton();
+		        btSubmitNo.setText("NO");								
+		        btSubmitNo.addMouseListener(new MouseAdapter() {												
+		            @Override
+		            public void mouseReleased(MouseEvent evt) {
+		            	setYesOrNot(false);
+		            }
+				});
+		        panel.add(btSubmitNo);
+		        
+		        
+		        ///############### SUBMIT YES####################################
+		        JButton btSubmitYes=new JButton();
+		        btSubmitYes.setText("YES");								
+		        btSubmitYes.addMouseListener(new MouseAdapter() {												
+		            @Override
+		            public void mouseReleased(MouseEvent evt) {
+		            	setYesOrNot(true);
+		            }
+				});
+		        panelOperaciones.add(btSubmitYes);
+		        
+		        panel.add(labelCliente);
+		        panel.add(panelOperaciones);
+				//getFrameSenha().setContentPane(panel);
+			}catch(MiException e)
+			{
+				throw e;
+			}
+			catch(Exception e)
+			{
+				throw new MiException("[VALIDAR SENHA] EXCEPTION : "+e);
+			}
+			return isYesOrNot();
+		}
+	}
 }
+
