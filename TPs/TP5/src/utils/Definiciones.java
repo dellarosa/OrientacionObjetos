@@ -38,6 +38,7 @@ public class Definiciones {
 	public static final Border line_raisedbevel = BorderFactory.createRaisedBevelBorder();
 	public static final Border line_loweredbevel = BorderFactory.createLoweredBevelBorder();
 	public static final Border line_empty = BorderFactory.createEmptyBorder();
+	public static final int cantidadOpcionesMenu = 10;
 	
 	
 }

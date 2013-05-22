@@ -657,7 +657,7 @@ public class SQLSelects {
 		return inLastID;
 	}
 	//##################################### BUSCAR ULTIMO CLIENTE ID ##########################################
-	public int buscarUltimoClienteId(int id) throws SQLException,MiException {
+	public int buscarUltimoClienteId() throws SQLException,MiException {
 		int inLastID = 0;
 		String query;						
 		Connection conn=null;
