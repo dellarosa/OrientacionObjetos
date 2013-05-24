@@ -153,8 +153,163 @@ public class MetodosGrl {
 		usuarios.remove(i);
 		return usuarios;
 	}
+	public int obtenerCantidadFiltros(List<Autoparte> autopartesG) {
+		int i=0;
+		for (Autoparte autoparte : autopartesG)
+		{										
+			if(autoparte instanceof Filtro)
+			{												
+				i++;
+			}
+		}
+		return i;
+	}
+	public int obtenerCantidadAceites(List<Autoparte> autopartesG) {
+		int i=0;
+		for (Autoparte autoparte : autopartesG)
+		{										
+			if(autoparte instanceof Aceite)
+			{												
+				i++;
+			}
+		}
+		return i;
+	}
+	public int obtenerCantidadLamparas(List<Autoparte> autopartesG) {
+		int i=0;
+		for (Autoparte autoparte : autopartesG)
+		{										
+			if(autoparte instanceof Lampara)
+			{												
+				i++;
+			}
+		}
+		return i;
+	}
+	public Filtro obtenerFiltroEnListaByID(List<Autoparte> autopartesG,int fieldId) {
 
-	
+		Filtro filtro=null;
+		try
+		{
+			System.out.print("FIELD INGRESADO ID: " +fieldId);
+			
+			for(Autoparte autoparte : autopartesG)
+			{
+				if(autoparte instanceof Filtro)
+				{	
+					
+					filtro=(Filtro)autoparte;					
+					if(fieldId==filtro.getFiltro_ID())
+					{	
+						break;
+					}
+					filtro=null;
+				}
+			}
+		}catch(MiException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[obtenerFiltroEnListaByID] EXCEPTION : "+e);
+		}
+		return filtro;
+	}
+	public Aceite obtenerAceiteEnListaByID(List<Autoparte> autopartesG,int fieldId) {
+
+		Aceite aceite=null;
+		try
+		{
+			for(Autoparte autoparte : autopartesG)
+			{
+				if(autoparte instanceof Aceite)
+				{					
+					
+					aceite=(Aceite)autoparte;
+					if(fieldId==aceite.getAceite_ID())
+					{
+						break;
+					}
+					aceite=null;
+				}
+			}
+		}catch(MiException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[obtenerAceiteEnListaByID] EXCEPTION : "+e);
+		}
+		return aceite;
+	}
+	public Lampara obtenerLamparaEnListaByID(List<Autoparte> autopartesG,int fieldId) {
+
+		Lampara lampara=null;
+		
+		try
+		{
+			for(Autoparte autoparte : autopartesG)
+			{
+				if(autoparte instanceof Lampara)
+				{					
+					
+					lampara=(Lampara)autoparte;
+					if(fieldId==lampara.getLampara_ID())
+					{
+						break;
+					}
+					lampara=null;
+				}
+			}
+		}catch(MiException e)
+		{
+			throw e;
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[obtenerLamparaEnListaByID] EXCEPTION : "+e);
+		}
+		return lampara;
+	}
+	public List<Autoparte> eliminarAutoparteDeLista(List<Autoparte> autopartesG,Autoparte autoparte) {
+		
+		int index=0;
+		for(Autoparte autoparteB:autopartesG)
+		{
+			if(autoparteB.getId()==autoparte.getId())
+			{
+				break;
+			}
+			index++;
+		}
+		autopartesG.remove(index);
+		
+		return autopartesG;
+		/*
+		if(autoparte instanceof Filtro)
+		{
+			for(Autoparte autoparteB:autopartesG)
+			{
+				
+			}
+		}else if(autoparte instanceof Aceite)
+		{
+			for(Autoparte autoparteB:autopartesG)
+			{
+				
+			}
+		}
+		else if(autoparte instanceof Lampara)
+		{
+			for(Autoparte autoparteB:autopartesG)
+			{
+				
+			}
+		}*/
+		
+	}
 
 	
 

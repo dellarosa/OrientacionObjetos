@@ -156,7 +156,7 @@ public class SQLModif {
 		
 			try
 			{
-				query="UPDATE Lampara SET lampara_ID='"+lampara.getLampara_ID()+"',autoparte_ID='"+lampara.getAutoparteID()+"',color'"+lampara.getColor()+"',tamaño='"+lampara.getTamaño()+"' WHERE lampara_ID='"+lampara.getLampara_ID()+"'";
+				query="UPDATE Lampara SET lampara_ID='"+lampara.getLampara_ID()+"',autoparte_ID='"+lampara.getAutoparteID()+"',color='"+lampara.getColor()+"',tamaño='"+lampara.getTamaño()+"' WHERE lampara_ID='"+lampara.getLampara_ID()+"'";
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[updateLampara] "+query);		//DEBUG
@@ -196,7 +196,7 @@ public class SQLModif {
 		
 			try
 			{	
-				query="UPDATE Autoparte  SET autoparte_ID='"+autoparte.getId()+"',tipoAutoparte='"+autoparte.getTipoAutoparte()+"',marca='"+autoparte.getMarca()+"',modelo='"+autoparte.getModelo()+"',costo='"+autoparte.getCosto()+"',cantidadDisponible='"+autoparte.getCantDisponible()+" WHERE autoparte_ID='"+autoparte.getId()+"'";
+				query="UPDATE Autoparte  SET autoparte_ID="+autoparte.getId()+",tipoAutoparte='"+autoparte.getTipoAutoparte()+"',marca='"+autoparte.getMarca()+"',modelo='"+autoparte.getModelo()+"',costo='"+autoparte.getCosto()+"',cantidadDisponible="+autoparte.getCantDisponible()+" WHERE autoparte_ID="+autoparte.getId();
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[updateAutoparte] "+query);					//DEBUG
