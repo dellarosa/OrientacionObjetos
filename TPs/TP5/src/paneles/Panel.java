@@ -16,16 +16,20 @@ import javax.swing.border.Border;
 
 import entities.Aceite;
 import entities.Autoparte;
+import entities.Cliente;
 import entities.Filtro;
 import entities.Lampara;
+import entities.Reparacion;
 
 import utils.Definiciones;
+import utils.MetodosGrl;
 import utils.MiException;
 
 public class Panel {
+	MetodosGrl metgral;
 	public Panel()
 	{
-		
+		metgral=new MetodosGrl();
 	}
 	public JPanel crearPanelBoxGral(JFrame frame,Color colorBack,int AXIS) throws MiException
 	{
@@ -190,8 +194,9 @@ public class Panel {
 		}	
 		return label;
 	}
-	public JPanel cargarFiltrosEnPanel(JPanel panelGridLabel,List<Autoparte> autopartesG) {
+	public JPanel cargarFiltrosEnPanel(List<Autoparte> autopartesG) {
 		
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(metgral.obtenerCantidadFiltros(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO
 		for (Autoparte autoparte : autopartesG)
 		{										
 			if(autoparte instanceof Filtro)
@@ -207,8 +212,9 @@ public class Panel {
 		return panelGridLabel;
 		
 	}
-	public JPanel cargarAceitesEnPanel(JPanel panelGridLabel,List<Autoparte> autopartesG) {
+	public JPanel cargarAceitesEnPanel(List<Autoparte> autopartesG) {
 		
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(metgral.obtenerCantidadAceites(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO
 		for (Autoparte autoparte : autopartesG)
 		{										
 			if(autoparte instanceof Aceite)
@@ -224,8 +230,9 @@ public class Panel {
 		return panelGridLabel;
 		
 	}
-	public JPanel cargarLamparasEnPanel(JPanel panelGridLabel,List<Autoparte> autopartesG) {
+	public JPanel cargarLamparasEnPanel(List<Autoparte> autopartesG) {
 	
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(metgral.obtenerCantidadLamparas(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO
 	for (Autoparte autoparte : autopartesG)
 	{										
 		if(autoparte instanceof Lampara)
@@ -240,6 +247,94 @@ public class Panel {
 	
 	return panelGridLabel;
 	
+	}
+	public JPanel cargarLabelsMostrarDatos() {
+		
+		JLabel labelClientes=new JLabel("1-Clientes",JLabel.CENTER);
+		labelClientes.setBorder(Definiciones.line_blackline);
+		JLabel labelAutopartes=new JLabel("2-Autopartes",JLabel.CENTER);
+		labelAutopartes.setBorder(Definiciones.line_blackline);
+		JLabel labelReparaciones=new JLabel("3-Reparaciones",JLabel.CENTER);
+		labelReparaciones.setBorder(Definiciones.line_blackline);
+		
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(3, 1), Definiciones.line_blackline,null,null,null);
+		
+		panelGridLabel.add(labelClientes);
+		panelGridLabel.add(labelAutopartes);
+		panelGridLabel.add(labelReparaciones);
+		
+		return panelGridLabel;
+	}
+	public JPanel crearPanelOpcion(String titulo,JTextField fieldOpcion) {
+		 
+		JPanel panelGridOpcion=crearPanelGrid(new GridLayout(1, 2), Definiciones.line_blackline,null,null,null);
+		fieldOpcion.setBorder(Definiciones.line_blackline);	
+		JLabel labelOpcion=new JLabel(titulo,JLabel.CENTER);
+		labelOpcion.setBorder(Definiciones.line_blackline);						
+		
+		panelGridOpcion.add(labelOpcion);
+		panelGridOpcion.add(fieldOpcion);
+		
+		return panelGridOpcion;
+	}
+	public JPanel cargarClientesEnPanel(List<Cliente> clientesG) {
+		
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(clientesG.size(), 1), Definiciones.line_blackline,null,null,null);
+		for (Cliente client : clientesG)
+		{										
+			JLabel label=new JLabel(client.toString(),JLabel.LEFT);
+			label.setFont(new Font(Font.SERIF,-1,9));
+			label.setBorder(Definiciones.line_blackline);
+			panelGridLabel.add(label);
+		
+		}
+		
+		return panelGridLabel;
+	}
+	public JPanel cargarPanelReparacionesEnReparacion(List<Reparacion> reparacionesG) {
+		
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(metgral.obtenerCantidadReparacionesEnReparacion(reparacionesG), 1), Definiciones.line_blackline,null,null,null);
+		for(Reparacion reparacion : reparacionesG)
+		{				
+			if(reparacion.getEntregado()==0)
+			{
+				//JLabel label=new JLabel(reparacion.toString(),JLabel.LEFT);
+				JLabel label=new JLabel("\nID: "+reparacion.getId()+" - FECHA I: "+reparacion.getFechainicio()+" NOMBRE CLIENTE: "+reparacion.getCliente().getNombre(),JLabel.LEFT);
+				label.setFont(new Font(Font.SERIF,-1,9));
+				label.setBorder(Definiciones.line_blackline);
+				panelGridLabel.add(label);		
+				//System.out.print("\nID: "+reparacion.getId()+" - FECHA I: "+reparacion.getFechainicio()+" NOMBRE CLIENTE: "+reparacion.getCliente().getNombre());
+			}
+		}
+		return panelGridLabel;
+		
+	}
+	public JPanel cargarPanelReparacionesEntregadas(List<Reparacion> reparacionesG) {
+		
+		JPanel panelGridLabel=crearPanelGrid(new GridLayout(metgral.obtenerCantReparacionesFinalizadasYAutopartes(reparacionesG), 1), Definiciones.line_blackline,null,null,null);
+		System.out.print("\nCANT :"+metgral.obtenerCantReparacionesFinalizadasYAutopartes(reparacionesG));
+		
+		for(Reparacion reparacion : reparacionesG)
+		{				
+			if(reparacion.getEntregado()==1)
+			{	
+				JLabel label=new JLabel(reparacion.toString(),JLabel.LEFT);
+				label.setFont(new Font(Font.SERIF,-1,9));
+				label.setBorder(Definiciones.line_blackline);
+				panelGridLabel.add(label);		
+				
+				System.out.print("\nCANT A:"+reparacion.getAutopartes().size());
+				
+				JPanel panelGridAutopart=crearPanelGrid(new GridLayout(reparacion.getAutopartes().size(), 1), Definiciones.line_blackline,null,null,null);
+				for(Autoparte autoparte: reparacion.getAutopartes()){
+					JLabel labelAutop=new JLabel("  A: "+ autoparte.toString(),JLabel.LEFT);
+					labelAutop.setFont(new Font(Font.SERIF,-1,9));
+					panelGridAutopart.add(labelAutop);		
+				}
+				panelGridLabel.add(panelGridAutopart);
+			}
+		}
+		return panelGridLabel;
 	}
 
 }

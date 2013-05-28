@@ -600,11 +600,11 @@ public class SQLInserts {
 			
 			}catch(SQLException e)
 			{
-				throw new MiException("[insertarupdateReparacionFinal]SQL Connection EXCEPTION "+e.getMessage());
+				throw new MiException("\n[insertarupdateReparacionFinal]SQL Connection EXCEPTION "+e.getMessage());
 			}catch(Exception e)
 			{
 			
-				throw new MiException("[insertarupdateReparacionFinal]ERROR AL CREAR TABLAS",e);
+				throw new MiException("\n[insertarupdateReparacionFinal]ERROR AL CREAR TABLAS",e);
 			}
 			finally
 			{

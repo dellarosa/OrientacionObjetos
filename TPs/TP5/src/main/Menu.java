@@ -91,7 +91,7 @@ public class Menu
 		private Filtro filtroAux;
     	private Aceite aceiteAux;
     	private Lampara lamparaAux;
-    	
+    	private Reparacion reparacionAux;
 		public Filtro getFiltroAux() {
 			return filtroAux;
 		}
@@ -115,9 +115,13 @@ public class Menu
 		}
 		public void setFrameSistema(JFrame frame) {
 			this.frameSistema = frame;
+		}			
+		public Reparacion getReparacionAux() {
+			return reparacionAux;
 		}
-				
-		
+		public void setReparacionAux(Reparacion reparacionAux) {
+			this.reparacionAux = reparacionAux;
+		}
 		public MenuSistema()
 		{
 			metgral=new MetodosGrl();
@@ -128,6 +132,7 @@ public class Menu
 			filtroAux=new Filtro();
 			aceiteAux=new Aceite();
 			lamparaAux=new Lampara();
+			reparacionAux=new Reparacion();
 			
 			try
 			{
@@ -1144,27 +1149,19 @@ public class Menu
 				btModifAutoparte.addMouseListener(new MouseAdapter() {												
 	            @Override
 	            public void mouseReleased(MouseEvent evt) {
-	            	
-	            	
 	            		try
 		            	{
 			            	getFrameSistema().getContentPane().removeAll();
 		            		getFrameSistema().getContentPane().repaint();
 		    				
-		            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
-		    				JPanel panelGrid=panelGestor.crearPanelGrid(new GridLayout(1, 2), Definiciones.line_blackline,null,null,null);
+		            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);		    				
 		    				JPanel panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(3, 2), Definiciones.line_blackline,null,null,null);
 		    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
 		    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MODIFICACION DE AUTOPARTE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 					        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
 					        
-					        
-							final JTextField fieldTipoAutoparte=new JTextField();
-							fieldTipoAutoparte.setBorder(Definiciones.line_blackline);	
-							JLabel labelTipoAutoparte=new JLabel("TIPO AUTOPARTE",JLabel.CENTER);
-							labelTipoAutoparte.setBorder(Definiciones.line_blackline);						
-							panelGrid.add(labelTipoAutoparte);
-							panelGrid.add(fieldTipoAutoparte);
+					        final JTextField fieldTipoAutoparte=new JTextField();
+							JPanel panelGridOpcion=panelGestor.crearPanelOpcion(new String("TIPO AUTOPARTE"),fieldTipoAutoparte);
 													
 							panelGridLabel=panelGestor.labelsTiposAutopartes(panelGridLabel);
 							
@@ -1215,32 +1212,29 @@ public class Menu
 											switch(Integer.valueOf(fieldTipoAutoparte.getText()))
 											{
 												case Definiciones.FILTRO_INDICE:
-													panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(metgral.obtenerCantidadFiltros(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO
 													labelId.setText("INGRESE ID FILTRO");
 													labelTitulo.setText("MODIFICAR FILTRO");
 													panelTituloTipo.add("Center",labelTitulo);
 																																		
-													panelGridLabel=panelGestor.cargarFiltrosEnPanel(panelGridLabel,autopartesG);
+													panelGridLabel=panelGestor.cargarFiltrosEnPanel(autopartesG);
 													
 																
 													break;
 												case Definiciones.ACEITE_INDICE:
-													panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(metgral.obtenerCantidadAceites(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO
 													labelId.setText("INGRESE ID ACEITE");
 													labelTitulo.setText("MODIFICAR ACEITE");
 													panelTituloTipo.add("Center",labelTitulo);
 																																		
-													panelGridLabel=panelGestor.cargarAceitesEnPanel(panelGridLabel,autopartesG);
+													panelGridLabel=panelGestor.cargarAceitesEnPanel(autopartesG);
 													
 																
 													break;
 												case Definiciones.LAMPARA_INDICE:
-													panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(metgral.obtenerCantidadLamparas(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO
 													labelId.setText("INGRESE ID LAMPARA");
 													labelTitulo.setText("MODIFICAR LAMPARA");
 													panelTituloTipo.add("Center",labelTitulo);
 																																		
-													panelGridLabel=panelGestor.cargarLamparasEnPanel(panelGridLabel,autopartesG);
+													panelGridLabel=panelGestor.cargarLamparasEnPanel(autopartesG);
 													
 																
 													break;
@@ -1682,7 +1676,7 @@ public class Menu
 		
 							panel.add(panelTitulo);
 							panel.add(panelGridLabel);
-							panel.add(panelGrid);
+							panel.add(panelGridOpcion);
 							panel.add(panelResto);
 							panel.add(panelEnd);
 							
@@ -1708,187 +1702,364 @@ public class Menu
 	            public void mouseReleased(MouseEvent evt) {
 	            	try
 					{	
-						int opcionmodif=0;
-						Filtro filtro = new Filtro();
-						Aceite aceite=new Aceite();
-						Lampara lampara=new Lampara();
-						boolean hayAutoparte=false;
-						int index=0;
-						//PODRIA SER MAS DINAMICO							
-						System.out.print("\n1-FILTROS");	
-						System.out.print("\n2-ACEITE");
-						System.out.print("\n3-LAMPARA");							
-						switch(Dentre.entero("\nINGRESE TIPO AUTOPARTE A DAR DE BAJA: "))
-						{
-							case Definiciones.FILTRO_INDICE:
-								
-								System.out.print("\n**FILTROS**");
-																
-								
-								for (Autoparte autoparte : autopartesG)
-								{										
-									if(autoparte instanceof Filtro)
-									{												
-										filtro=(Filtro)autoparte;
-										//System.out.print("\nID: "+filtro.getFiltro_ID()+" - Marca: "+filtro.getMarca()+" - Modelo:"+filtro.getModelo());
-										System.out.print("\n"+filtro.toString());
-									}
-								}
-																	
-								opcionmodif=Dentre.entero("\n\nINGRESE ID FILTRO A DAR DE BAJA: ");
-								index=0;
-								for(Autoparte autoparte : autopartesG)
-								{
-									if(autoparte instanceof Filtro)
-									{					
-										filtro=(Filtro)autoparte;
-										if(opcionmodif==filtro.getFiltro_ID())
-										{
-											if(sqldelete.eliminarAutoparte(filtro))
-											{
-												System.out.print("\nAUTOPARTE ELIMINADA CORRECTAMENTE");
-												Thread.sleep(2000);
-											}else{
-												System.out.print("\nFALLO ELIMINACION AUTOPARTE");
-												Thread.sleep(2000);
-											}
-											if(sqldelete.eliminarFiltro(filtro))
-											{
-												System.out.print("\nFILTRO ELIMINADO CORRECTAMENTE");
-												Thread.sleep(2000);
-											}else{
-												System.out.print("\nFALLO ELIMINACION FILTRO");
-												Thread.sleep(2000);
-											}
-											autopartesG.remove(index);
-											hayAutoparte=true;
+	            		getFrameSistema().getContentPane().removeAll();					
+            			getFrameSistema().getContentPane().repaint();
+    				
+	            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+	    				JPanel panelGrid=panelGestor.crearPanelGrid(new GridLayout(1, 2), Definiciones.line_blackline,null,null,null);
+	    				JPanel panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(3, 2), Definiciones.line_blackline,null,null,null);
+	    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
+	    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"BAJA DE AUTOPARTE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+				        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+				        
+				        
+						final JTextField fieldTipoAutoparte=new JTextField();
+						fieldTipoAutoparte.setBorder(Definiciones.line_blackline);	
+						JLabel labelTipoAutoparte=new JLabel("TIPO AUTOPARTE",JLabel.CENTER);
+						labelTipoAutoparte.setBorder(Definiciones.line_blackline);						
+						panelGrid.add(labelTipoAutoparte);
+						panelGrid.add(fieldTipoAutoparte);
+												
+						panelGridLabel=panelGestor.labelsTiposAutopartes(panelGridLabel);
+						
+						
+						///################# SUBMIT ##########################
+						JButton btSubmit=new JButton();
+						btSubmit.setText("SUBMIT");								
+						btSubmit.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	
+			            	try
+			            	{
+			            		if(fieldTipoAutoparte.getText().equals("")||Integer.valueOf(fieldTipoAutoparte.getText())>3||Integer.valueOf(fieldTipoAutoparte.getText())<1)	
+			            		{
+				            		System.out.print("\n\n[MENU SISTEMA] NO EXISTE ESE TIPO DE AUTOPARTE \n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+									try {
+										MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+										menuSistema.mostrar();	
+									} catch (MiException e) {
+										throw e;
+									}catch(SQLException e)
+									{
+										throw new MiException("\n[MENU SISTEMA] CARGA AUTOPARTE EXCEPTION :"+e);
+									}	
+			            		}else
+					            {
+				            		getFrameSistema().getContentPane().removeAll();
+				            		getFrameSistema().getContentPane().repaint();
+				    				
+				            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+				    				JPanel panelGrid=panelGestor.crearPanelGrid(new GridLayout(1, 2), Definiciones.line_blackline,null,null,null);
+				    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
+				    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"BAJA DE AUTOPARTE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+							        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+							        JPanel panelGridLabel=new JPanel();
+							        
+							    	JPanel panelTituloTipo = panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.black,new Dimension(400,50));
+									JLabel labelTitulo=panelGestor.crearTitulo("", JLabel.CENTER,Color.white, new Font(Font.SERIF,Font.BOLD,15));
+							        
+									final JTextField fieldId=new JTextField();
+									fieldId.setBorder(Definiciones.line_blackline);	
+									JLabel labelId=new JLabel("INGRESE ID",JLabel.CENTER);
+									labelId.setBorder(Definiciones.line_blackline);						
+									panelGrid.add(labelId);
+									panelGrid.add(fieldId);
+										
+									switch(Integer.valueOf(fieldTipoAutoparte.getText()))
+									{
+										case Definiciones.FILTRO_INDICE:
+											labelId.setText("INGRESE ID FILTRO");
+											labelTitulo.setText("BAJA FILTRO");
+											panelTituloTipo.add("Center",labelTitulo);
+																																
+											panelGridLabel=panelGestor.cargarFiltrosEnPanel(autopartesG);
+											
+														
 											break;
-										}
-									}
-									index++;
-								}										
-								if(!hayAutoparte)
-									System.out.print("\nNO HAY FILTRO CON ESE ID");
-								
-							break;
-							case Definiciones.ACEITE_INDICE:
-								
-								System.out.print("\n**ACEITES**");
-								
-								for (Autoparte autoparte : autopartesG)
-								{										
-									if(autoparte instanceof Aceite)
-									{												
-										aceite=(Aceite)autoparte;
-										//System.out.print("\nID: "+aceite.getAceite_ID()+" - Marca: "+aceite.getMarca()+" - Modelo:"+aceite.getModelo());
-										System.out.print("\n"+aceite.toString());
-									}
-								}
-																	
-								opcionmodif=Dentre.entero("\n\nINGRESE ID ACEITE A DAR DE BAJA: ");
-								index=0;
-								for(Autoparte autoparte : autopartesG)
-								{
-									if(autoparte instanceof Aceite)
-									{					
-										aceite=(Aceite)autoparte;
-										if(opcionmodif==aceite.getAceite_ID())
-										{
-											if(sqldelete.eliminarAutoparte(aceite))
-											{
-												System.out.print("\nAUTOPARTE ELIMINADA CORRECTAMENTE");
-												Thread.sleep(2000);
-											}else{
-												System.out.print("\nFALLO ELIMINACION AUTOPARTE");
-												Thread.sleep(2000);
-											}
-											if(sqldelete.eliminarAceite(aceite))
-											{
-												System.out.print("\nACEITE ELIMINADO CORRECTAMENTE");
-												Thread.sleep(2000);
-											}else{
-												System.out.print("\nFALLO ELIMINACION ACEITE");
-												Thread.sleep(2000);
-											}
-											autopartesG.remove(index);
-											hayAutoparte=true;
-											break;													
-										}
-									}
-									index++;
-								}		
-								if(!hayAutoparte)
-									System.out.print("\nNO HAY ACEITE CON ESE ID");
-								
-								break;
-								
-							case Definiciones.LAMPARA_INDICE:
-								
-								System.out.print("\n**LAMPARAS**");
-								
-								for (Autoparte autoparte : autopartesG)
-								{										
-									if(autoparte instanceof Lampara)
-									{												
-										lampara=(Lampara)autoparte;
-										//System.out.print("\nID: "+lampara.getLampara_ID()+" - Marca: "+lampara.getMarca()+" - Modelo:"+lampara.getModelo());
-										System.out.print("\n"+lampara.toString());
-									}
-								}
-																	
-								opcionmodif=Dentre.entero("\n\nINGRESE ID LAMPARA A DAR DE BAJA: ");
-								index=0;
-								for(Autoparte autoparte : autopartesG)
-								{
-									if(autoparte instanceof Lampara)
-									{					
-										lampara=(Lampara)autoparte;
-										if(opcionmodif==lampara.getLampara_ID())
-										{
-											if(sqldelete.eliminarAutoparte(lampara))
-											{
-												System.out.print("\nAUTOPARTE ELIMINADA CORRECTAMENTE");
-												Thread.sleep(2000);
-											}else{
-												System.out.print("\nFALLO ELIMINACION AUTOPARTE");
-												Thread.sleep(2000);
-											}
-											if(sqldelete.eliminarLampara(lampara))
-											{
-												System.out.print("\nLAMPARA ELIMINADO CORRECTAMENTE");
-												Thread.sleep(2000);
-											}else{
-												System.out.print("\nFALLO ELIMINACION LAMPARA");
-												Thread.sleep(2000);
-											}
-											autopartesG.remove(index);
-											hayAutoparte=true;
+										case Definiciones.ACEITE_INDICE:
+											labelId.setText("INGRESE ID ACEITE");
+											labelTitulo.setText("MODIFICAR ACEITE");
+											panelTituloTipo.add("Center",labelTitulo);
+																																
+											panelGridLabel=panelGestor.cargarAceitesEnPanel(autopartesG);
+											
+														
 											break;
-										}
+										case Definiciones.LAMPARA_INDICE:
+											labelId.setText("INGRESE ID LAMPARA");
+											labelTitulo.setText("MODIFICAR LAMPARA");
+											panelTituloTipo.add("Center",labelTitulo);
+																																
+											panelGridLabel=panelGestor.cargarLamparasEnPanel(autopartesG);
+											
+														
+											break;
+										default:
+											break;
 									}
-									index++;
+									///################# SUBMIT ##########################
+									JButton btSubmit=new JButton();
+									btSubmit.setText("SUBMIT");								
+									btSubmit.addMouseListener(new MouseAdapter() {												
+						            @Override
+						            public void mouseReleased(MouseEvent evt) {
+						            	boolean okId=false;
+						            	if(fieldId.getText().equals(""))
+						            	{
+						            		okId=false;
+						            	}else
+						            	{
+						            		switch(Integer.valueOf(fieldTipoAutoparte.getText()))
+											{
+												case Definiciones.FILTRO_INDICE:
+													setFiltroAux(metgral.obtenerFiltroEnListaByID(autopartesG,Integer.valueOf(fieldId.getText())));
+													if(getFiltroAux()!=null)
+														okId=true;
+													else
+														okId=false;
+													
+												break;
+												case Definiciones.ACEITE_INDICE:
+													setAceiteAux(aceiteAux=metgral.obtenerAceiteEnListaByID(autopartesG,Integer.valueOf( fieldId.getText())));
+													if(getAceiteAux()!=null)
+														okId=true;
+														else
+															okId=false;
+												break;
+												case Definiciones.LAMPARA_INDICE:
+													setLamparaAux(metgral.obtenerLamparaEnListaByID(autopartesG, Integer.valueOf(fieldId.getText())));
+													if(getLamparaAux()!=null)
+														okId=true;
+														else
+															okId=false;
+												break;
+												default:
+														
+													break;
+											}
+						            	}
+										if(okId)
+										{		
+											boolean elimino=false;
+											switch(Integer.valueOf(fieldTipoAutoparte.getText()))
+											{
+												case Definiciones.FILTRO_INDICE:
+													try {
+														if(sqldelete.eliminarAutoparte(getFiltroAux()))
+														{	
+															elimino=true;
+														}else{
+															elimino=false;
+														}												
+														if(sqldelete.eliminarFiltro(getFiltroAux()))
+														{
+															elimino=true;
+														}else{
+															elimino=false;
+														}
+														if(elimino)
+														{
+															System.out.print("\nFILTRO ELIMINADO CORRECTAMENTE");	//DEBUG														
+															metgral.eliminarAutoparteDeLista(autopartesG, getFiltroAux());														
+														}
+														else
+														{
+															System.out.print("\nFALLO ELIMINACION FILTRO");	//DEBUG														
+														}
+													} catch (MiException e) {
+														throw e;													
+													} catch (Exception e) {
+														throw new MiException("[MENU SISTEMA] FALLO ELIMINACION DE AUTOPARTE: "+ e);													
+													}
+													
+												break;
+												case Definiciones.ACEITE_INDICE:
+													try {
+														if(sqldelete.eliminarAutoparte(getAceiteAux()))
+														{	
+															elimino=true;
+														}else{
+															elimino=false;
+														}												
+														if(sqldelete.eliminarAceite(getAceiteAux()))
+														{
+															elimino=true;
+														}else{
+															elimino=false;
+														}
+														if(elimino)
+														{
+															System.out.print("\nACEITE ELIMINADO CORRECTAMENTE");	//DEBUG														
+															metgral.eliminarAutoparteDeLista(autopartesG, getAceiteAux());														
+														}
+														else
+														{
+															System.out.print("\nFALLO ELIMINACION ACEITE");	//DEBUG															
+														}
+													} catch (MiException e) {
+														throw e;													
+													} catch (Exception e) {
+														throw new MiException("[MENU SISTEMA] FALLO ELIMINACION DE AUTOPARTE: "+ e);													
+													}
+												break;
+												case Definiciones.LAMPARA_INDICE:
+													try {
+														if(sqldelete.eliminarAutoparte(getLamparaAux()))
+														{	
+															elimino=true;
+														}else{
+															elimino=false;
+														}												
+														if(sqldelete.eliminarLampara(getLamparaAux()))
+														{
+															elimino=true;
+														}else{
+															elimino=false;
+														}
+														if(elimino)
+														{
+															System.out.print("\nLAMPARA ELIMINADA CORRECTAMENTE");	//DEBUG														
+															metgral.eliminarAutoparteDeLista(autopartesG, getLamparaAux());														
+														}
+														else
+														{
+															System.out.print("\nFALLO ELIMINACION LAMPARA");	//DEBUG															
+														}
+													} catch (MiException e) {
+														throw e;													
+													} catch (Exception e) {
+														throw new MiException("[MENU SISTEMA] FALLO ELIMINACION DE AUTOPARTE: "+ e);													
+													}
+												break;
+												default:
+													break;
+											}											
+											try {
+												MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+												menuSistema.mostrar();	
+											} catch (MiException e) {
+												throw e;
+											}catch(SQLException e)
+											{
+												throw new MiException("\n[MENU SISTEMA] VOLVER - BAJA AUTOPARTE EXCEPTION :"+e);
+											}
+										}else
+										{
+											System.out.print("\n[MENU SISTEMA] ID DE LA AUTOPARTE INCORRECTO");		//AGREGAR MENU EMERGENTE
+											try {
+												MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+												menuSistema.mostrar();	
+											} catch (MiException e) {
+												throw e;
+											}catch(SQLException e)
+											{
+												throw new MiException("\n[MENU SISTEMA] VOLVER - BAJA AUTOPARTE EXCEPTION :"+e);
+											}
+										}
+						            	
+						              }});
+									  panelEnd.add(btSubmit);
+									
+										///####################### VOLVER #############################
+										JButton btVolver=new JButton();
+										btVolver.setText("VOLVER");								
+										btVolver.addMouseListener(new MouseAdapter() {												
+							            @Override
+							            public void mouseReleased(MouseEvent evt) {
+							            	 
+											try {
+												MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+												menuSistema.mostrar();	
+											} catch (MiException e) {
+												throw e;
+											}catch(SQLException e)
+											{
+												throw new MiException("\n[MENU SISTEMA] VOLVER - BAJA AUTOPARTE EXCEPTION :"+e);
+											}
+															            	
+							            }
+										});
+										panelEnd.add(btVolver);
+										///######################## SALIR ##########################
+										JButton btSalir=new JButton();
+										btSalir.setText("SALIR");								
+										btSalir.addMouseListener(new MouseAdapter() {												
+							            @Override
+							            public void mouseReleased(MouseEvent evt) {
+							            	System.exit(0);					            	
+							            }
+										});
+										panelEnd.add(btSalir);
+										
+										panel.add(panelTitulo);
+										panel.add(panelTituloTipo);
+										panel.add(panelGridLabel);
+										panel.add(panelGrid);
+										panel.add(panelResto);
+										panel.add(panelEnd);
+										getFrameSistema().setContentPane(panel);
+									}
+			            		}catch(MiException e)
+								{
+									throw e;
+								}catch(Exception e)
+								{
+									throw new MiException("\n[MENU SISTEMA] BAJA AUTOPARTE Exception : "+e);
 								}	
-								if(!hayAutoparte)
-									System.out.print("\nNO HAY LAMPARA CON ESE ID");
-								
-								break;
-							default:
-								break;
-						}
+			            }});							
+						panelEnd.add(btSubmit);
+						
+						///####################### VOLVER #############################
+						JButton btVolver=new JButton();
+						btVolver.setText("VOLVER");								
+						btVolver.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	 
+							try {
+								MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+								menuSistema.mostrar();	
+							} catch (MiException e) {
+								throw e;
+							}catch(SQLException e)
+							{
+								throw new MiException("\n[MENU SISTEMA] VOLVER - BAJA AUTOPARTE EXCEPTION :"+e);
+							}
+											            	
+			            }
+						});
+						panelEnd.add(btVolver);
+						
+						///######################## SALIR ##########################
+						JButton btSalir=new JButton();
+						btSalir.setText("SALIR");								
+						btSalir.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	System.exit(0);					            	
+			            }
+						});
+						panelEnd.add(btSalir);
+	
+						panel.add(panelTitulo);
+						panel.add(panelGridLabel);
+						panel.add(panelGrid);
+						panel.add(panelResto);
+						panel.add(panelEnd);
+						
+						getFrameSistema().setContentPane(panel);						
 						
 					}
 					catch(MiException e)
 					{
 						throw e;
-					}catch(SQLException e)
-					{
-						throw new MiException("[BAJA AUTOPARTE] SQLException : "+e);
 					}catch(Exception e)
 					{
-						throw new MiException("[BAJA AUTOPARTE] Exception : "+e);
-					}				            	
-	            }
-				});			
+						throw new MiException("\n[MENU SISTEMA]BAJA AUTOPARTE Exception : "+e);
+					}
+				}
+	            });			
 				panelOperaciones.add(btBajaAutoparte);
 				
 				
@@ -1899,45 +2070,203 @@ public class Menu
 	            @Override
 	            public void mouseReleased(MouseEvent evt) {
 	            	try
-					{		
-						//Cliente clientereparacion=sqlselects.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "));
-						Cliente clientereparacion=metgral.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "),clientesG);
-						if(clientereparacion==null)
-						{
-							System.out.print("\nCLIENTE NO ENCONTRADO");
-							Thread.sleep(2000);
-							return;
-						}
-						Reparacion nuevareparacion=new Reparacion();
+	            	{		            			
+	            		getFrameSistema().getContentPane().removeAll();					
+            			getFrameSistema().getContentPane().repaint();
+    				
+	            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);	    				
+	    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
+	    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CARGA DE REPARACION",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+				        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
 						
-					    Calendar c = new GregorianCalendar();
-					    Date d1 = c.getTime(); 
-						nuevareparacion.setFechainicio(d1.toString());
-						nuevareparacion.setCliente(clientereparacion);
-						nuevareparacion.setEntregado(0);								
-						nuevareparacion.setId(sqlselects.buscarUltimaReparacionId());
-						
-						if(sqlinserts.insertarReparacionInicio(nuevareparacion))
-						{
-							reparacionesG.add(nuevareparacion);
+						final JTextField fieldCliente=new JTextField();
+						JPanel panelGridOpcion=panelGestor.crearPanelOpcion(new String("NOMBRE CLIENTE"),fieldCliente);
 							
-							System.out.print("\nCARGA DE NUEVA REPARACION CORRECTA\n");
-							Thread.sleep(2000);
-						}else{
-							System.out.print("\nFALLO CARGA DE NUEVA REPARACION\n");
-							Thread.sleep(2000);
-						}
-					}catch(MiException e)
+						///################# SUBMIT ##########################
+						JButton btSubmit=new JButton();
+						btSubmit.setText("SUBMIT");								
+						btSubmit.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	
+			            	if(fieldCliente.getText().equals(""))	
+		            		{
+			            		System.out.print("\n\n[MENU SISTEMA] NO COLOCO NINGUN CLIENTE\n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+								try {
+									MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+									menuSistema.mostrar();	
+								} catch (MiException e) {
+									throw e;
+								}catch(SQLException e)
+								{
+									throw new MiException("\n[MENU SISTEMA] CARGA REPARACION EXCEPTION :"+e);
+								}	
+		            		}else
+				            {
+		            			final Cliente clientereparacion=metgral.buscarClientePorApodo(fieldCliente.getText(),clientesG);
+								if(clientereparacion==null)
+								{
+									System.out.print("\n\nCLIENTE NO ENCONTRADO\n");		//DEBUG AGREGAR EMERGENTE								
+									try {
+										MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+										menuSistema.mostrar();	
+									} catch (MiException e) {
+										throw e;
+									}catch(SQLException e)
+									{
+										throw new MiException("\n[MENU SISTEMA] CARGA REPARACION EXCEPTION :"+e);
+									}	
+								}else
+								{		
+										System.out.print("\n\nCLIENTE ENCONTRADO\n");		//DEBUG
+										
+										getFrameSistema().getContentPane().removeAll();
+										getFrameSistema().getContentPane().repaint();
+										
+										JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+					    				JPanel panelOperaciones=panelGestor.crearPanelGrid(new GridLayout(1, 2), Definiciones.line_blackline,Color.cyan,null,null);
+					    				JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);					    				
+					    				JPanel panelLabel=panelGestor.crearPanelBox(BoxLayout.X_AXIS,Color.black);
+					    				
+					    				JLabel labelCliente=panelGestor.crearTitulo("CARGA DE REPARACION 'Cliente: "+clientereparacion.getNombre()+"' - 'Auto: "+clientereparacion.getAuto(),JLabel.CENTER,Color.white,new Font(Font.SERIF,Font.BOLD,18));
+								        panelLabel.add(labelCliente);
+								        
+								        try{     
+									        ///############### SUBMIT NO ####################################
+									        JButton btSubmitNo=new JButton();
+									        btSubmitNo.setText("NO");								
+									        btSubmitNo.addMouseListener(new MouseAdapter() {												
+									            @Override
+									            public void mouseReleased(MouseEvent evt) {
+									            	try
+									            	{
+										            	System.out.print("\nSE CANCELO CARGA REPARACION");		//DEBUG
+														Thread.sleep(2000);
+														MenuSistema menuSistema=new MenuSistema(getFrameSistema(),user);
+														menuSistema.mostrar();
+									            	}catch(MiException e)
+													{
+														throw e;
+													}catch(Exception e)
+													{
+														throw new MiException("\n[MENU SISTEMA] SUBMIT NO CARGA REPARACION EXCEPTION :"+e);
+													}
+													
+									            }
+											});
+									        panelOperaciones.add(btSubmitNo);
+									        
+									        
+									        ///############### SUBMIT YES####################################
+									        JButton btSubmitYes=new JButton();
+									        btSubmitYes.setText("YES");								
+									        btSubmitYes.addMouseListener(new MouseAdapter() {												
+									            @Override
+									            public void mouseReleased(MouseEvent evt) {								            	
+									            	try {
+										            	Reparacion nuevareparacion=new Reparacion();
+														
+													    Calendar c = new GregorianCalendar();
+													    Date d1 = c.getTime(); 
+														nuevareparacion.setFechainicio(d1.toString());
+														nuevareparacion.setCliente(clientereparacion);
+														nuevareparacion.setEntregado(0);
+														
+														nuevareparacion.setId(sqlselects.buscarUltimaReparacionId());
+														if(sqlinserts.insertarReparacionInicio(nuevareparacion))
+														{
+															reparacionesG.add(nuevareparacion);
+															
+															System.out.print("\nCARGA DE NUEVA REPARACION CORRECTA\n");
+															
+														}else{
+															System.out.print("\nFALLO CARGA DE NUEVA REPARACION\n");
+														}
+														
+														try {
+															MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+															menuSistema.mostrar();	
+														} catch (MiException e) {
+															throw e;
+														}catch(SQLException e)
+														{
+															throw new MiException("\n[MENU SISTEMA] VOLVER - CARGA REAPARACION EXCEPTION :"+e);
+														}
+													
+													}catch (MiException e) {
+														
+														throw e;
+													}catch (Exception e) {
+														
+														throw new MiException("\n[MENU SISTEMA] CARGA REPARACION Exception : "+e);
+													}
+									            }
+											});
+									        panelOperaciones.add(btSubmitYes);
+									        
+									        panel.add(panelLabel);
+									        panel.add(panelResto);
+									        panel.add(panelOperaciones);
+									        getFrameSistema().setContentPane(panel);
+	
+										} catch (MiException e) {
+											throw e;
+										}catch(Exception e)
+										{
+											throw new MiException("\n[MENU SISTEMA] CARGA REPARACION EXCEPTION :"+e);
+										}
+								}
+				            }
+			            }});							
+						panelEnd.add(btSubmit);
+						
+						///####################### VOLVER #############################
+						JButton btVolver=new JButton();
+						btVolver.setText("VOLVER");								
+						btVolver.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	 
+							try {
+								MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+								menuSistema.mostrar();	
+							} catch (MiException e) {
+								throw e;
+							}catch(SQLException e)
+							{
+								throw new MiException("\n[MENU SISTEMA] VOLVER - CARGA REAPARACION EXCEPTION :"+e);
+							}
+											            	
+			            }
+						});
+						panelEnd.add(btVolver);
+						
+						///######################## SALIR ##########################
+						JButton btSalir=new JButton();
+						btSalir.setText("SALIR");								
+						btSalir.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	System.exit(0);					            	
+			            }
+						});
+						panelEnd.add(btSalir);
+						
+						panel.add(panelTitulo);						
+						panel.add(panelGridOpcion);
+						panel.add(panelResto);
+						panel.add(panelEnd);
+						
+						getFrameSistema().setContentPane(panel);						
+						
+					}
+					catch(MiException e)
 					{
 						throw e;
-					}
-					catch(SQLException e)
-					{
-						throw new MiException("[CARGA REPARACION] SQLException : "+e);
 					}catch(Exception e)
 					{
-						throw new MiException("[CARGA REPARACION] Exception : "+e);
-					}					            	
+						throw new MiException("\n[MENU SISTEMA]CARGA REPARACION Exception : "+e);
+					}            	
 	            }
 				});			
 				panelOperaciones.add(btCargarReparacion);
@@ -1948,102 +2277,328 @@ public class Menu
 				btFinalizarReparacion.addMouseListener(new MouseAdapter() {												
 	            @Override
 	            public void mouseReleased(MouseEvent evt) {
+	            	
+	            	
 	            	try
-					{					
-						Cliente cliente= metgral.buscarClientePorApodo(Dentre.texto("\nINGRESE NOMBRE CLIENTE: "), clientesG);
-						int index=0;
-						if(cliente==null)
-						{
-							System.out.print("\nCLIENTE NO ENCONTRADO\n");
-							Thread.sleep(2000);
-							return;
-						}
+	            	{		            			
+	            		getFrameSistema().getContentPane().removeAll();					
+            			getFrameSistema().getContentPane().repaint();
+    				
+	            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);	    				
+	    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
+	    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"FINALIZAR REPARACION",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+				        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+				        
+						final JTextField fieldCliente=new JTextField();
+						JPanel panelGridOpcion=panelGestor.crearPanelOpcion(new String("NOMBRE CLIENTE"),fieldCliente);
 						
-						for(Reparacion reparacion:reparacionesG)
-						{
-							if(reparacion.getCliente().getId()==cliente.getId())
-							{		
-								if(reparacion.getEntregado()==1)
-								{
-									System.out.print("\nCLIENTE NO POSEE NINGUNA REPARACION ABIERTA\n");
-									break;
-								}
-								else
-								{
-									Calendar c = new GregorianCalendar();
-								    Date d1 = c.getTime(); 
-									reparacion.setFechaentrega(d1.toString());
-									reparacion.setEntregado(1);
-									
-									Filtro filtro=new Filtro();
-									Aceite aceite=new Aceite();
-									Lampara lampara=new Lampara();
-									
-									boolean salir=false;
-									while(!salir)
+						///################# SUBMIT ##########################
+						JButton btSubmit=new JButton();
+						btSubmit.setText("SUBMIT");								
+						btSubmit.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	
+			            	try
+			            	{
+				            	if(fieldCliente.getText().equals(""))	
+			            		{
+				            		System.out.print("\n\n[MENU SISTEMA] NO COLOCO NINGUN CLIENTE\n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+									try {
+										MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+										menuSistema.mostrar();	
+									} catch (MiException e) {
+										throw e;
+									}catch(SQLException e)
 									{
-									
-										for (Autoparte autoparte : autopartesG)
-										{										
-											if(autoparte instanceof Filtro)
-											{	
-												filtro=(Filtro)autoparte;
-												System.out.print("\n"+filtro.toString());
-											}
-											else if(autoparte instanceof Aceite)
-											{	
-												aceite=(Aceite)autoparte;
-												System.out.print("\n"+aceite.toString());
-											}
-											else if(autoparte instanceof Lampara)
-											{	
-												lampara=(Lampara)autoparte;
-												System.out.print("\n"+lampara.toString());
-											}
-										}										
-										int opcionmodif=Dentre.entero("\n\n**INGRESE ID AUTOPARTE PARA AGREGAR ('99' para salir): ");
-										if(opcionmodif==99)
+										throw new MiException("\n[MENU SISTEMA] FINALIZAR REPARACION EXCEPTION :"+e);
+									}	
+			            		}else
+					            {
+			            			final Cliente cliente=metgral.buscarClientePorApodo(fieldCliente.getText(),clientesG);
+									if(cliente==null)
+									{
+										System.out.print("\n\nCLIENTE NO ENCONTRADO\n");		//DEBUG AGREGAR EMERGENTE								
+										try {
+											MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+											menuSistema.mostrar();	
+										} catch (MiException e) {
+											throw e;
+										}catch(SQLException e)
 										{
-											salir=true;
-										}else
+											throw new MiException("\n[MENU SISTEMA] FINALIZAR REPARACION EXCEPTION :"+e);
+										}	
+									}else
+									{											
+										for(Reparacion reparaL:reparacionesG)
 										{
-										
-											List<Autoparte> autopartes=new ArrayList<Autoparte>();
-											for (Autoparte autoparte : autopartesG)
-											{										
-												if(autoparte.getId()==opcionmodif)
+											if(reparaL.getCliente().getId()==cliente.getId())
+											{	
+												if(reparaL.getEntregado()==1)												
 												{
-													autopartes.add(autoparte);												
-													//reparacion.getAutopartes().add(autoparte);	//Null pointer exception
-													reparacion.setCosto(reparacion.getCosto()+autoparte.getCosto());
+													System.out.print("\nCLIENTE NO POSEE NINGUNA REPARACION ABIERTA\n");	//DEBUG
+													//SI NO COLOCO ESTO , eL CLIENTE PUEDE TENER MAS DE UNA REPARACION, PODRIA SER, PERO POR AHORA...
+													try {
+														MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+														menuSistema.mostrar();	
+													} catch (MiException e) {
+														throw e;
+													}catch(SQLException e)
+													{
+														throw new MiException("\n[MENU SISTEMA] FINALIZAR REPARACION EXCEPTION :"+e);
+													}	
 												}
-											
-											}	
-											reparacion.setAutopartes(autopartes);
+												else
+												{	
+													setReparacionAux(reparaL);
+													Calendar c = new GregorianCalendar();
+												    Date d1 = c.getTime(); 
+													getReparacionAux().setFechaentrega(d1.toString());
+													getReparacionAux().setEntregado(1);
+													getReparacionAux().setCliente(cliente);			
+													
+													getFrameSistema().getContentPane().removeAll();					
+							            			getFrameSistema().getContentPane().repaint();
+							    				
+								            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+								    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(2, 2), null, Color.blue,null,null);						
+								    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"FINALIZAR REPARACION",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+											        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+											        
+													
+											        JPanel panelTituloFiltro = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"FILTROS",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,11),Color.white);																																		
+													JPanel panelGridLabelF=panelGestor.cargarFiltrosEnPanel(autopartesG);
+													
+													JPanel panelTituloAceite = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"ACEITES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,11),Color.white);															        																																		
+													JPanel panelGridLabelA=panelGestor.cargarAceitesEnPanel(autopartesG);
+													
+													JPanel panelTituloLampara = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"LAMPARAS",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,11),Color.white);															        																																		
+													JPanel panelGridLabelL=panelGestor.cargarLamparasEnPanel(autopartesG);
+													 
+													 final JTextField fieldOpcion=new JTextField();
+													JPanel panelGridOpcion=panelGestor.crearPanelOpcion(new String("INGRESE ID AUTOPARTE"),fieldOpcion);
+													
+													///################# AGREGAR ##########################
+													JButton btAdd=new JButton();
+													btAdd.setText("AGREGAR");								
+													btAdd.addMouseListener(new MouseAdapter() {												
+										            @Override
+										            public void mouseReleased(MouseEvent evt) {
+										            	
+										            	try
+										            	{
+										            		if(fieldOpcion.getText().equals("")||fieldOpcion==null)	
+										            		{
+											            		System.out.print("\n\n[MENU SISTEMA] NO COLOCO NINGUNA OPCION\n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+																try {
+																	MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+																	menuSistema.mostrar();	
+																} catch (MiException e) {
+																	throw e;
+																}catch(SQLException e)
+																{
+																	throw new MiException("\n[MENU SISTEMA]AGREGAR AUTOPARTE- FINALIZAR REPARACION EXCEPTION :"+e);
+																}	
+										            		}else
+												            {	
+										            			for (Autoparte autoparte : autopartesG)
+																{										
+																	if(autoparte.getId()==Integer.valueOf(fieldOpcion.getText()))
+																	{	
+																		if(getReparacionAux().getCosto()!=0)
+																		{
+																			getReparacionAux().setCosto(getReparacionAux().getCosto()+autoparte.getCosto());
+																		}
+																		else
+																		{
+																			getReparacionAux().setCosto(autoparte.getCosto());
+																		}
+																		getReparacionAux().getAutopartes().add(autoparte);
+																		fieldOpcion.setText("");
+																		break;
+																	}
+																}
+																
+												            	System.out.print("\n\nSE AGREGO AUTOPARTE\n"); //PODRIA SER EMERGENTE	
+															}										            		
+										            	} catch (MiException e) {
+															throw e;
+														}catch(Exception e)
+														{
+															throw new MiException("\n[MENU SISTEMA] AGREGAR AUTOPARTE- FINALIZAR REPARACION EXCEPTION :"+e);
+														}
+										            }});
+													panelEnd.add(btAdd);
+													
+													///################# SUBMIT ##########################
+													JButton btSubmit=new JButton();
+													btSubmit.setText("SUBMIT");								
+													btSubmit.addMouseListener(new MouseAdapter() {												
+										            @Override
+										            public void mouseReleased(MouseEvent evt) {
+										            	
+										            	try
+										            	{
+										            		if(getReparacionAux().getAutopartes()==null||getReparacionAux().getAutopartes().isEmpty())	
+										            		{
+											            		System.out.print("\n\n[MENU SISTEMA]NO INGRESO AUTOPARTE\n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+																try {
+																	MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+																	menuSistema.mostrar();	
+																} catch (MiException e) {
+																	throw e;
+																}catch(SQLException e)
+																{
+																	throw new MiException("\n[MENU SISTEMA] SUBMIT - FINALIZAR REPARACION EXCEPTION :"+e);
+																}	
+										            		}else
+												            {    
+																//Podria validar si se cargo autopartes o no se cargo nada
+																sqlinserts.insertarupdateReparacionFinal(getReparacionAux(),sqlselects.buscarUltimaReparacionAutoparteId());
+																int indice=0;
+																for(Reparacion repara:reparacionesG)
+																{
+																	if(repara.getCliente().getId()==getReparacionAux().getCliente().getId())
+																	{
+																		break;
+																	}
+																	indice++;
+																}
+																reparacionesG.remove(indice);
+																reparacionesG.add(getReparacionAux());	
+																System.out.print("\n\nSE FINALIZO REPARACION\n");														
+																
+																try {
+																	MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+																	menuSistema.mostrar();	
+																} catch (MiException e) {
+																	throw e;
+																}catch(SQLException e)
+																{
+																	throw new MiException("\n[MENU SISTEMA] SUBMIT -  VOLVER - FINALIZAR REAPARACION EXCEPTION :"+e);
+																}
+												            }
+															
+										            	} catch (MiException e) {
+															throw e;
+														}catch(Exception e)
+														{
+															throw new MiException("\n[MENU SISTEMA] SUBMIT - FINALIZAR REPARACION EXCEPTION :"+e);
+														}
+													
+													
+										            }});
+													panelEnd.add(btSubmit);
+													
+													///####################### VOLVER #############################
+													JButton btVolver=new JButton();
+													btVolver.setText("VOLVER");								
+													btVolver.addMouseListener(new MouseAdapter() {												
+													@Override
+													public void mouseReleased(MouseEvent evt) {
+														 
+														try {
+															MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+															menuSistema.mostrar();	
+														} catch (MiException e) {
+															throw e;
+														}catch(SQLException e)
+														{
+															throw new MiException("\n[MENU SISTEMA] VOLVER - FINALIZAR REAPARACION EXCEPTION :"+e);
+														}
+																		            	
+													}
+													});
+													panelEnd.add(btVolver);
+													
+													///######################## SALIR ##########################
+													JButton btSalir=new JButton();
+													btSalir.setText("SALIR");								
+													btSalir.addMouseListener(new MouseAdapter() {												
+													@Override
+													public void mouseReleased(MouseEvent evt) {
+														System.exit(0);					            	
+													}
+													});
+													panelEnd.add(btSalir);
+													
+													panel.add(panelTitulo);		
+													panel.add(panelTituloFiltro);
+													panel.add(panelGridLabelF);
+													panel.add(panelTituloAceite);
+													panel.add(panelGridLabelA);
+													panel.add(panelTituloLampara);
+													panel.add(panelGridLabelL);
+													
+													panel.add(panelGridOpcion);
+													
+													panel.add(panelResto);
+													panel.add(panelEnd);
+													
+													getFrameSistema().setContentPane(panel);				
+																						
+												}
+											}
 										}
 									}
-								//Podria validar si se cargo autopartes o no se cargo nada
-								sqlinserts.insertarupdateReparacionFinal(reparacion,sqlselects.buscarUltimaReparacionAutoparteId());
-								reparacionesG.remove(index);
-								reparacionesG.add(reparacion);	
-								System.out.print("\n\nSE AGREGO AUTOPARTE\n");
-								Thread.sleep(2000);
-								}
-								index++;
+					            }
+							} catch (MiException e) {
+								throw e;
+							}catch(Exception e)
+							{
+								throw new MiException("\n[MENU SISTEMA] FINALIZAR REPARACION EXCEPTION :"+e);
 							}
+					    
+						}});							
+						panelEnd.add(btSubmit);
+						
+						///####################### VOLVER #############################
+						JButton btVolver=new JButton();
+						btVolver.setText("VOLVER");								
+						btVolver.addMouseListener(new MouseAdapter() {												
+						@Override
+						public void mouseReleased(MouseEvent evt) {
+							 
+							try {
+								MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+								menuSistema.mostrar();	
+							} catch (MiException e) {
+								throw e;
+							}catch(SQLException e)
+							{
+								throw new MiException("\n[MENU SISTEMA] VOLVER - FINALIZAR REAPARACION EXCEPTION :"+e);
+							}
+											            	
 						}
-					}
-					catch(MiException e)
+						});
+						panelEnd.add(btVolver);
+						
+						///######################## SALIR ##########################
+						JButton btSalir=new JButton();
+						btSalir.setText("SALIR");								
+						btSalir.addMouseListener(new MouseAdapter() {												
+						@Override
+						public void mouseReleased(MouseEvent evt) {
+							System.exit(0);					            	
+						}
+						});
+						panelEnd.add(btSalir);
+						
+						panel.add(panelTitulo);						
+						panel.add(panelGridOpcion);
+						panel.add(panelResto);
+						panel.add(panelEnd);
+						
+						getFrameSistema().setContentPane(panel);						
+						
+					}catch(MiException e)
 					{
-						throw e;
-					}catch(SQLException e)
+					throw e;
+					}catch(Exception e)
 					{
-						throw new MiException("[Exception al finalizar reparación] SQL Exception: "+e);
-					}
-					catch(Exception e)
-					{
-						throw new MiException("[Exception al finalizar reparación] Exception: "+e);
-					}				            	
+					throw new MiException("\n[MENU SISTEMA]FINALIZAR REPARACION Exception : "+e);
+					}     
+            			            	
 	            }
 				});			
 				panelOperaciones.add(btFinalizarReparacion);
@@ -2055,112 +2610,426 @@ public class Menu
 	            @Override
 	            public void mouseReleased(MouseEvent evt) {
 	            	try
-					{		
-						System.out.print("\n1-MOSTRAR CLIENTES");
-						System.out.print("\n2-MOSTRAR REPARACIONES");
-						System.out.print("\n3-MOSTRAR AUTOPARTES");
-						switch(Dentre.entero("\nINGRESE OPCION: "))
-						{
-							case 1:									
-								System.out.print("\n***CLIENTES***");
-								for (Cliente cliente : clientesG)
-								{	
-									System.out.print("\n"+cliente.toString());											
-								}
-								Thread.sleep(2000);
-							break;
-							
-							case 2:
-								try
-								{
-									System.out.print("\n***REPARACIONES***");
-									System.out.print("\n********FINALIZADOS********");
-									for(Reparacion reparacion : reparacionesG)
-									{				
-										if(reparacion.getEntregado()==1)
-										{												
-											System.out.print("\n"+reparacion.toString());
-											System.out.print("\n    ºAUTOPARTESº: \n");
-											for(Autoparte autoparte: reparacion.getAutopartes()){
-												System.out.print("    "+autoparte.toString());
-											}
-													
-										}
-									}
-									
-									System.out.print("\n********EN REPARACION********");
-									for(Reparacion reparacion : reparacionesG)
-									{				
-										
-										if(reparacion.getEntregado()==0)
-										{
-											//System.out.print("\n"+reparacion.toString());
-											System.out.print("\nID: "+reparacion.getId()+" - FECHA I: "+reparacion.getFechainicio()+" NOMBRE CLIENTE: "+reparacion.getCliente().getNombre());
-										}
-									}
-									Thread.sleep(2000);
-									System.out.print("\n\n");
-									
-								}
-								catch(MiException e)
-								{
+					{			            			
+	            		getFrameSistema().getContentPane().removeAll();					
+            			getFrameSistema().getContentPane().repaint();
+    				
+	            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+	            		JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
+	    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CARGA DE REPARACION",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+				        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+				        
+				        final JTextField fieldOpcion=new JTextField();
+						JPanel panelGridOpcion=panelGestor.crearPanelOpcion(new String("INGRESE OPCION"),fieldOpcion);
+						
+						JPanel panelGridLabel=panelGestor.cargarLabelsMostrarDatos();
+						
+						///################# SUBMIT ##########################
+						JButton btSubmit=new JButton();
+						btSubmit.setText("SUBMIT");								
+						btSubmit.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	
+			            	if(fieldOpcion.getText().equals(""))	
+		            		{
+			            		System.out.print("\n\n[MENU SISTEMA] NO COLOCO NINGUNA OPCION\n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+								try {
+									MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+									menuSistema.mostrar();	
+								} catch (MiException e) {
 									throw e;
-								}
-								catch(Exception e)
+								}catch(SQLException e)
 								{
-									throw new MiException("[CARGA REPARACION] Exception : "+e);
-								}
-							break;
-							case 3:
-								System.out.print("\n***AUTOPARTES***");
-								Filtro filtro=new Filtro();
-								Aceite aceite=new Aceite();
-								Lampara lampara=new Lampara();
-								
-								for (Autoparte autoparte : autopartesG)
-								{										
-									if(autoparte instanceof Filtro)
-									{
-										System.out.print("\n***FILTROS***");
-										filtro=(Filtro)autoparte;
-										System.out.print("\n"+filtro.toString());
-									}											
-								}
-								for (Autoparte autoparte : autopartesG)
-								{										
-									if(autoparte instanceof Aceite)
-									{
-										System.out.print("\n***ACEITES***");
-										aceite=(Aceite)autoparte;
-										System.out.print("\n"+aceite.toString());
-									}
-								}
-								for (Autoparte autoparte : autopartesG)
-								{										
-									if(autoparte instanceof Lampara)
-									{
-										System.out.print("\n***LAMPARAS***");
-										lampara=(Lampara)autoparte;
-										System.out.print("\n"+lampara.toString());
-									}
-								}
-								Thread.sleep(2000);
-							break;
-							case 4:
-							break;
-							default:
-								break;
-							
-						}							
-					}
-					catch(MiException e)
+									throw new MiException("\n[MENU SISTEMA] MOSTRAR DATOS EXCEPTION :"+e);
+								}	
+		            		}else
+				            {
+		            			switch(Integer.valueOf(fieldOpcion.getText()))
+		            			{
+		            				case 1:			//CLIENTES
+		            					try
+		        		            	{
+		            						getFrameSistema().getContentPane().removeAll();
+    					            		getFrameSistema().getContentPane().repaint();
+    					    				
+    					            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+    					    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(2, 1), null, Color.blue,null,null);						
+    					    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CLIENTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+    								        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+    								        JPanel panelGridLabel=new JPanel();
+    								     
+    								        panelGridLabel=panelGestor.cargarClientesEnPanel(clientesG);
+    								    											
+											///####################### VOLVER #############################
+											JButton btVolver=new JButton();
+											btVolver.setText("VOLVER");								
+											btVolver.addMouseListener(new MouseAdapter() {												
+								            @Override
+								            public void mouseReleased(MouseEvent evt) {
+								            	 
+												try {
+													MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+													menuSistema.mostrar();	
+												} catch (MiException e) {
+													throw e;
+												}catch(SQLException e)
+												{
+													throw new MiException("\n[MENU SISTEMA] VOLVER - MOSTRAR AUTOPARTE EXCEPTION :"+e);
+												}
+																            	
+								            }
+											});
+											panelEnd.add(btVolver);
+											
+											///######################## SALIR ##########################
+											JButton btSalir=new JButton();
+											btSalir.setText("SALIR");								
+											btSalir.addMouseListener(new MouseAdapter() {												
+								            @Override
+								            public void mouseReleased(MouseEvent evt) {
+								            	System.exit(0);					            	
+								            }
+											});
+											panelEnd.add(btSalir);
+						
+											panel.add(panelTitulo);
+											panel.add(panelGridLabel);
+											panel.add(panelResto);
+											panel.add(panelEnd);
+											
+											getFrameSistema().setContentPane(panel);	
+											
+						            	}catch(MiException e)
+										{
+											throw e;
+										}catch(Exception e)
+										{
+											throw new MiException("\n[MENU SISTEMA]MOSTRAR DATOS Exception : "+e);
+										}
+		            					break;
+		            				case 2:			//AUTOPARTES
+		            					try
+		        		            	{
+		        			            	getFrameSistema().getContentPane().removeAll();
+		        		            		getFrameSistema().getContentPane().repaint();
+		        		    				
+		        		            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+		        		    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(3, 1), null, Color.blue,null,null);						
+		        		    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR AUTOPARTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+		        					        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+		        					        
+		        					        JPanel panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(3, 2), Definiciones.line_blackline,null,null,null);
+		        					        panelGridLabel=panelGestor.labelsTiposAutopartes(panelGridLabel);
+		        					        
+		        					        final JTextField fieldOpcion=new JTextField();
+		        							JPanel panelGridOpcion=panelGestor.crearPanelOpcion(new String("TIPO AUTOPARTE"),fieldOpcion);
+		        					        
+		        							///################# SUBMIT ##########################
+		        							JButton btSubmit=new JButton();
+		        							btSubmit.setText("SUBMIT");								
+		        							btSubmit.addMouseListener(new MouseAdapter() {												
+		        				            @Override
+		        				            public void mouseReleased(MouseEvent evt) {
+		        				            	
+		        				            	try
+		        				            	{
+		        				            		if(fieldOpcion.getText().equals("")||Integer.valueOf(fieldOpcion.getText())>3||Integer.valueOf(fieldOpcion.getText())<1)	
+		        				            		{
+		        					            		System.out.print("\n\n[MENU SISTEMA] NO EXISTE ESE TIPO DE AUTOPARTE \n"); //ENEL FUTURO AGREGAR MENU EMERGENTE
+		        										try {
+		        											MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+		        											menuSistema.mostrar();	
+		        										} catch (MiException e) {
+		        											throw e;
+		        										}catch(SQLException e)
+		        										{
+		        											throw new MiException("\n[MENU SISTEMA] MOSTRAR DATOS AUTOPARTES EXCEPTION :"+e);
+		        										}	
+		        				            		}else
+		        						            {
+		        					            		getFrameSistema().getContentPane().removeAll();
+		        					            		getFrameSistema().getContentPane().repaint();
+		        					    				
+		        					            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+		        					    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(2, 1), null, Color.blue,null,null);						
+		        					    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR DATOS AUTOPARTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+		        								        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+		        								        JPanel panelGridLabel=new JPanel();
+		        								        
+		        								    	JPanel panelTituloTipo = panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.black,new Dimension(400,50));
+		        										JLabel labelTitulo=panelGestor.crearTitulo("", JLabel.CENTER,Color.white, new Font(Font.SERIF,Font.BOLD,15));
+		        								        
+		        										
+		        											
+		        											switch(Integer.valueOf(fieldOpcion.getText()))
+		        											{
+		        												case Definiciones.FILTRO_INDICE:
+		        													labelTitulo.setText("MODIFICAR FILTRO");
+		        													panelTituloTipo.add("Center",labelTitulo);
+		        													panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(metgral.obtenerCantidadFiltros(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO																					
+		        													panelGridLabel=panelGestor.cargarFiltrosEnPanel(autopartesG);
+		        													
+		        																
+		        													break;
+		        												case Definiciones.ACEITE_INDICE:
+		        													labelTitulo.setText("MODIFICAR ACEITE");
+		        													panelTituloTipo.add("Center",labelTitulo);
+		        													panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(metgral.obtenerCantidadAceites(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO		        																																		
+		        													panelGridLabel=panelGestor.cargarAceitesEnPanel(autopartesG);
+		        													
+		        																
+		        													break;
+		        												case Definiciones.LAMPARA_INDICE:
+		        													labelTitulo.setText("MODIFICAR LAMPARA");
+		        													panelTituloTipo.add("Center",labelTitulo);
+		        													panelGridLabel=panelGestor.crearPanelGrid(new GridLayout(metgral.obtenerCantidadLamparas(autopartesG),1), Definiciones.line_blackline,null,null,null);	//PODRIA PREGUNTAR SI POR L OMENOS HAY ALGUN FILTRO		        																																		
+		        													panelGridLabel=panelGestor.cargarLamparasEnPanel(autopartesG);
+ 		        																
+		        													break;
+		        												default:
+		        													break;
+		        											}
+		        											///####################### VOLVER #############################
+		        		        							JButton btVolver=new JButton();
+		        		        							btVolver.setText("VOLVER");								
+		        		        							btVolver.addMouseListener(new MouseAdapter() {												
+		        		        				            @Override
+		        		        				            public void mouseReleased(MouseEvent evt) {
+		        		        				            	 
+		        		        								try {
+		        		        									MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+		        		        									menuSistema.mostrar();	
+		        		        								} catch (MiException e) {
+		        		        									throw e;
+		        		        								}catch(SQLException e)
+		        		        								{
+		        		        									throw new MiException("\n[MENU SISTEMA] VOLVER - MOSTRAR AUTOPARTE EXCEPTION :"+e);
+		        		        								}
+		        		        												            	
+		        		        				            }
+		        		        							});
+		        		        							panelEnd.add(btVolver);
+		        		        							
+		        		        							///######################## SALIR ##########################
+		        		        							JButton btSalir=new JButton();
+		        		        							btSalir.setText("SALIR");								
+		        		        							btSalir.addMouseListener(new MouseAdapter() {												
+		        		        				            @Override
+		        		        				            public void mouseReleased(MouseEvent evt) {
+		        		        				            	System.exit(0);					            	
+		        		        				            }
+		        		        							});
+		        		        							panelEnd.add(btSalir);
+		        		        		
+		        		        							panel.add(panelTitulo);
+		        		        							panel.add(panelGridLabel);		        		        							
+		        		        							panel.add(panelResto);
+		        		        							panel.add(panelEnd);
+		        		        							
+		        		        							getFrameSistema().setContentPane(panel);
+		        											
+		        						            }
+		        				            	}catch(MiException e)
+		        								{
+		        									throw e;
+		        								}catch(Exception e)
+		        								{
+		        									throw new MiException("\n[MENU SISTEMA]MOSTRAR DATOS Exception : "+e);
+		        								}
+		        				            }});
+		        							panelEnd.add(btSubmit);
+		        							
+		        							///####################### VOLVER #############################
+		        							JButton btVolver=new JButton();
+		        							btVolver.setText("VOLVER");								
+		        							btVolver.addMouseListener(new MouseAdapter() {												
+		        				            @Override
+		        				            public void mouseReleased(MouseEvent evt) {
+		        				            	 
+		        								try {
+		        									MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+		        									menuSistema.mostrar();	
+		        								} catch (MiException e) {
+		        									throw e;
+		        								}catch(SQLException e)
+		        								{
+		        									throw new MiException("\n[MENU SISTEMA] VOLVER - MOSTRAR AUTOPARTE EXCEPTION :"+e);
+		        								}
+		        												            	
+		        				            }
+		        							});
+		        							panelEnd.add(btVolver);
+		        							
+		        							///######################## SALIR ##########################
+		        							JButton btSalir=new JButton();
+		        							btSalir.setText("SALIR");								
+		        							btSalir.addMouseListener(new MouseAdapter() {												
+		        				            @Override
+		        				            public void mouseReleased(MouseEvent evt) {
+		        				            	System.exit(0);					            	
+		        				            }
+		        							});
+		        							panelEnd.add(btSalir);
+		        		
+		        							panel.add(panelTitulo);
+		        							panel.add(panelGridLabel);
+		        							panel.add(panelGridOpcion);
+		        							panel.add(panelResto);
+		        							panel.add(panelEnd);
+		        							
+		        							getFrameSistema().setContentPane(panel);	
+		        							
+		        		            	}catch(MiException e)
+		        						{
+		        							throw e;
+		        						}catch(Exception e)
+		        						{
+		        							throw new MiException("\n[MENU SISTEMA]MOSTRAR DATOS Exception : "+e);
+		        						}
+		        							
+		        				            	
+		        				            	
+		            					break;
+		            				case 3:			//REPARACIONEs
+		            					try
+		        		            	{
+		            						getFrameSistema().getContentPane().removeAll();
+    					            		getFrameSistema().getContentPane().repaint();
+    					    				
+    					            		JPanel panel=panelGestor.crearPanelBoxGral(getFrameSistema(),Color.lightGray,BoxLayout.Y_AXIS);
+    					    				JPanel panelEnd=panelGestor.crearPanelGrid(new GridLayout(2, 1), null, Color.blue,null,null);						
+    					    				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR REPARACIONES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+    								        JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.cyan,new Dimension(400,300),null);
+    								        JPanel panelGridLabelEntregados=new JPanel();
+    								        JPanel panelGridLabelEnReparacion=new JPanel();
+    								        
+    								        
+    								        JPanel panelTituloE = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"EN REPARACION",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+    								        panelGridLabelEnReparacion=panelGestor.cargarPanelReparacionesEnReparacion(reparacionesG);
+    								        JPanel panelTituloF = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"FINALIZADOS",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);    								        
+    								        panelGridLabelEntregados=panelGestor.cargarPanelReparacionesEntregadas(reparacionesG);
+    								        
+    								        
+    								        
+    								        
+											///####################### VOLVER #############################
+											JButton btVolver=new JButton();
+											btVolver.setText("VOLVER");								
+											btVolver.addMouseListener(new MouseAdapter() {												
+								            @Override
+								            public void mouseReleased(MouseEvent evt) {
+								            	 
+												try {
+													MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+													menuSistema.mostrar();	
+												} catch (MiException e) {
+													throw e;
+												}catch(SQLException e)
+												{
+													throw new MiException("\n[MENU SISTEMA] VOLVER - MOSTRAR AUTOPARTE EXCEPTION :"+e);
+												}
+																            	
+								            }
+											});
+											panelEnd.add(btVolver);
+											
+											///######################## SALIR ##########################
+											JButton btSalir=new JButton();
+											btSalir.setText("SALIR");								
+											btSalir.addMouseListener(new MouseAdapter() {												
+								            @Override
+								            public void mouseReleased(MouseEvent evt) {
+								            	System.exit(0);					            	
+								            }
+											});
+											panelEnd.add(btSalir);
+						
+											panel.add(panelTitulo);											
+											panel.add(panelTituloE);
+											panel.add(panelGridLabelEnReparacion);
+											panel.add(panelTituloF);
+											panel.add(panelGridLabelEntregados);											
+											panel.add(panelResto);
+											panel.add(panelEnd);
+											
+											getFrameSistema().setContentPane(panel);	
+											
+						            	}catch(MiException e)
+										{
+											throw e;
+										}catch(Exception e)
+										{
+											throw new MiException("\n[MENU SISTEMA]MOSTRAR DATOS Exception : "+e);
+										}
+		            					
+		            					break;
+	            					default:
+	            						System.out.print("\nNO EXISTE OPCION INGRESADA");
+	            						try {
+	        								MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+	        								menuSistema.mostrar();	
+	        							} catch (MiException e) {
+	        								throw e;
+	        							}catch(SQLException e)
+	        							{
+	        								throw new MiException("\n[MENU SISTEMA] VOLVER - MOSTRAR DATOS EXCEPTION :"+e);
+	        							}
+	            						break;
+		            			}
+				            }
+	            		
+						
+						}});							
+						panelEnd.add(btSubmit);
+						
+						///####################### VOLVER #############################
+						JButton btVolver=new JButton();
+						btVolver.setText("VOLVER");								
+						btVolver.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	 
+							try {
+								MenuSistema menuSistema = new MenuSistema(getFrameSistema(),user);
+								menuSistema.mostrar();	
+							} catch (MiException e) {
+								throw e;
+							}catch(SQLException e)
+							{
+								throw new MiException("\n[MENU SISTEMA] VOLVER - MOSTRAR DATOS EXCEPTION :"+e);
+							}
+											            	
+			            }
+						});
+						panelEnd.add(btVolver);
+						
+						///######################## SALIR ##########################
+						JButton btSalir=new JButton();
+						btSalir.setText("SALIR");								
+						btSalir.addMouseListener(new MouseAdapter() {												
+			            @Override
+			            public void mouseReleased(MouseEvent evt) {
+			            	System.exit(0);					            	
+			            }
+						});
+						panelEnd.add(btSalir);
+						
+						panel.add(panelTitulo);
+						panel.add(panelGridLabel);
+						panel.add(panelGridOpcion);
+						panel.add(panelResto);
+						panel.add(panelEnd);
+						
+						getFrameSistema().setContentPane(panel);						
+						
+					}catch(MiException e)
 					{
 						throw e;
-					}
-					catch(Exception e)
+					}catch(Exception e)
 					{
-						throw new MiException("[CARGA REPARACION] Exception : "+e);
-					}				            	
+						throw new MiException("\n[MENU SISTEMA]MOSTRAR DATOS Exception : "+e);
+					}  			            	
 	            }
 				});			
 				panelOperaciones.add(btMostrarDatos);

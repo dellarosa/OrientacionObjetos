@@ -1,10 +1,15 @@
 package utils;
 
+import java.awt.Component;
+import java.awt.Font;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import SQL.SQLClass;
 import SQL.SQLSelects;
@@ -310,9 +315,54 @@ public class MetodosGrl {
 		}*/
 		
 	}
-
-	
-
-	
+	public int obtenerCantidadClientes(List<Cliente> clientesG) {
+		int cant=0;
+		for(Cliente client:clientesG)
+		{
+			cant++;
+		}
+		return cant;
+		
+	}
+	public int obtenerCantidadReparacionesEnReparacion(List<Reparacion> reparacionesG) {
+		int cant=0;
+		
+		for(Reparacion reparacion : reparacionesG)
+		{				
+			if(reparacion.getEntregado()==0)
+			{
+				cant++;
+			}
+		}
+		
+		return cant;
+	}
+	public int obtenerCantidadReparacionesFinalizadas(List<Reparacion> reparacionesG) {
+		int cant=0;
+		
+		for(Reparacion reparacion : reparacionesG)
+		{				
+			if(reparacion.getEntregado()==1)
+			{	
+				cant++;
+			}
+		}
+		
+		return cant;
+	}
+	public int obtenerCantReparacionesFinalizadasYAutopartes(List<Reparacion> reparacionesG) {
+		int cant=0;
+		
+		for(Reparacion reparacion : reparacionesG)
+		{				
+			if(reparacion.getEntregado()==1)
+			{	
+				cant=cant+reparacion.getAutopartes().size();
+				cant++;
+			}
+		}
+		
+		return cant;
+	}
 	
 }

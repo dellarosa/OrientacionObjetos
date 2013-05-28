@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Reparacion {
@@ -22,6 +23,7 @@ public class Reparacion {
 	public Reparacion()
 	{
 		this.setCosto(0);
+		this.setAutopartes(new ArrayList<Autoparte>());
 	}
 	public int getId() {
 		return id;
