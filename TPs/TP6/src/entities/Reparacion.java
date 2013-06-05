@@ -14,17 +14,21 @@ public class Reparacion {
 	private int id;
 	private int entregado;
 	
+	
+	public Reparacion()
+	{
+		this.setCosto(0);
+		this.setAutopartes(new ArrayList<Autoparte>());
+	}
+	
+	
 	public int getEntregado() {
 		return entregado;
 	}
 	public void setEntregado(int entregado) {
 		this.entregado = entregado;
 	}
-	public Reparacion()
-	{
-		this.setCosto(0);
-		this.setAutopartes(new ArrayList<Autoparte>());
-	}
+
 	public int getId() {
 		return id;
 	}

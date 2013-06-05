@@ -354,7 +354,7 @@ public class FiltroDAO_SQL_Impl implements FiltroDAO{
 			stmt = conn.createStatement();
 			try
 			{				
-				query="SELECT * FROM Filtro WHERE filtro_ID="+id;
+				query="SELECT * FROM Filtro WHERE autoparte_ID="+id;
 				ResultSet rs=stmt.executeQuery(query);			
 				conn.commit();
 				

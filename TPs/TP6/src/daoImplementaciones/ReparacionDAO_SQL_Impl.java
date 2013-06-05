@@ -129,6 +129,8 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 								client.setNombre(rsclient.getString("nombre"));
 							}
 							reparacion.setCliente(client);
+							//System.out.print("\n[cargaReparaciones] REPARACION CLIENTE: "+client.toString());	//DEBUG
+							
 							//#########################################
 							reparacion.setFechainicio(rs.getString("fechaInicio"));
 							
@@ -151,15 +153,15 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 								conn.setAutoCommit(false);
 								stmt = conn.createStatement();
 																	
-								query="SELECT * FROM ReparacionAutoparte WHERE ReparacionAutoparte_ID="+rs.getInt("reparacion_ID");
+								//query="SELECT * FROM ReparacionAutoparte";
+								query="SELECT * FROM ReparacionAutoparte WHERE reparacion_ID="+rs.getInt("reparacion_ID");
 								ResultSet rsRepAuto=stmt.executeQuery(query);			
 								conn.commit();
 								
 								//System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG									
-									
+								
 								stmt.execute("SHUTDOWN");							
 								conn.close();	
-								
 								
 								while(rsRepAuto.next())
 								{
@@ -171,13 +173,16 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 									ResultSet rsAutopart=stmt.executeQuery(query);			
 									conn.commit();		
 									
-								//	System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG
+									//System.out.print("\n[cargaReparaciones] QUERY: "+query);	//DEBUG
 									
 									stmt.execute("SHUTDOWN");							
 									conn.close();	
 									if(rsAutopart.next())
 									{
-										if(rsAutopart.getString("tipoAutoparte").equals(Definiciones.FILTRO_STRING))							{
+										//System.out.print("\n[cargaReparaciones] TIPO AUTOPARTE: "+rsAutopart.getString("tipoAutoparte"));	//DEBUG
+										if(rsAutopart.getString("tipoAutoparte").equals("filtro"))
+										{	
+											
 											filtro=filtroDao.buscarFiltroPorIdAutoParte(rsAutopart.getInt("autoparte_ID"));		//POdria usar la lista de filtros
 											if(filtro!=null)
 											{	
@@ -189,11 +194,13 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 												filtro.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
 												autopartes.add(filtro);											
 												
+												//System.out.print("\n[cargaReparaciones] FILTRO EN REPARACION: "+filtro.toString());	//DEBUG
 												
 											}
 									
-										}else if(rsAutopart.getString("tipoAutoparte").equals(Definiciones.ACEITE_STRING))
+										}else if(rsAutopart.getString("tipoAutoparte").equals("aceite"))
 										{
+											
 											aceite=aceiteDao.buscarAceitePorIdAutoParte(rsAutopart.getInt("autoparte_ID"));
 											if(aceite!=null)
 											{
@@ -203,10 +210,12 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 												aceite.setMarca(rsAutopart.getString("marca"));
 												aceite.setModelo(rsAutopart.getString("modelo"));
 												aceite.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
-												autopartes.add(aceite);											
+												autopartes.add(aceite);		
+												
+												//System.out.print("\n[cargaReparaciones] ACEITE EN REPARACION: "+aceite.toString());	//DEBUG
 											}
 											
-										}else if(rsAutopart.getString("tipoAutoparte").equals(Definiciones.LAMPARA_STRING))
+										}else if(rsAutopart.getString("tipoAutoparte").equals("lampara"))
 										{
 											lampara=lamparaDao.buscarLamparaPorIdAutoParte(rsAutopart.getInt("autoparte_ID"));
 											if(lampara!=null)
@@ -220,6 +229,8 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 												lampara.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
 												
 												autopartes.add(lampara);
+												
+												//System.out.print("\n[cargaReparaciones] LAMPARA EN REPARACION: "+lampara.toString());	//DEBUG
 											}	
 										}else
 										{}
@@ -232,7 +243,7 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 							}					
 							reparaciones.add(reparacion);
 						}while(rs.next());
-					
+						System.out.print("\n[cargaReparaciones]HAY REPARACIONES: ");		//DEBUG
 				}else
 				{	
 					System.out.print("\n[cargaReparaciones]NO HAY REPARACIONES CARGADOS : ");		//DEBUG

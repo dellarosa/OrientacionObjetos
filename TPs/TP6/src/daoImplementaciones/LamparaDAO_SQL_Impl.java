@@ -297,7 +297,7 @@ public class LamparaDAO_SQL_Impl implements LamparaDAO{
 			stmt = conn.createStatement();
 			try
 			{				
-				query="SELECT * FROM Lampara WHERE lampara_ID="+id;
+				query="SELECT * FROM Lampara WHERE autoparte_ID="+id;
 				ResultSet rs=stmt.executeQuery(query);			
 				conn.commit();
 				

@@ -308,7 +308,7 @@ public class AceiteDAO_SQL_Impl implements AceiteDAO{
 			stmt = conn.createStatement();
 			try
 			{				
-				query="SELECT * FROM Aceite WHERE aceite_ID="+id;
+				query="SELECT * FROM Aceite WHERE autoparte_ID="+id;
 				ResultSet rs=stmt.executeQuery(query);			
 				conn.commit();
 				

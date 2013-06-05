@@ -35,7 +35,7 @@ public class Filtro extends Autoparte{
 	
 	public String toString()
 	{
-		return super.toString()+" - ID_FILTRO: "+this.getFiltro_ID()+" - TAMA�O: "+this.getTamanio()+" - MATERIAL: "+
+		return super.toString()+" - ID_FILTRO: "+this.getFiltro_ID()+" - TAMANIO: "+this.getTamanio()+" - MATERIAL: "+
 	    this.getMaterial();
 	}
 }

@@ -314,30 +314,37 @@ public class Panel {
 	}
 	public JPanel cargarPanelReparacionesEntregadas(List<Reparacion> reparacionesG) {
 		
-		JPanel panelGridLabel=crearPanelGrid(new GridLayout(metgral.obtenerCantReparacionesFinalizadasYAutopartes(reparacionesG), 1), Definiciones.line_blackline,null,null,null);
-		System.out.print("\nCANT :"+metgral.obtenerCantReparacionesFinalizadasYAutopartes(reparacionesG));
+		System.out.print("\nCANT :"+metgral.obtenerCantReparacionesFinalizadasYAutopartes(reparacionesG));	//DEBUG
+		JPanel panelGridReparaciones=crearPanelGrid(new GridLayout(metgral.obtenerCantReparacionesFinalizadasYAutopartes(reparacionesG), 1), Definiciones.line_blackline,null,null,null);
+		
 		
 		for(Reparacion reparacion : reparacionesG)
 		{				
 			if(reparacion.getEntregado()==1)
 			{	
+		
 				JLabel label=new JLabel(reparacion.toString(),JLabel.LEFT);
 				label.setFont(new Font(Font.SERIF,-1,9));
 				label.setBorder(Definiciones.line_blackline);
-				panelGridLabel.add(label);		
+				panelGridReparaciones.add(label);		
 				
 				System.out.print("\nCANT A:"+reparacion.getAutopartes().size());
+			
+				DefaultTableModel model = new DefaultTableModel();
+				JTable table = new JTable(model);
+				model.addColumn("AUTOPARTES");
 				
-				JPanel panelGridAutopart=crearPanelGrid(new GridLayout(reparacion.getAutopartes().size(), 1), Definiciones.line_blackline,null,null,null);
-				for(Autoparte autoparte: reparacion.getAutopartes()){
-					JLabel labelAutop=new JLabel("  A: "+ autoparte.toString(),JLabel.LEFT);
-					labelAutop.setFont(new Font(Font.SERIF,-1,9));
-					panelGridAutopart.add(labelAutop);		
+				for(Autoparte autoparte: reparacion.getAutopartes())
+				{
+					model.addRow(new Object[]{autoparte.toString()});
 				}
-				panelGridLabel.add(panelGridAutopart);
+				panelGridReparaciones.add(table);
+
+				
 			}
 		}
-		return panelGridLabel;
+		
+		return panelGridReparaciones;
 	}
 	public JTextField crearTextField(String text, int col,Border border, Font font, Color color, float alignX) {
 
@@ -418,6 +425,108 @@ public class Panel {
 		}
 		
 		return table;
+	}
+	public JTable cargarReparacionesPendEnTabla(List<Reparacion> reparacionesG) {
+
+		DefaultTableModel model = new DefaultTableModel();
+		JTable table = new JTable(model);
+		model.addColumn("DATOS");
+		for(Reparacion repara:reparacionesG)
+		{
+			if(repara.getEntregado()==0)
+			{
+				model.addRow(new Object[]{"ID: "+repara.getId()+" - FECHA I: "+repara.getFechainicio()+" - CLIENTE: "+repara.getCliente().getNombre()});
+			}
+		}
+		
+		return table;
+	}
+	public JTable cargarReparacionesFinEnTabla(List<Reparacion> reparacionesG) {
+		DefaultTableModel model = new DefaultTableModel();
+		JTable table = new JTable(model);
+		model.addColumn("DATOS");
+				
+		for(Reparacion reparacion : reparacionesG)
+		{				
+			if(reparacion.getEntregado()==1)
+			{	
+				model.addRow(new Object[]{reparacion.toString()});	
+				
+				DefaultTableModel modelAutop = new DefaultTableModel();
+				JTable tableAutop = new JTable(modelAutop);
+				model.addColumn("AUTOPARTES");
+				
+				for(Autoparte autoparte: reparacion.getAutopartes()){
+					modelAutop.addRow(new Object[]{"  A: "+ autoparte.toString()});					
+				}
+				model.addRow(new Object[]{tableAutop});
+			}
+		}
+		
+		return table;
+	}
+	public JTable cargarFiltrosEnTable(List<Autoparte> autopartesG) {
+
+		DefaultTableModel model = new DefaultTableModel();
+		JTable table = new JTable(model);
+		model.addColumn("FILTROS");
+				
+		for(Autoparte autopart : autopartesG)
+		{				
+			//System.out.print("\nAutoparte: "+autopart.toString());
+			if(autopart instanceof Filtro)
+			{	
+				Filtro filtro=(Filtro) autopart;
+				//System.out.print("\nINSTANCIA DE FILTRO: "+filtro.toString());	//DEBUG
+				model.addRow(new Object[]{filtro.toString()});
+			}
+		}
+		
+		return table;
+
+	}
+	public JTable cargarAceitesEnTable(List<Autoparte> autopartesG) {
+		DefaultTableModel model = new DefaultTableModel();
+		JTable table = new JTable(model);
+		model.addColumn("ACEITES");
+				
+		for(Autoparte autopart : autopartesG)
+		{				
+			if(autopart instanceof Aceite)
+			{	
+				Aceite aceite=(Aceite) autopart;
+				model.addRow(new Object[]{aceite.toString()});
+			}
+		}
+		
+		return table;
+	}
+	public JTable cargarLamparasEnTable(List<Autoparte> autopartesG) {
+		DefaultTableModel model = new DefaultTableModel();
+		JTable table = new JTable(model);
+		model.addColumn("LAMPARAS");
+				
+		for(Autoparte autopart : autopartesG)
+		{				
+			if(autopart instanceof Lampara)
+			{	
+				Lampara lampara=(Lampara) autopart;
+				model.addRow(new Object[]{lampara.toString()});
+			}
+		}
+		
+		return table;
+	}
+	
+	public JPanel cargarAutopartesEnPanel(List<Autoparte> autopartesG){
+		
+		JPanel panelGrid=crearPanelGrid(new GridLayout(4,1),null,Color.gray,new Dimension(400,300),null);
+		
+		panelGrid.add(cargarFiltrosEnTable(autopartesG));										
+		panelGrid.add(cargarAceitesEnTable(autopartesG));
+		panelGrid.add(cargarLamparasEnTable(autopartesG));
+		
+		return panelGrid;
 	}
 	
 

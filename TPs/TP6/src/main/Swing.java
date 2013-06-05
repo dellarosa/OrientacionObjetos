@@ -11,6 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -28,6 +31,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import paneles.Panel;
 
@@ -62,12 +66,13 @@ public class Swing {
 	private List<Reparacion> reparacionesG;
 	private List<Usuario> usuariosG;
 	private MetodosGrl metgral;
-	
+	private Reparacion reparacionAux;
 	public Swing()
 	{
+		reparacionAux=new Reparacion();
 		autopartesG=new ArrayList<Autoparte>();
 		clientesG=new ArrayList<Cliente>();
-		reparacionesG=new ArrayList<Reparacion>();
+		reparacionesG=new ArrayList<Reparacion>();		
 		usuariosG=new ArrayList<Usuario>();
 		this.setPanelInicio(new JPanel(new BorderLayout()));
 		this.setMenuBar(new JMenuBar());
@@ -114,14 +119,18 @@ public class Swing {
 	public void setFrameSwing(JFrame frameSwing) {
 		this.frameSwing = frameSwing;
 	}
+	
+	public Reparacion getReparacionAux() {
+		return reparacionAux;
+	}
+	public void setReparacionAux(Reparacion reparacionAux) {
+		this.reparacionAux = reparacionAux;
+	}
 	public void pantallaPrincipal(JFrame frame)
 	{
 		final Panel panelGestor=new Panel();
 		final UsuarioBO usuarioBo=new UsuarioBO();
-		final ClienteBO clienteBo=new ClienteBO();
-		final AceiteBO aceiteBo=new AceiteBO();
-		final FiltroBO filtroBo=new FiltroBO();
-		final LamparaBO lamparaBo=new LamparaBO();
+		final ClienteBO clienteBo=new ClienteBO();		
 		final AutoparteBO autoparteBo=new AutoparteBO();
 		final ReparacionBO reparacionBo=new ReparacionBO();
 		metgral=new MetodosGrl(); 
@@ -654,9 +663,9 @@ public class Swing {
 							panel.add(BorderLayout.NORTH,panelTitulo);
 							panel.add(BorderLayout.CENTER,panelGrid);
 							panel.add(BorderLayout.SOUTH,panelResto);
-							getPanelInicio().add(panel,BorderLayout.CENTER);
-							getPanelInicio().add(btSubmit,BorderLayout.SOUTH);
 							
+							getPanelInicio().add(panel,BorderLayout.CENTER);
+							getPanelInicio().add(btSubmit,BorderLayout.SOUTH);							
 							getFrameSwing().setContentPane(getPanelInicio());
 							
 						}
@@ -707,7 +716,7 @@ public class Swing {
 							{
 								System.out.print("\nCLIENTE ELIMINADO CORRECTAMENTE");		//DEBUG
 								Thread.sleep(2000);
-								clientesG=metgral.eliminarClienteDeLista(clientesG,clienteEncontrado);
+								clientesG=metgral.eliminarClienteDeLista(getClientesG(),clienteEncontrado);
 								
 							}else
 							{
@@ -722,7 +731,6 @@ public class Swing {
 	            			pantallaPrincipal(getFrameSwing());
 	            		}else
 	            		{	
-	            			Thread.sleep(2000);
 	            			pantallaPrincipal(getFrameSwing());
 	            		}
 					}	
@@ -899,8 +907,8 @@ public class Swing {
 		menuAutoparte.add(menuLampara);
 		
 		menuAutoparte.add(itemMostrarAutopartes);
-		//#################################3 REPARACION ###########################################
-		JMenu menuReparacion=new JMenu("Autoparte");									//...
+		//################################# REPARACION ###########################################
+		JMenu menuReparacion=new JMenu("Reparacion");									//...
 		
 		JMenuItem itemIniciarReparacion=new JMenuItem("Iniciar Reparacion");
 		JMenuItem itemFinalizarReparacion=new JMenuItem("Finalizar Reparacion");
@@ -909,10 +917,69 @@ public class Swing {
 
 		//////////// INICIAR REPARACION /////////////////
 		itemIniciarReparacion.addActionListener(new ActionListener(){
-						@Override
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				
+				try
+				{	
+					setFrameSwing(getFrameSwing());		
+					getFrameSwing().getContentPane().removeAll();
+					getFrameSwing().getContentPane().repaint();
+					getPanelInicio().add(getMenuBar(),BorderLayout.NORTH);
+					
+					String seleccion=null;
+					seleccion = JOptionPane.showInputDialog(getFrameSwing(),"","Ingrese Cliente para nueva reparacion",JOptionPane.QUESTION_MESSAGE);  
+					
+					if((seleccion==null)||(seleccion.equals("")))
+	            	{
+	            		System.out.print("\n[INICIAR REPARACION] DATOS VACIOS");		//DEBUG AGREGAR VENTANA EMERG.
+	            		Thread.sleep(2000);
+	            		pantallaPrincipal(getFrameSwing());
+	            	}else
+	            	{
+	            		final Cliente clientereparacion=metgral.buscarClientePorApodo(seleccion,getClientesG());
+						if(clientereparacion==null)
+						{
+							System.out.print("\n\nCLIENTE NO ENCONTRADO\n");		//DEBUG AGREGAR EMERGENTE								
+							pantallaPrincipal(getFrameSwing());			
+						}else
+						{	
+							Calendar c = new GregorianCalendar();
+						    Date d1 = c.getTime(); 
+							int response=JOptionPane.showConfirmDialog(getFrameSwing(), "CARGA DE REPARACION 'Cliente: "+clientereparacion.getNombre()+"' - 'Auto: "+clientereparacion.getAuto(), "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+							    
+							if(response==JOptionPane.YES_OPTION)
+							{
+								Reparacion nuevareparacion=new Reparacion();
+								nuevareparacion.setFechainicio(d1.toString());			
+								nuevareparacion.setCliente(clientereparacion);
+								nuevareparacion.setEntregado(0);
+								
+								nuevareparacion.setId(reparacionBo.buscarUltimaReparacionId());
+								if(reparacionBo.insertarReparacionInicio(nuevareparacion))
+								{
+									getReparacionesG().add(nuevareparacion);
+									
+									System.out.print("\nCARGA DE NUEVA REPARACION CORRECTA\n");
+									 
+									JOptionPane.showMessageDialog(getFrameSwing(), "CARGA DE NUEVA REPARACION\n"+d1.toString());
+									 
+								}else{
+									JOptionPane.showMessageDialog(getFrameSwing(), "FALLO CARGA");
+								}							
+							}else
+							{	
+								JOptionPane.showMessageDialog(getFrameSwing(), "CARGA CANCELADA");
+							}
+							pantallaPrincipal(getFrameSwing());
+						}
+	        		}	
+				} catch (MiException e) {
+					throw e;					
+		        } catch (Exception e) {
+					throw new MiException("[INICIAR REPARACION]EXCEPTION : "+e);												
+				}
+				            	
 			}
 		});
 		
@@ -920,8 +987,172 @@ public class Swing {
 		itemFinalizarReparacion.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
-				
+				try
+				{	
+					setFrameSwing(getFrameSwing());		
+					getFrameSwing().getContentPane().removeAll();
+					getFrameSwing().getContentPane().repaint();
+					getPanelInicio().add(getMenuBar(),BorderLayout.NORTH);
+					
+					String seleccion=null;
+					seleccion = JOptionPane.showInputDialog(getFrameSwing(),"","Ingrese Cliente Reparacion Iniciada",JOptionPane.QUESTION_MESSAGE);	//PODRIA BUSCAR POR ID REPARACION PARA KE UN CLIENTE TENGA MAS DE UNA REPARACION  
+					
+					if((seleccion==null)||(seleccion.equals("")))
+	            	{
+	            		System.out.print("\n[INICIAR REPARACION] DATOS VACIOS");		//DEBUG AGREGAR VENTANA EMERG.
+	            		Thread.sleep(2000);
+	            		pantallaPrincipal(getFrameSwing());
+	            	}else
+	            	{
+	            		final Cliente cliente=metgral.buscarClientePorApodo(seleccion,getClientesG());	//PODRIA BUSCAR POR ID REPARACION
+						if(cliente==null)
+						{
+							System.out.print("\n\nCLIENTE NO ENCONTRADO\n");		//DEBUG AGREGAR EMERGENTE								
+							
+							pantallaPrincipal(getFrameSwing());			
+						}else
+						{	
+							for(Reparacion reparaL:getReparacionesG())
+							{
+								if(reparaL.getCliente().getId()==cliente.getId())
+								{	
+									if(reparaL.getEntregado()==1)												
+									{	
+										JOptionPane.showMessageDialog(getFrameSwing(), "CLIENTE NO POSEE NINGUNA REPARACION ABIERTA");
+										pantallaPrincipal(getFrameSwing());										
+										break;
+									}
+									else
+									{	
+										JPanel panel = panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.white,null);
+										JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.gray,new Dimension(400,200),null);
+										JPanel panelOpcion=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,80),null);
+										final JTextField fieldOpcion=new JTextField();
+										
+										setReparacionAux(new Reparacion());
+										setReparacionAux(reparaL);
+										Calendar c = new GregorianCalendar();
+									    Date d1 = c.getTime();
+									    getReparacionAux().setFechaentrega(d1.toString());
+									    getReparacionAux().setEntregado(1);
+										//getReparacionAux().setCliente(cliente);
+										
+										JPanel panelAutopart= panelGestor.cargarAutopartesEnPanel(getAutopartesG());
+										panelAutopart.add(panelGestor.crearPanelOpcion(new String("INGRESE ID AUTOPARTE"),fieldOpcion));
+										
+										panel.add(BorderLayout.NORTH,panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"AUTOPARTES USADAS EN LA REPARACION",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,11),Color.white));										
+										panel.add(BorderLayout.CENTER,panelAutopart);
+										panel.add(BorderLayout.SOUTH,panelResto);
+										
+										
+										///################# AGREGAR ##########################
+										JButton btAdd=new JButton();
+										btAdd.setText("AGREGAR");								
+										btAdd.addMouseListener(new MouseAdapter() {												
+							            @Override
+							            public void mouseReleased(MouseEvent evt) {
+							            	
+							            	try
+							            	{
+							            		if(fieldOpcion.getText().equals("")||fieldOpcion==null)	
+							            		{
+							            			JOptionPane.showMessageDialog(getFrameSwing(), "NO SE COLOCO NINGUNA OPCION");
+								            		//pantallaPrincipal(getFrameSwing());					            		
+								            	}else
+								            	{	
+							            			for (Autoparte autoparte : getAutopartesG())
+													{										
+														if(autoparte.getId()==Integer.valueOf(fieldOpcion.getText()))
+														{	
+															if(getReparacionAux().getCosto()!=0)
+															{
+																getReparacionAux().setCosto(getReparacionAux().getCosto()+autoparte.getCosto());
+															}
+															else
+															{
+																getReparacionAux().setCosto(autoparte.getCosto());
+															}
+															
+															getReparacionAux().getAutopartes().add(autoparte);
+															
+															System.out.print("\n REPARACIOES AUTOPART: "+getReparacionAux().getAutopartes().size());
+															fieldOpcion.setText("");
+															break;
+														}
+													}
+													
+							            			JOptionPane.showMessageDialog(getFrameSwing(), "SE AGREGO AUTOPARTE");	
+												}										
+							            		
+							            	} catch (MiException e) {
+												throw e;
+											}catch(Exception e)
+											{
+												throw new MiException("\n[FINALIZAR REPARACION] AGREGAR AUTOPARTE- FINALIZAR REPARACION EXCEPTION :"+e);
+											}
+							            }});
+										panelOpcion.add(btAdd);
+										
+										///################# SUBMIT ##########################
+										JButton btSubmit=new JButton();
+										btSubmit.setText("SUBMIT");								
+										btSubmit.addMouseListener(new MouseAdapter() {												
+							            @Override
+							            public void mouseReleased(MouseEvent evt) {
+							            	
+							            	try
+							            	{
+							            		if((getReparacionAux().getAutopartes()==null)&&(getReparacionAux().getAutopartes().isEmpty())&&(getReparacionAux().getAutopartes().size()==0))	
+							            		{
+								            		JOptionPane.showMessageDialog(getFrameSwing(), "NO SE AGREGO AUTOPARTE");
+							            		}else
+									            {    
+													//Podria validar si se cargo autopartes o no se cargo nada
+							            			reparacionBo.insertarupdateReparacionFinal(getReparacionAux(),reparacionBo.buscarUltimaReparacionAutoparteId());
+													int indice=0;
+													for(Reparacion repara:getReparacionesG())
+													{
+														if(repara.getCliente().getId()==getReparacionAux().getCliente().getId())
+														{
+															break;
+														}
+														indice++;
+													}
+													getReparacionesG().remove(indice);
+													getReparacionesG().add(getReparacionAux());	
+													
+													JOptionPane.showMessageDialog(getFrameSwing(), "REPARACION FINALIZADA OK");
+												 }
+							            		 pantallaPrincipal(getFrameSwing());
+												
+							            	} catch (MiException e) {
+												throw e;
+											}catch(Exception e)
+											{
+												throw new MiException("\n[MENU SISTEMA] SUBMIT - FINALIZAR REPARACION EXCEPTION :"+e);
+											}
+										
+										
+							            }});
+										panelOpcion.add(btSubmit);
+										
+										//panel.add(BorderLayout.SOUTH,panelOpcion);
+											
+										getPanelInicio().add(panel,BorderLayout.CENTER);
+										getPanelInicio().add(panelOpcion,BorderLayout.SOUTH);
+										getFrameSwing().setContentPane(getPanelInicio());
+										
+										break;
+									}
+								}
+							}
+						}
+	        		}	
+				} catch (MiException e) {
+					throw e;					
+		        } catch (Exception e) {
+					throw new MiException("[INICIAR REPARACION]EXCEPTION : "+e);												
+				}
 			}
 			});
 		
@@ -941,8 +1172,8 @@ public class Swing {
 					JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.white,new Dimension(400,400),null);
 					JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR REPARACIONES PENDIENTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 
-			    	//JTable table=panelGestor.cargarPanelReparacionesEnReparacion(reparacionesG)cargarClientesEnTabla(getClientesG());										
-					
+			    	//JTable table=panelGestor.cargarPanelReparacionesEnReparacion(reparacionesG);										
+					JTable table=panelGestor.cargarReparacionesPendEnTabla(getReparacionesG());
 			        
 			        panel.add(BorderLayout.NORTH,panelTitulo);
 					panel.add(BorderLayout.CENTER,table);
@@ -964,7 +1195,33 @@ public class Swing {
 		itemReparaFinalizadas.addActionListener(new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			
+			try
+        	{	
+				setFrameSwing(getFrameSwing());		
+				getFrameSwing().getContentPane().removeAll();
+				getFrameSwing().getContentPane().repaint();
+				getPanelInicio().add(getMenuBar(),BorderLayout.NORTH);
+				
+				JPanel panel = panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.white,null);
+				JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(1,1),null,Color.white,new Dimension(400,400),null);
+				JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR REPARACIONES FINALIZADAS",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+
+		    	JPanel panelReparaciones=panelGestor.cargarPanelReparacionesEntregadas(getReparacionesG());										
+				//JTable table=panelGestor.cargarReparacionesFinEnTabla(getReparacionesG());
+		        panel.add(BorderLayout.NORTH,panelTitulo);
+				panel.add(BorderLayout.CENTER,panelReparaciones);
+				panel.add(BorderLayout.SOUTH,panelResto);
+				getPanelInicio().add(panel,BorderLayout.CENTER);					
+				
+				getFrameSwing().setContentPane(getPanelInicio());
+				
+        	}catch(MiException e)
+			{
+				throw e;
+			}catch(Exception e)
+			{
+				throw new MiException("\n[MOSTRAR CLIENTES]MOSTRAR DATOS CLIENTE Exception : "+e);
+			}
 			
 		}
 		});
