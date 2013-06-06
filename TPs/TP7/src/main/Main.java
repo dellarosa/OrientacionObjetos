@@ -52,11 +52,11 @@ public class Main {
 			
 			UsuarioPanelAlta usuarioPanelAlta=new UsuarioPanelAlta(frame);
 			
-			UsuarioPanelModificacion usuarioPanelModificacion=new UsuarioPanelModificacion(frame);
+			//UsuarioPanelModificacion usuarioPanelModificacion=new UsuarioPanelModificacion(frame);
 			
-			UsuarioPanelBaja usuarioPanelBaja=new UsuarioPanelBaja(frame);
+			//UsuarioPanelBaja usuarioPanelBaja=new UsuarioPanelBaja(frame);
 			
-			UsuarioPanelMostrar usuarioPanelMostrar=new UsuarioPanelMostrar(frame);
+			//UsuarioPanelMostrar usuarioPanelMostrar=new UsuarioPanelMostrar(frame);
 			
 		}
 		catch(MiException e)

@@ -83,8 +83,6 @@ public class UsuarioDAOSQLImpl implements UsuarioDAO{
 				
 				if(rs.next())
 				{
-					
-					System.out.print("\n[cargarUsuarios] HAY USUARIOS: ");		//DEBUG
 					do {		
 						Usuario usuario=new Usuario();
 						
