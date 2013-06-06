@@ -46,15 +46,10 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 								
 				System.out.print("\n[crearTablaReparacion] "+query);			//DEBUG 
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
-				
 			}catch(SQLException e)
 			{
 				System.out.print("\n[crearTablaReparacion] SQL Exception AL CREAR: "+e);			//DEBUG
 				conn.rollback();	
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 				//throw new MiException("[crearTablaReparacion] SQL Exception: "+e);
 			}
 		
@@ -65,6 +60,15 @@ public class ReparacionDAO_SQL_Impl implements ReparacionDAO{
 		{
 		
 			throw new MiException("[crearTablaReparacion]ERROR AL CREAR TABLAS",e);
+		}finally
+		{
+			try {
+				stmt.execute("SHUTDOWN");
+				conn.close();
+			} catch (SQLException e) {
+				throw new MiException("[crearTablaReparacion] Exception Finally"+e);
+			}					
+			
 		}
 			
 		return true;
