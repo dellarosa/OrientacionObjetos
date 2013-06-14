@@ -116,9 +116,7 @@ public class UsuarioPanelAlta extends JPanel
 	    					} catch (MiException e1) {
 	    						JOptionPane.showMessageDialog(null, "Error interno Usuario", "Error", JOptionPane.ERROR_MESSAGE);
 	    						handler.backToPrincipal();
-	    					}
-            			
-            			
+	    					}            			
             		}
             		
 
