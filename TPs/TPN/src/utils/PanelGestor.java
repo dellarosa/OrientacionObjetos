@@ -2,6 +2,7 @@ package utils;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -16,6 +17,10 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
+import entities.Aceite;
+import entities.Cliente;
+import entities.Filtro;
+import entities.Lampara;
 import entities.Usuario;
 
 public class PanelGestor {
@@ -299,5 +304,53 @@ public class PanelGestor {
 		
 		}
 		return table;
-	}	
+	}
+	public JTable cargarClientesEnTabla(List<Cliente> clientes) {
+		DefaultTableModel model=new DefaultTableModel();
+		JTable table=new JTable(model);
+		model.addColumn("CLIENTES");
+		
+		for (Cliente cliente : clientes)
+		{										
+			model.addRow(new Object[]{cliente.toString()});
+		
+		}
+		return table;
+	}
+	public JTable cargarAceiteEnTabla(List<Aceite> aceites) {
+		DefaultTableModel model=new DefaultTableModel();
+		JTable table=new JTable(model);
+		model.addColumn("ACEITES");
+		
+		for (Aceite aceite : aceites)
+		{										
+			model.addRow(new Object[]{aceite.toString()});
+		
+		}
+		return table;
+	}
+	public JTable cargarFiltroEnTabla(List<Filtro> filtros) {
+		DefaultTableModel model=new DefaultTableModel();
+		JTable table=new JTable(model);
+		model.addColumn("FILTROS");
+		
+		for (Filtro filtro : filtros)
+		{										
+			model.addRow(new Object[]{filtro.toString()});
+		
+		}
+		return table;
+	}
+	public JTable cargarLamparaEnTabla(List<Lampara> lamparas) {
+		DefaultTableModel model=new DefaultTableModel();
+		JTable table=new JTable(model);
+		model.addColumn("FILTROS");
+		
+		for(Lampara lampara : lamparas)
+		{										
+			model.addRow(new Object[]{lampara.toString()});
+		
+		}
+		return table;
+	}		
 }

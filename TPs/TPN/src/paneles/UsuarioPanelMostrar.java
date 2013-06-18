@@ -31,7 +31,7 @@ public class UsuarioPanelMostrar extends JPanel {
 			try
 			{
 				panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(400,400),null);
-				panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR CLIENTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+				panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR USUARIOS",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 				 		
 			} catch (MiException e1) {
 				JOptionPane.showMessageDialog(null, "Error al crear paneles", "Error", JOptionPane.ERROR_MESSAGE);
