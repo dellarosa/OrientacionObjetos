@@ -1,5 +1,7 @@
 package paneles;
 
+import handler.Handler;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,6 +22,7 @@ import javax.swing.JTextField;
 
 import utils.Definiciones;
 import utils.MiException;
+import utils.PanelGestor;
 import bo.AceiteBO;
 import bo.AutoparteBO;
 import entities.Aceite;
@@ -35,30 +38,35 @@ public class AceitePanelBaja extends JPanel{
 	{
 		
 	}
-	public AceitePanelBaja(final JFrame frame)
+	public AceitePanelBaja(final Handler handler)
 	{
-		try{
-			this.setLayout(new BorderLayout());
+		this.setLayout(new BorderLayout());
+			PanelGestor panelGestor= new PanelGestor();			
+			JPanel panelTitulo=null;
+			JPanel panelCentro=null;
 			
-			final AceiteBO aceiteBo=new AceiteBO();			
-			final AutoparteBO autoparteBo=new AutoparteBO();
-			
-			frame.getContentPane().removeAll();
-			frame.getContentPane().repaint();
-			
-			PanelGestor panelGestor= new PanelGestor();
-			
-			JPanel panelCentro=panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.gray,new Dimension(400,400));
-			
-			JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"BAJA DE ACEITE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-			
+			try
+			{
+				panelCentro=panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.gray,new Dimension(400,400));			
+				panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"BAJA DE ACEITE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);			
+			} catch (MiException e1) {
+				JOptionPane.showMessageDialog(null, "Error al crear Panel", "Error", JOptionPane.ERROR_MESSAGE);
+				handler.backToPrincipal();
+			}
 			final JTextField tfIngreso=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);
 			//panelResto.add(panelGestor.crearPanelOpcion("Ingrese id Autoparte a eliminar", tfIngreso));
 			
 			
 			//panelCentro.add(BorderLayout.CENTER,panelGestor.cargarAceiteEnTabla(aceiteBo.cargarAceites()));
 			
-			List<Autoparte> lstAutopartes= autoparteBo.cargaAutopartes();
+			List<Autoparte> lstAutopartes=null;
+			try
+			{
+				lstAutopartes= handler.cargaAutopartes();
+			} catch (MiException e1) {
+				JOptionPane.showMessageDialog(null, "Error al cargar el listado de Autopartes", "Error", JOptionPane.ERROR_MESSAGE);
+				handler.backToPrincipal();
+			}
 			List<Aceite> lstAceite=new ArrayList<Aceite>();
 			for(Autoparte autop:lstAutopartes)
 			{
@@ -69,10 +77,14 @@ public class AceitePanelBaja extends JPanel{
 				}
 			}
 			
-			
-			panelCentro.add(BorderLayout.CENTER,panelGestor.cargarAceiteEnTabla(lstAceite));
-			panelCentro.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese id Autoparte del Aceiten a eliminar", tfIngreso));
-			
+			try
+			{
+				panelCentro.add(BorderLayout.CENTER,panelGestor.cargarAceiteEnTabla(lstAceite));
+				panelCentro.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese id Autoparte del Aceiten a eliminar", tfIngreso));
+			} catch (MiException e1) {
+				JOptionPane.showMessageDialog(null, "Error al crear Panel", "Error", JOptionPane.ERROR_MESSAGE);
+				handler.backToPrincipal();
+			}
 			JButton btSubmit=new JButton();
 			btSubmit.setText("SUBMIT");								
 			btSubmit.addActionListener(new ActionListener() {												
@@ -82,59 +94,57 @@ public class AceitePanelBaja extends JPanel{
 		            
 					if((tfIngreso.getText()==null)||(tfIngreso.getText().equals("")||tfIngreso==null))
 		        	{
-						JOptionPane.showMessageDialog(frame, "DATOS VACIOS");
+						JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
 		        	}else
 		        	{
-		        		Aceite aceite =new Aceite();
-		        		
-		        		aceite=aceiteBo.buscarAceitePorIdAutoParte(Integer.valueOf(tfIngreso.getText()));
-		        		
-		        		if(aceite==null)
-						{
-							JOptionPane.showMessageDialog(frame, "NO SE ENCONTRO EL ACEITE");
-		        		}else
+		        		try
 		        		{
-		        			
-		        			JOptionPane optionPane= new JOptionPane();
-			        		int response=JOptionPane.showConfirmDialog(frame, "ELIMINAR ACEITE Marca: "+aceite.getMarca()+" - Modelo: "+aceite.getModelo()+"?", "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			        		Aceite aceite =new Aceite();
 			        		
-			        		if(optionPane.YES_OPTION==response)
-			        		{	
-			        			if(autoparteBo.eliminarAutoparte(aceite))
-			        			{
-			        				if(aceiteBo.eliminarAceite(aceite))
-			        				{
-			        					JOptionPane.showMessageDialog(frame, "ACEITE ELIMINADO CORRECTAMENTE");			
-			        				}
-				        			else
-									{
-										JOptionPane.showMessageDialog(frame, "FALLO BAJA ACEITE");
-									}
-			        			}			        		
-			        		}else if(optionPane.NO_OPTION==response)
-			        		{	
-			        			//TODO
+			        		aceite=handler.buscarAceitePorIdAutoParte(Integer.valueOf(tfIngreso.getText()));
+			        		
+			        		if(aceite==null)
+							{
+								JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO EL ACEITE");
 			        		}else
-			        		{	
-			        			JOptionPane.showMessageDialog(frame, "NO SE ENCONTRO ACEITE");
-			        		}							
-		        		}
-		        		
+			        		{
+			        			Autoparte autoparteToDel=handler.buscarAutopartePorId(aceite.getId());
+			        			JOptionPane optionPane= new JOptionPane();
+				        		int response=JOptionPane.showConfirmDialog(handler.getFrame(), "ELIMINAR ACEITE Marca: "+autoparteToDel.getMarca()+" - Modelo: "+autoparteToDel.getModelo()+"?", "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+				        		
+				        		if(optionPane.YES_OPTION==response)
+				        		{	
+				        			if(handler.eliminarAutoparte(handler.buscarAutopartePorId(aceite.getId())))
+				        			{
+				        				if(handler.eliminarAceite(aceite))
+				        				{
+				        					JOptionPane.showMessageDialog(handler.getFrame(), "ACEITE ELIMINADO CORRECTAMENTE");			
+				        				}
+					        			else
+										{
+											JOptionPane.showMessageDialog(handler.getFrame(), "FALLO BAJA ACEITE");
+										}
+				        			}			        		
+				        		}else if(optionPane.NO_OPTION==response)
+				        		{	
+				        			//TODO
+				        			JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ELIMINO ACEITE");
+				        		}else
+				        		{	
+				        			JOptionPane.showMessageDialog(handler.getFrame(), "NO SE SELECCIONO OPCION");
+				        		}	
+				        		handler.backToPrincipal();
+			        		}
+		        		} catch (MiException e) {
+							JOptionPane.showMessageDialog(null, "Error al buscar aceite por ID autoparte", "Error", JOptionPane.ERROR_MESSAGE);
+							handler.backToPrincipal();
+						}
 					}	
             }});
 			
 			
 			this.add(BorderLayout.NORTH,panelTitulo);
 			this.add(BorderLayout.CENTER,panelCentro);
-			this.add(BorderLayout.SOUTH,btSubmit);
-						
-			frame.setContentPane(this);
-			frame.setVisible(true);
-			
-		} catch (MiException e) {
-			throw e;					
-        } catch (Exception e) {
-			throw new MiException("[BAJA ACEITE]EXCEPTION : "+e);												
-		}
+			this.add(BorderLayout.SOUTH,btSubmit);		
 	}
 }

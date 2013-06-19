@@ -32,6 +32,8 @@ public class ClientePanelMostrar extends JPanel {
 	}
 	public ClientePanelMostrar(final Handler handler)
 	{
+		
+		this.setLayout(new BorderLayout());
 			PanelGestor panelGestor=new PanelGestor();
 			
 			JPanel panelTitulo=null;
@@ -39,7 +41,7 @@ public class ClientePanelMostrar extends JPanel {
 			JTable table=null;
 			try
 			{
-				panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(400,400),null);
+				panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(600,400),null);
 				panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR CLIENTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 				table=panelGestor.cargarClientesEnTabla(handler.cargaClientes());
 			} catch (MiException e1) {

@@ -1,5 +1,7 @@
 package paneles;
 
+import handler.Handler;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,31 +19,22 @@ import javax.swing.JTextField;
 
 import utils.Definiciones;
 import utils.MiException;
+import utils.PanelGestor;
 import bo.AutoparteBO;
 import bo.LamparaBO;
 import entities.Lampara;
 
 public class LamparaPanelAlta extends JPanel{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	public LamparaPanelAlta()
 	{
 		
 	}
-	public LamparaPanelAlta(final JFrame frame)
+	public LamparaPanelAlta(final Handler handler)
 	{
-		final LamparaBO lamparaBo=new LamparaBO();
-		final AutoparteBO autoparteBo=new AutoparteBO();
-		
-		frame.getContentPane().removeAll();
-		frame.getContentPane().repaint();
 		this.setLayout(new BorderLayout());
-		
-		PanelGestor panelGestor=new PanelGestor();
-		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);			
+		PanelGestor panelGestor=new PanelGestor();					
 	
 			final JTextField areaMarca=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 			final JTextField areaModelo=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
@@ -60,8 +53,18 @@ public class LamparaPanelAlta extends JPanel{
 			JTextField[] textFields=new JTextField[]{areaMarca,areaModelo,areaColor,areaTamanio,areaCosto,areaCant};
 			JLabel[] labels=new JLabel[]{label1,label2,label3,label4,label5,label6};
 			
-			JPanel panelGrid=panelGestor.crearPanelConFieldsEnForm(textFields,labels);
-			JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CREACION DE LAMPARA",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+			JPanel panelResto=null;
+			JPanel panelGrid=null;
+			JPanel panelTitulo =null;
+			try
+			{
+				panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);	
+				panelGrid=panelGestor.crearPanelConFieldsEnForm(textFields,labels);
+				panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CREACION DE LAMPARA",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+			} catch (MiException e1) {
+				JOptionPane.showMessageDialog(null, "Error al crear Panel", "Error", JOptionPane.ERROR_MESSAGE);
+				handler.backToPrincipal();
+			}
 			panelResto.add(panelGrid);
 			
 			JButton btSubmit=new JButton();
@@ -72,13 +75,13 @@ public class LamparaPanelAlta extends JPanel{
 	        	try {					            		
 	        		if(areaMarca.getText().equals("")||areaModelo.getText().equals("")||areaColor.getText().equals("")||areaTamanio.getText().equals("")||areaCosto.getText().equals("")||areaCant.getText().equals(""))
 	        		{
-	        			JOptionPane.showMessageDialog(frame, "DATOS VACIOS");
+	        			JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
 	        		}else
 	        		{	
 	        			Lampara lampara=new Lampara();
 	        			
-	        			lampara.setAutoparteID(autoparteBo.buscarUltimaAutoparteId());
-	        			lampara.setLampara_ID(lamparaBo.buscarUltimoLamparaId());
+	        			lampara.setId(handler.buscarUltimaAutoparteId());
+	        			lampara.setLampara_ID(handler.buscarUltimoLamparaId());
 	        			lampara.setCantDisponible(Integer.valueOf(areaCant.getText()));
 	        			lampara.setCosto(Double.valueOf(areaCosto.getText()));
 	        			lampara.setMarca(areaMarca.getText());
@@ -87,28 +90,26 @@ public class LamparaPanelAlta extends JPanel{
 	        			lampara.setTamanio(areaTamanio.getText());
 	        			lampara.setTipoAutoparte("lampara");
 					
-						if(lamparaBo.insertarLampara(lampara))
+						if(handler.insertarLampara(lampara))
 						{
-							JOptionPane.showMessageDialog(frame, "LAMPARA CREADO CORRECTAMENTE");
+							JOptionPane.showMessageDialog(handler.getFrame(), "LAMPARA CREADO CORRECTAMENTE");
 							
 						}else
 						{
-							JOptionPane.showMessageDialog(frame, "FALLO CREACION LAMPARA");
+							JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION LAMPARA");
 						}
+						handler.backToPrincipal();
 	        		}
-				} catch (MiException e) {
-						throw e;					
-	            } catch (Exception e) {
-					throw new MiException("[CREATE LAMPARA]EXCEPTION : "+e);												
-				}
-		        }
+        		}catch (MiException e1) {
+					JOptionPane.showMessageDialog(handler.getFrame(), "Error interno Lampara", "Error", JOptionPane.ERROR_MESSAGE);
+					handler.backToPrincipal();
+				} 
+	        }
 			});
 			
 			this.add(BorderLayout.NORTH,panelTitulo);			
 			this.add(BorderLayout.CENTER,panelResto);
 			this.add(BorderLayout.SOUTH,btSubmit);
 		
-			frame.setContentPane(this);
-			frame.setVisible(true);
 	}
 }

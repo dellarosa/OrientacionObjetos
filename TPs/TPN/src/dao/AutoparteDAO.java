@@ -21,6 +21,6 @@ public interface AutoparteDAO {
 	public List<Autoparte> cargaAutopartes() throws  MiException ;
 	
 	public boolean crearTablaAutoparte() throws MiException;
-	
+	public Autoparte buscarAutoPartePorId(int id) throws MiException;
 	
 }

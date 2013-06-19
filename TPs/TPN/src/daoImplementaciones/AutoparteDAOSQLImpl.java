@@ -79,14 +79,23 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 	//########################################## CARGAR AUTOPARTES ##############################################
 	public List<Autoparte> cargaAutopartes() throws  MiException {
 		
+		//System.out.print("\n[cargaAutopartes] INICIO CARGA");		//DEBUG
+		
 		AceiteDAO aceiteDao=new AceiteDAOSQLImpl();
 		FiltroDAO filtroDao=new FiltroDAOSQLImpl();
 		LamparaDAO lamparaDao=new LamparaDAOSQLImpl();
 		
+		List<Filtro> filtros=new ArrayList<Filtro>();
+		filtros=filtroDao.cargarFiltros();
+		List<Aceite> aceites=new ArrayList<Aceite>();
+		aceites=aceiteDao.cargarAceites();
+		List<Lampara> lamparas=new ArrayList<Lampara>();
+		lamparas=lamparaDao.cargarLamparas();
+			
 		String query;
 		Connection conn=null;
 		Statement stmt=null;	
-		List<Autoparte> autopartes=new ArrayList<Autoparte>();
+		List<Autoparte> autopartes=null;
 		
 		try
 		{			
@@ -98,11 +107,11 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 				query="SELECT * FROM Autoparte";
 				ResultSet rsAutopart=stmt.executeQuery(query);			
 				conn.commit();					
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
-				List<Filtro> filtros=filtroDao.cargarFiltros();
-				List<Aceite> aceites=aceiteDao.cargarAceites();
-				List<Lampara> lamparas=lamparaDao.cargarLamparas();
+				//System.out.print("\n[cargaAutopartes] QUERY: "+query );		//DEBUG
+				autopartes=new ArrayList<Autoparte>();
+				
+				
+					
 					while(rsAutopart.next())
 					{
 						
@@ -114,7 +123,7 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 							
 							for(Filtro filtro : filtros)
 							{
-								if(rsAutopart.getInt("autoparte_ID")==filtro.getAutoparteID())
+								if(rsAutopart.getInt("autoparte_ID")==filtro.getId())
 								{
 									filtro.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));									
 									filtro.setCosto(rsAutopart.getFloat("costo"));
@@ -134,7 +143,7 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 							
 							for(Aceite aceite : aceites)
 							{
-								if(rsAutopart.getInt("autoparte_ID")==aceite.getAutoparteID())
+								if(rsAutopart.getInt("autoparte_ID")==aceite.getId())
 								{
 									aceite.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
 									aceite.setCosto(rsAutopart.getFloat("costo"));
@@ -155,7 +164,7 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 							
 							for(Lampara lampara : lamparas)
 							{	
-								if(rsAutopart.getInt("autoparte_ID")==lampara.getAutoparteID())
+								if(rsAutopart.getInt("autoparte_ID")==lampara.getId())
 								{
 									lampara.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
 									lampara.setCosto(rsAutopart.getFloat("costo"));
@@ -182,26 +191,30 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 			
 		}catch(SQLException e)
 		{
-			throw new MiException("[cargaAutopartes]SQL EXCEPTION AL CONECTAR: "+e);
+			throw new MiException("\n[cargaAutopartes]SQL EXCEPTION AL CONECTAR: "+e);
 		}
 		catch(Exception e)
 		{
-			throw new MiException("[cargaAutopartes] EXCEPTION AL CONECTAR: "+e);
+			throw new MiException("\n[cargaAutopartes] EXCEPTION AL CONECTAR: "+e);
 		}
 		finally
-		{				
+		{		
 			try
 			{
 				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
 				conn.close();
 			}catch(SQLException e)
 			{
-				throw new MiException("[cargaAutopartes] Close Exception: " +e);
+				throw new MiException("\n[cargaAutopartes] Close Exception: " +e);
+			}
+			catch(Exception e)
+			{
+				throw new MiException("\n[cargaAutopartes] E Close Exception: " +e);
 			}
 			
 		}
-		return autopartes;
-		
+				
+		return autopartes;		
 	}
 
 	
@@ -213,9 +226,6 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 		String query;
 		Connection conn=null;
 		Statement stmt = null;
-		AceiteDAO aceiteDao=new AceiteDAOSQLImpl();
-		FiltroDAO filtroDao=new FiltroDAOSQLImpl();
-		LamparaDAO lamparaDao=new LamparaDAOSQLImpl();
 		
 		try
 		{			
@@ -229,10 +239,7 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[eliminarAutoparte] "+query);			//DEBUG
-				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
-						
+									
 				deleted=true;
 			}catch(SQLException e)
 			{
@@ -282,16 +289,12 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[insertarAutoparte] "+query);					//DEBUG
-				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
+
 			}catch(SQLException e)
 			{
 				
 				System.out.print("\n[insertarAutoparte] SQL Exception AL INSERTAR: "+e);					//DEBUG
 				conn.rollback();	
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
 			}
 		
 		}catch(SQLException e)
@@ -473,5 +476,69 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 			}
 			return inLastID;
 		}
-	
+		//################################### BUSCAR FILTRO POR ID AUTOPARTE ##################################################################
+		public Autoparte buscarAutoPartePorId(int id) throws MiException
+		{
+			String query;
+			Connection conn=null;
+			Statement stmt=null;
+			Autoparte autoparte=null;
+			
+			try
+			{			
+				conn = DBManager.getConnection();
+				conn.setAutoCommit(false);
+				stmt = conn.createStatement();
+				try
+				{				
+					query="SELECT * FROM Autoparte WHERE autoparte_ID="+id;
+					ResultSet rs=stmt.executeQuery(query);			
+					conn.commit();
+					
+					if(rs.next())
+					{
+						//System.out.print("\n[buscarFiltroPorId] HAY Filtro ");		//DEBUG
+						do {										
+							autoparte=new Autoparte();
+												
+							autoparte.setId(rs.getInt("autoparte_ID"));
+							autoparte.setCosto(rs.getDouble("costo"));
+							autoparte.setCantDisponible(rs.getInt("cantidadDisponible"));
+							autoparte.setMarca(rs.getString("marca"));
+							autoparte.setModelo(rs.getString("modelo"));
+							autoparte.setTipoAutoparte(rs.getString("tipoAutoparte"));
+							
+						}while(rs.next());
+					}else
+					{	
+						//System.out.print("\n[buscarFiltroPorIdAutoParte]NO HAY Filtros CARGADOS : ");		//DEBUG
+					}
+				}catch(SQLException e)
+				{
+					//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+					conn.rollback();
+					//throw new MiException("[Login] SQL Exception: "+e);
+
+				}						
+			}catch(SQLException e)
+			{
+				throw new MiException("[buscarFiltroPorIdAutoParte] SQL EXCEPTION AL CONECTAR: "+e);
+			}
+			catch(Exception e)
+			{
+				throw new MiException("[buscarFiltroPorIdAutoParte] EXCEPTION AL CONECTAR: "+e);
+			}		
+			finally
+			{
+				try {
+					stmt.execute("SHUTDOWN");
+					conn.close();
+				} catch (SQLException e) {
+					throw new MiException("[buscarFiltroPorIdAutoParte] Exception Close: " +e);
+				}							//CIERRO STATEMENT
+					
+							
+			}
+			return autoparte;
+		}
 }

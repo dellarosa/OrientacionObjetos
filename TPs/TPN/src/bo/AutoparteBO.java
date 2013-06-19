@@ -29,9 +29,7 @@ public class AutoparteBO {
 		return autoparteDao.insertarAutoparte(autoparte);
 	}
 
-	public boolean insertarAutoparte(int autoparte_ID, String tipo,
-			String marca, String modelo, double costo, int cantDisponible)
-			throws MiException {
+	public boolean insertarAutoparte(int autoparte_ID, String tipo,String marca, String modelo, double costo, int cantDisponible)throws MiException {
 		return autoparteDao.insertarAutoparte(autoparte_ID, tipo, marca,
 				modelo, costo, cantDisponible);
 	}
@@ -41,11 +39,15 @@ public class AutoparteBO {
 	}
 
 	public List<Autoparte> cargaAutopartes() throws MiException {
+		
 		return autoparteDao.cargaAutopartes();
 	}
 
 	public boolean crearTablaAutoparte() throws MiException {
 		return autoparteDao.crearTablaAutoparte();
 	}
-	
+	public Autoparte buscarAutopartePorId(int id)throws MiException
+	{
+		return autoparteDao.buscarAutoPartePorId(id);
+	}
 }

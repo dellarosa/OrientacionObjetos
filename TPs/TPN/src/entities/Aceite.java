@@ -19,12 +19,6 @@ public class Aceite extends Autoparte {
 		this.aceite_ID = aceite_ID;
 	}
 
-	public int getAutoparteID() {
-		return autoparteID;
-	}
-	public void setAutoparteID(int autoparteID) {
-		this.autoparteID = autoparteID;
-	}
 	public void setCantidadlitros(int cantidadlitros) {
 		this.cantidadlitros = cantidadlitros;
 	}

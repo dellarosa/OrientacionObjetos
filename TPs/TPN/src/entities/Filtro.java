@@ -14,12 +14,7 @@ public class Filtro extends Autoparte{
 	public void setFiltro_ID(int filtro_ID) { 
 		this.filtro_ID = filtro_ID;
 	}
-	public int getAutoparteID() {
-		return autoparteID;
-	}
-	public void setAutoparteID(int autoparteID) {
-		this.autoparteID = autoparteID;
-	}
+	
 	public String getTamanio() {
 		return tamanio;
 	}

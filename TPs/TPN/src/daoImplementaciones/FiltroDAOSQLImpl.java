@@ -72,7 +72,7 @@ public class FiltroDAOSQLImpl implements FiltroDAO{
 		String query;
 		Connection conn=null;
 		Statement stmt=null;		
-		List<Filtro> filtros=new ArrayList<Filtro>();
+		List<Filtro> filtros=null;
 		
 		try
 		{			
@@ -87,11 +87,12 @@ public class FiltroDAOSQLImpl implements FiltroDAO{
 				
 				if(rs.next())
 				{
-					System.out.print("\n[cargaFiltros] HAY Filtros ");		//DEBUG
+					filtros=new ArrayList<Filtro>();
+					//System.out.print("\n[cargaFiltros] HAY Filtros ");		//DEBUG
 					do {										
 						Filtro filtro=new Filtro();
 						filtro.setFiltro_ID(rs.getInt("filtro_ID"));					
-						filtro.setAutoparteID(rs.getInt("autoparte_ID"));
+						filtro.setId(rs.getInt("autoparte_ID"));
 						filtro.setMaterial(rs.getString("material"));
 						filtro.setTamanio(rs.getString("tamanio"));
 						
@@ -153,8 +154,7 @@ public class FiltroDAOSQLImpl implements FiltroDAO{
 				System.out.print("\n[eliminarFiltro] "+query);			//DEBUG
 				deleted=true;
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
+				
 			}catch(SQLException e)
 			{
 				System.out.print("\n[eliminarFiltro] SQL Exception: "+e);		//DEBUG
@@ -292,13 +292,11 @@ public class FiltroDAOSQLImpl implements FiltroDAO{
 		
 			try
 			{					
-				query="UPDATE Filtro SET filtro_ID='"+filtro.getFiltro_ID()+"',autoparte_ID='"+filtro.getAutoparteID()+"',tama�o='"+filtro.getTamanio()+"',material='"+filtro.getMaterial()+"' WHERE filtro_ID='"+filtro.getFiltro_ID()+"'";
+				query="UPDATE Filtro SET filtro_ID='"+filtro.getFiltro_ID()+"',autoparte_ID='"+filtro.getId()+"',tamanio='"+filtro.getTamanio()+"',material='"+filtro.getMaterial()+"' WHERE filtro_ID='"+filtro.getFiltro_ID()+"'";
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[updateFiltro] "+query);						//DEBUG
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[updateFiltro] Exception SQL: "+e);					//DEBUG
@@ -410,10 +408,10 @@ public class FiltroDAOSQLImpl implements FiltroDAO{
 					//System.out.print("\n[buscarFiltroPorId] HAY Filtro ");		//DEBUG
 					do {										
 						filtro=new Filtro();
-						filtro.setId(rs.getInt("filtro_ID"));					
-						filtro.setAutoparteID(rs.getInt("autoparte_ID"));
+						filtro.setFiltro_ID(rs.getInt("filtro_ID"));					
+						filtro.setId(rs.getInt("autoparte_ID"));
 						filtro.setMaterial(rs.getString("material"));
-						filtro.setTamanio(rs.getString("tama�o"));
+						filtro.setTamanio(rs.getString("tamanio"));
 						
 					}while(rs.next());
 				}else

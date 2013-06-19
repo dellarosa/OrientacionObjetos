@@ -5,8 +5,9 @@ public class Cliente {
 	private String auto;
 	private String mail;
 	private String patente;
-	
 	private int id;
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -33,14 +34,14 @@ public class Cliente {
 	}
 	
 	public String getPatente() {
-		return patente;
+		return this.patente;
 	}
 	public void setPatente(String patente) {
 		this.patente = patente;
 	}
 	public String toString()
 	{
-		return "CLIENTE_ID: "+this.getId()+" - NOMBRE: "+this.getNombre()+" - AUTO: "+this.getAuto()+" - MAIL: "+this.getMail();
+		return "CLIENTE_ID: "+this.getId()+" - NOMBRE: "+this.getNombre()+" - AUTO: "+this.getAuto()+" - MAIL: "+this.getMail()+" - PATENTE: "+this.getPatente();
 	}
 	
 }

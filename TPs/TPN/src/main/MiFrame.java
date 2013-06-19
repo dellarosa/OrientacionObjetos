@@ -51,8 +51,8 @@ public class MiFrame extends JFrame {
 		JMenuBar menuBar=new JMenuBar();
 		JMenu menuUsuario=new JMenu("Usuario");
 		JMenu menuCliente=new JMenu("Cliente");
-		JMenu menuAutopartes=new JMenu("Cliente");
-		JMenu menuReparacion=new JMenu("Cliente");
+		JMenu menuAutopartes=new JMenu("Autoparte");
+		JMenu menuReparacion=new JMenu("Reparacion");
 		
 		////////#######################// USUARIO  #####################################///////////// 
 		//////////CREAR USUARIO /////////////
@@ -141,9 +141,9 @@ public class MiFrame extends JFrame {
 		menuBar.add(menuCliente);
 
 		//////###############################// AUTOPARTES  #########################################/////////////
-		JMenu menuFiltro=new JMenu();
-		JMenu menuAceite=new JMenu();
-		JMenu menuLampara=new JMenu();		
+		JMenu menuFiltro=new JMenu("Filtro");
+		JMenu menuAceite=new JMenu("Aceite");
+		JMenu menuLampara=new JMenu("Lampara");		
 		//##################################### FILTROS ########################################
 		//////////CREAR FILTRO /////////////
 		JMenuItem itemCrearFiltro=new JMenuItem("Crear Filtro");
@@ -239,7 +239,7 @@ public class MiFrame extends JFrame {
 					MiFrame.this.switchPanel(new LamparaPanelAlta(handler));
 			}
 		});			
-		menuAceite.add(itemCrearLampara);
+		menuLampara.add(itemCrearLampara);
 		
 		//////////MODIFICAR LAMPARA /////////////
 		JMenuItem itemModificarLampara=new JMenuItem("Modificar Lampara");
@@ -275,6 +275,7 @@ public class MiFrame extends JFrame {
 		
 		menuBar.add(menuAutopartes);
 		
+		menuBar.add(menuReparacion);
 		//##################################### REPARACION ########################################
 		
 		

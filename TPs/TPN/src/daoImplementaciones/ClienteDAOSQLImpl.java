@@ -36,8 +36,6 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 				conn.commit();
 				System.out.print("\n[crearTablaCliente] "+query);				//DEBUG
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[crearTablaCliente] SQL Exception AL CREAR: "+e);			//DEBUG
@@ -87,13 +85,14 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 				
 				if(rs.next())
 				{
-					System.out.print("\n[cargaClientes] HAY CLIENTES ");		//DEBUG
+					//System.out.print("\n[cargaClientes] HAY CLIENTES ");		//DEBUG
 					do {										
 						Cliente cliente=new Cliente();
 						cliente.setNombre(rs.getString("nombre"));
 						cliente.setId(rs.getInt("cliente_ID"));
 						cliente.setAuto(rs.getString("auto"));
 						cliente.setMail(rs.getString("mail"));
+						cliente.setPatente(rs.getString("patente"));
 						clientes.add(cliente);
 						
 					}while(rs.next());
@@ -101,8 +100,6 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 				{	
 					System.out.print("\n[cargaClientes]NO HAY CLIENTES CARGADOS : ");		//DEBUG
 				}
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();															
 							
 			}catch(SQLException e)
 			{
@@ -156,8 +153,6 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 				System.out.print("\n[eliminarCliente] "+query);			//DEBUG
 				deleted=true;
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[eliminarCliente] SQL Exception: "+e);		//DEBUG
@@ -207,8 +202,6 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 				conn.commit();
 				System.out.print("\n[insertarCliente] "+query);									//DEBUG
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
 			}catch(SQLException e)
 			{
 				System.out.print("\n[insertarCliente] SQL Exception AL INSERTAR: "+e);					//DEBUG
@@ -255,8 +248,6 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 				conn.commit();
 				System.out.print("\n[insertarCliente] "+query);					//DEBUG
 				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[insertarCliente] SQL Exception AL INSERTAR: "+e);					//DEBUG
@@ -304,8 +295,6 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 					conn.commit();
 					System.out.print("\n[updateCliente] "+query);					//DEBUG
 					
-					stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-					conn.close();
 				}catch(SQLException e)
 				{
 					System.out.print("\n[updateCliente] Exception SQL: "+e);					//DEBUG
@@ -335,9 +324,10 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 	}
 
 	//###################################### BUSCAR CLIENTE POR APODO #############################################################################	
-	public Cliente buscarClientePorApodo(String userToFind) throws MiException
+	public Cliente buscarClientePorApodo(String clientToFind) throws MiException
 	{
-		Cliente cliente=new Cliente();
+		Cliente cliente=null;
+		
 		String query;						
 		Connection conn=null;
 		Statement stmt=null;
@@ -348,27 +338,30 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 			conn.setAutoCommit(false);
 			stmt = conn.createStatement();
 			try
-			{				
-				query="SELECT * FROM Usuarios WHERE user='"+userToFind+"'";
+			{	
+				
+				query="SELECT * FROM Cliente WHERE nombre='"+clientToFind+"'";
 				ResultSet rs=stmt.executeQuery(query);			
 				conn.commit();
+				//System.out.print("\n[buscarClientePorApodo] QUERY: "+query);	//DEBUG
 				if(rs.next()) {									
 					
+					//System.out.print("\n[buscarClientePorApodo] LO ENCONTRE \n");	//DEBUG
+					
+					cliente=new Cliente();
 					cliente.setAuto(rs.getString("auto"));
 					cliente.setMail(rs.getString("mail"));
 					cliente.setNombre(rs.getString("nombre"));							
-					cliente.setId(rs.getInt("ususario_ID"));							
+					cliente.setId(rs.getInt("cliente_ID"));
+					cliente.setPatente(rs.getString("patente"));
 				}else
 				{	
-					//System.out.print("\n[buscarClientePorApodo] NO HAY COINCIDENCIAS");	//DEBUG
-					cliente=null;
+					//System.out.print("\n[buscarClientePorApodo] NO HAY COINCIDENCIAS");	//DEBUG					
 					
-				}		
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
+				}
 			}catch(SQLException e)
 			{
-				//System.out.print("\n[buscarClientePorApodo] SQL Exception: "+e);		//DEBUG
+				System.out.print("\n[buscarClientePorApodo] SQL Exception: "+e);		//DEBUG
 				conn.rollback();
 				
 				//throw new MiException("[buscarClientePorApodo] SQL Exception: "+e);
@@ -392,6 +385,7 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 			}						
 			
 		}
+		
 		return cliente;
 	}
 	

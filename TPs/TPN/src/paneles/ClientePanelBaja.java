@@ -32,7 +32,8 @@ public class ClientePanelBaja extends JPanel{
 	}
 	public ClientePanelBaja(final Handler handler)
 	{			
-		PanelGestor panelGestor= new PanelGestor();						
+		this.setLayout(new BorderLayout());
+		PanelGestor panelGestor= new PanelGestor();					
 		
 		final JTextField tfIngreso=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);
 		JPanel panelTitulo=null;
@@ -65,30 +66,33 @@ public class ClientePanelBaja extends JPanel{
 		        		final Cliente clienteEncontrado=handler.buscarClientePorApodo(tfIngreso.getText());
 						if(clienteEncontrado==null)
 						{
-							JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
-		        		}
-		        		
-		        		JOptionPane optionPane= new JOptionPane();
-		        		int response=JOptionPane.showConfirmDialog(handler.getFrame(), "ELIMINAR CLIENTE "+clienteEncontrado.getNombre()+"?", "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-		        		
-		        		if(optionPane.YES_OPTION==response)
-		        		{	
-		        			if(handler.eliminarCliente(clienteEncontrado))
-							{
-		        				JOptionPane.showMessageDialog(handler.getFrame(), "CLIENTE ELIMINADO CORRECTAMENTE");
-							}else
-							{
-								JOptionPane.showMessageDialog(handler.getFrame(), "FALLO BAJA CLIENTE");
-							}        			
-		        		}else if(optionPane.NO_OPTION==response)
-		        		{	
-		        			//TODO
+							JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO CLIENTE, INGRESE NUEVAMENTE");
 		        		}else
-		        		{	
-		        			JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO USUARIO");
+		        		{
+		        		
+			        		JOptionPane optionPane= new JOptionPane();
+			        		int response=JOptionPane.showConfirmDialog(handler.getFrame(), "ELIMINAR CLIENTE "+clienteEncontrado.getNombre()+"?", "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			        		
+			        		if(optionPane.YES_OPTION==response)
+			        		{	
+			        			if(handler.eliminarCliente(clienteEncontrado))
+								{
+			        				JOptionPane.showMessageDialog(handler.getFrame(), "CLIENTE ELIMINADO CORRECTAMENTE");
+								}else
+								{
+									JOptionPane.showMessageDialog(handler.getFrame(), "FALLO BAJA CLIENTE");
+								}        			
+			        		}else if(optionPane.NO_OPTION==response)
+			        		{	
+			        			//TODO
+			        		}else
+			        		{	
+			        			JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO USUARIO");
+			        		}
+			        		handler.backToPrincipal();
 		        		}
 					}	
-					handler.backToPrincipal();
+					
 	            }catch (MiException e1) {
 					JOptionPane.showMessageDialog(handler.getFrame(), "Error al eliminar cliente", "Error", JOptionPane.ERROR_MESSAGE);
 					handler.backToPrincipal();

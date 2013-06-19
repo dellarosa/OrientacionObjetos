@@ -86,11 +86,11 @@ public class AceiteDAOSQLImpl implements AceiteDAO{
 				
 				if(rs.next())
 				{
-					System.out.print("\n[cargarAceites] HAY Aceite ");		//DEBUG
+					//System.out.print("\n[cargarAceites] HAY Aceite ");		//DEBUG
 					do {										
 						Aceite aceite=new Aceite();
 						aceite.setAceite_ID(rs.getInt("aceite_ID"));					
-						aceite.setAutoparteID(rs.getInt("autoparte_ID"));
+						aceite.setId(rs.getInt("autoparte_ID"));
 						aceite.setCantidadlitros(rs.getInt("litros"));
 						aceite.setTipoAceite(rs.getString("tipo"));	
 						
@@ -152,17 +152,12 @@ public class AceiteDAOSQLImpl implements AceiteDAO{
 				conn.commit();
 				System.out.print("\n[eliminarAceite] "+query);			//DEBUG
 				deleted=true;
-				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
+					
 			}catch(SQLException e)
 			{
 				System.out.print("\n[eliminarAceite] SQL Exception: "+e);		//DEBUG
 				deleted=false;
 				conn.rollback();
-				
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
 				//throw new MiException("[eliminarAceite] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -297,7 +292,7 @@ public class AceiteDAOSQLImpl implements AceiteDAO{
 		
 			try
 			{
-				query="UPDATE Aceite SET aceite_ID='"+aceite.getAceite_ID()+"',autoparte_ID='"+aceite.getAutoparteID()+"',litros='"+aceite.getCantidadlitros()+"',tipo='"+aceite.getTipoAceite()+"' WHERE aceite_ID="+aceite.getAceite_ID();
+				query="UPDATE Aceite SET aceite_ID='"+aceite.getAceite_ID()+"',autoparte_ID='"+aceite.getId()+"',litros='"+aceite.getCantidadlitros()+"',tipo='"+aceite.getTipoAceite()+"' WHERE aceite_ID="+aceite.getAceite_ID();
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[updateAceite] "+query);					//DEBUG	
@@ -353,8 +348,8 @@ public class AceiteDAOSQLImpl implements AceiteDAO{
 					//System.out.print("\n[buscarFiltroPorId] HAY aceite ");		//DEBUG
 					do {										
 						
-						aceite.setId(rs.getInt("aceite_ID"));					
-						aceite.setAutoparteID(rs.getInt("autoparte_ID"));
+						aceite.setAceite_ID(rs.getInt("aceite_ID"));					
+						aceite.setId(rs.getInt("autoparte_ID"));
 						aceite.setCantidadlitros(rs.getInt("litros"));
 						aceite.setTipoAceite(rs.getString("tipo"));
 						
@@ -430,8 +425,6 @@ public class AceiteDAOSQLImpl implements AceiteDAO{
 				conn.rollback();				
 				//throw new MiException("[buscarUltimoAceiteId] SQL Exception: "+e);
 			}
-			stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-			conn.close();
 		}catch(SQLException e)
 		{
 			throw new MiException("[buscarUltimoAceiteId] SQL EXCEPTION AL CONECTAR: "+e);

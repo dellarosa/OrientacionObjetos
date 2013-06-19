@@ -38,6 +38,7 @@ public class ClientePanelAlta extends JPanel{
 	}
 	public ClientePanelAlta(final Handler handler)
 	{			
+		this.setLayout(new BorderLayout());
 			PanelGestor panelGestor=new PanelGestor();
 			
 			final JTextField areaName=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				

@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,8 +19,6 @@ import javax.swing.JTextField;
 import utils.Definiciones;
 import utils.MiException;
 import utils.PanelGestor;
-import bo.AutoparteBO;
-import bo.FiltroBO;
 import entities.Filtro;
 
 public class FiltroPanelAlta extends JPanel{
@@ -31,9 +28,8 @@ public class FiltroPanelAlta extends JPanel{
 	{}
 	public FiltroPanelAlta(final Handler handler)
 	{
-		
-			PanelGestor panelGestor=new PanelGestor();
-			
+		this.setLayout(new BorderLayout());
+			PanelGestor panelGestor=new PanelGestor();			
 			
 			final JTextField areaMarca=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 			final JTextField areaModelo=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
@@ -81,7 +77,8 @@ public class FiltroPanelAlta extends JPanel{
 	        			//En el futuro podria buscar si ya existe el filtro
 		        			Filtro filtro=new Filtro();
 		        			
-		        			filtro.setAutoparteID(handler.buscarUltimaAutoparteId());
+		        			filtro.setId(handler.buscarUltimaAutoparteId());
+		        					        			
 		        			filtro.setFiltro_ID(handler.buscarUltimoFiltroId());
 		        			filtro.setCantDisponible(Integer.valueOf(areaCant.getText()));
 		        			filtro.setCosto(Double.valueOf(areaCosto.getText()));
@@ -93,13 +90,15 @@ public class FiltroPanelAlta extends JPanel{
 						
 							if(handler.insertarFiltro(filtro))
 							{
-								JOptionPane.showMessageDialog(handler.getFrame(), "FILTRO CREADO CORRECTAMENTE");
-								
+								if(handler.insertarAutoparte(filtro))
+									JOptionPane.showMessageDialog(handler.getFrame(), "FILTRO CREADO CORRECTAMENTE");
+								else
+									JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION FILTRO");
 							}else
 							{
 								JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION FILTRO");
 							}
-	        			
+	        			handler.backToPrincipal();
 	        		}
 	        		
 		        }catch (MiException e1) {
