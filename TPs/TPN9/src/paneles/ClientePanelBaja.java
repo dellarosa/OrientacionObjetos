@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import bo.ClienteBO;
@@ -36,18 +37,14 @@ public class ClientePanelBaja extends JPanel{
 		PanelGestor panelGestor= new PanelGestor();					
 		
 		tfIngreso=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);
-		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(3,1),null,Color.gray,new Dimension(400,400),null);
-		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"BAJA USUARIO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(800,50),"BAJA USUARIO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+		JPanel panelCenter=panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.gray,new Dimension(800,400));
 		
-		try
-		{
-			panelResto.add(panelGestor.cargarClientesEnTabla(handler.cargaClientes()));
-			panelResto.add(panelGestor.crearPanelOpcion("Ingrese Cliente a eliminar", tfIngreso));
-		}catch (MiException e1) {
-			JOptionPane.showMessageDialog(null, "Error al crear Panel", "Error", JOptionPane.ERROR_MESSAGE);
-			handler.backToPrincipal();
-		}
-			
+		JScrollPane pane= paneClientes(panelGestor);
+		//panelCenter.add(BorderLayout.NORTH,panelTitulo);
+		panelCenter.add(BorderLayout.CENTER,pane);
+		panelCenter.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese Cliente a eliminar", tfIngreso));
+		
 		JButton btSubmit=new JButton();
 		btSubmit.setText("SUBMIT");								
 		btSubmit.addActionListener(new ActionListener() {												
@@ -62,9 +59,23 @@ public class ClientePanelBaja extends JPanel{
         }
         });
 		
+		
 		this.add(BorderLayout.NORTH,panelTitulo);
-		this.add(BorderLayout.CENTER,panelResto);
+		this.add(BorderLayout.CENTER,panelCenter);
 		this.add(BorderLayout.SOUTH,btSubmit);
+	}
+	private JScrollPane paneClientes(PanelGestor panelGestor) {
+		JScrollPane pane=null;
+		try
+		{
+			pane=new JScrollPane(panelGestor.cargarClientesEnTabla(handler.cargaClientes()));
+			//panelResto.add(pane);
+			
+		}catch (MiException e1) {
+			JOptionPane.showMessageDialog(null, "Error al crear Panel", "Error", JOptionPane.ERROR_MESSAGE);
+			handler.backToPrincipal();
+		}
+		return pane;
 	}
 	private void clienteBaja() {
 		try

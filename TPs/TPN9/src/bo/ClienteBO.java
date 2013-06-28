@@ -47,5 +47,9 @@ public class ClienteBO {
 	public int buscarUltimoClienteId() throws MiException {
 		return clienteDao.buscarUltimoClienteId();
 	}
+
+	public Cliente buscarClientePorPatente(String patente) throws MiException{
+		return clienteDao.buscarClientePorPatente(patente);
+	}
 	
 }

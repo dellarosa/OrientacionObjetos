@@ -47,6 +47,10 @@ public class Autoparte {
 	
 	public String toString()
 	{
-		return "TIPO AUTOPARTE: "+this.getTipoAutoparte()+" - ID_AUTOPARTE: "+this.getId()+" - MARCA: "+this.getMarca()+" - Modelo: "+this.getModelo()+" - COSTO: "+this.getCosto()+" - CANT: "+this.getCantDisponible();
+		return "TIPO: "+this.getTipoAutoparte()+" - ID_AUTOPARTE: "+this.getId()+" - MARCA: "+this.getMarca()+" - MODELO: "+this.getModelo()+" - COSTO: "+this.getCosto()+" - CANT: "+this.getCantDisponible();
+	}
+	public String toStringSemi()
+	{
+		return "TIPO: "+this.getTipoAutoparte()+" - ID_AUTOPARTE: "+this.getId()+" - MARCA: "+this.getMarca()+" - MODELO: "+this.getModelo()+" - COSTO: "+this.getCosto();
 	}
 }

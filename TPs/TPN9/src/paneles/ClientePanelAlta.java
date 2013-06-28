@@ -83,17 +83,17 @@ public class ClientePanelAlta extends JPanel{
 		
 		} else {	
 			try {
-				
 				Cliente cliente=new Cliente();
-				
-				cliente.setNombre(areaName.getText());							            	
-				cliente.setMail(areaEmail.getText());							
-				cliente.setAuto(areaAuto.getText());
-				cliente.setId(handler.buscarUltimoClienteId());			//podria buscar en la lista, pero ...
-				cliente.setPatente(areaPatente.getText());
-				
-				handler.insertarCliente(cliente);
-				JOptionPane.showMessageDialog(handler.getFrame(), "CLIENTE CREADO CORRECTAMENTE");
+				if(handler.buscarClientePorPatente(areaPatente.getText())==null)		//PUEDE/DEBE ESTAR DENTRO DEL INSERTAR CLIENTE EN EL BO
+				{
+					crearClienteNuevo(cliente);
+					
+					handler.insertarCliente(cliente);
+					JOptionPane.showMessageDialog(handler.getFrame(), "CLIENTE CREADO CORRECTAMENTE");
+				}else
+				{
+					JOptionPane.showMessageDialog(handler.getFrame(), "AUTO YA EXISTENTE - NO SE CREO CLIENTE");
+				}
 
 			}catch (MiException e1) {
 				JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION CLIENTE");
@@ -101,6 +101,14 @@ public class ClientePanelAlta extends JPanel{
 
 			handler.backToPrincipal();
 		}
+	}
+
+	private void crearClienteNuevo(Cliente cliente) throws MiException {
+		cliente.setNombre(areaName.getText());							            	
+		cliente.setMail(areaEmail.getText());							
+		cliente.setAuto(areaAuto.getText());
+		cliente.setId(handler.buscarUltimoClienteId());			
+		cliente.setPatente(areaPatente.getText());
 	}
 
 	private boolean validarCamposVacios() {

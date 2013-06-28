@@ -74,8 +74,32 @@ public class Reparacion {
 
 	public String toString()
 	{
-		return "-ID: "+this.getId()+" -FECHA I: "+this.getFechainicio()+" - COSTO: "+this.getCosto()+" - ENTREGADO: "+this.getEntregado()+" - FECHA ENTREGA: "+this.getFechaentrega()+
-		" - CLIENTE: "+this.getCliente().toString()+" AUTOPARTES: "+this.getAutopartes().toString();
+		return "-ID: "+this.getId()+" -Fecha I: "+this.getFechainicio()+" - Costo: "+this.getCosto()+" -Entregado: "+this.getEntregado()+" - Fecha E: "+this.getFechaentrega()+
+		"\n - Cliente: "+this.getCliente().toString();
 				
+	}
+	public String toStringWithAutopartes()
+	{
+		String string="*ID: "+this.getId()+" -FECHA I: "+this.getFechainicio()+" - COSTO: "+this.getCosto()+" - ENTREGADO: "+this.getEntregado()+" - FECHA ENTREGA: "+this.getFechaentrega()+
+				"\n - CLIENTE: "+this.getCliente().toString();
+		
+		int x=1;
+		for(Autoparte au:this.getAutopartes())
+		{
+			string=string+"\n -AR "+x+" :"+au.toString();
+			x++;
+		}		
+		return string;
+	}
+	public String toStringAutopartes()
+	{
+		String string=new String();
+		int x=1;
+		for(Autoparte au:this.getAutopartes())
+		{
+			string=string+"\n -AR "+x+" :"+au.toStringSemi();
+			x++;
+		}		
+		return string;
 	}
 }

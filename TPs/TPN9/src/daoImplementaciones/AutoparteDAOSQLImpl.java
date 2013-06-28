@@ -497,7 +497,7 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 					
 					if(rs.next())
 					{
-						//System.out.print("\n[buscarFiltroPorId] HAY Filtro ");		//DEBUG
+						//System.out.print("\n[buscarAutoPartePorId] HAY autoparte ");		//DEBUG
 						do {										
 							autoparte=new Autoparte();
 												
@@ -511,22 +511,22 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 						}while(rs.next());
 					}else
 					{	
-						//System.out.print("\n[buscarFiltroPorIdAutoParte]NO HAY Filtros CARGADOS : ");		//DEBUG
+						//System.out.print("\n[buscarAutoPartePorId]NO HAY Filtros CARGADOS : ");		//DEBUG
 					}
 				}catch(SQLException e)
 				{
-					//System.out.print("\n[main] SQL Exception: "+e);		//DEBUG
+					//System.out.print("\n[buscarAutoPartePorId] SQL Exception: "+e);		//DEBUG
 					conn.rollback();
-					//throw new MiException("[Login] SQL Exception: "+e);
+					//throw new MiException("\n[buscarAutoPartePorId] SQL Exception: "+e);
 
 				}						
 			}catch(SQLException e)
 			{
-				throw new MiException("[buscarFiltroPorIdAutoParte] SQL EXCEPTION AL CONECTAR: "+e);
+				throw new MiException("\n[buscarAutoPartePorId] SQL EXCEPTION AL CONECTAR: "+e);
 			}
 			catch(Exception e)
 			{
-				throw new MiException("[buscarFiltroPorIdAutoParte] EXCEPTION AL CONECTAR: "+e);
+				throw new MiException("\n[buscarAutoPartePorId] EXCEPTION AL CONECTAR: "+e);
 			}		
 			finally
 			{
@@ -534,11 +534,62 @@ public class AutoparteDAOSQLImpl implements AutoparteDAO{
 					stmt.execute("SHUTDOWN");
 					conn.close();
 				} catch (SQLException e) {
-					throw new MiException("[buscarFiltroPorIdAutoParte] Exception Close: " +e);
+					//throw new MiException("\n[buscarAutoPartePorId] Exception Close: " +e);
 				}							//CIERRO STATEMENT
 					
 							
 			}
 			return autoparte;
 		}
+		
+		//###################################### MODIFICAR AUTOPARTE #############################################################################
+		public boolean disminuirAutoparte(Autoparte autoparte) throws MiException
+		{
+			String query;
+			Connection conn=null;
+			Statement stmt = null;
+			try
+			{
+				
+				conn=DBManager.getConnection();
+				conn.setAutoCommit(false);
+				stmt = conn.createStatement();
+			
+				try
+				{	
+					query="UPDATE Autoparte  SET cantidadDisponible="+(autoparte.getCantDisponible()-1)+" WHERE autoparte_ID="+autoparte.getId();
+					stmt.executeUpdate(query);
+					conn.commit();
+					System.out.print("\n[disminuirAutoparte] "+query);					//DEBUG
+
+				}catch(SQLException e)
+				{
+					System.out.print("\n[disminuirAutoparte] Exception SQL: "+e);					//DEBUG
+					conn.rollback();
+				}
+			
+			}catch(SQLException e)
+			{
+				throw new MiException("[disminuirAutoparte]SQL Connection EXCEPTION "+e.getMessage());
+			}catch(Exception e)
+			{
+			
+				throw new MiException("[disminuirAutoparte]ERROR AL CREAR TABLAS",e);
+			}
+			finally
+			{				
+				try
+				{
+					stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+					conn.close();
+				}catch(SQLException e)
+				{
+					throw new MiException("[disminuirAutoparte] Close Exception: " +e);
+				}
+				
+			}
+			
+			return true;
+		}
+
 }

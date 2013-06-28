@@ -6,25 +6,21 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import utils.Definiciones;
 import utils.MiException;
 import utils.PanelGestor;
-import bo.AceiteBO;
-import bo.AutoparteBO;
 import entities.Aceite;
 import entities.Autoparte;
 
@@ -46,7 +42,9 @@ public class AceitePanelBaja extends JPanel{
 		
 		tfIngreso=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);					
 		List<Aceite> lstAceite = listarAceites(handler);			
-		panelCentro.add(BorderLayout.CENTER,panelGestor.cargarAceiteEnTabla(lstAceite));
+		
+		JScrollPane pane = new JScrollPane(panelGestor.cargarAceiteEnTabla(lstAceite));		
+		panelCentro.add(BorderLayout.CENTER,pane);
 		panelCentro.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese id Autoparte del Aceiten a eliminar", tfIngreso));
 	
 		JButton btSubmit=new JButton("SUBMIT");											

@@ -446,4 +446,69 @@ public class ClienteDAOSQLImpl implements ClienteDAO{
 		return inLastID;
 		
 	}
+	@Override
+	public Cliente buscarClientePorPatente(String patente) throws MiException {
+
+		Cliente cliente=null;
+		
+		String query;						
+		Connection conn=null;
+		Statement stmt=null;
+		
+		try
+		{			
+			conn = DBManager.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			try
+			{	
+				
+				query="SELECT * FROM Cliente WHERE patente='"+patente+"'";
+				ResultSet rs=stmt.executeQuery(query);			
+				conn.commit();
+				//System.out.print("\n[buscarClientePorApodo] QUERY: "+query);	//DEBUG
+				if(rs.next()) {									
+					
+					//System.out.print("\n[buscarClientePorApodo] LO ENCONTRE \n");	//DEBUG
+					
+					cliente=new Cliente();
+					cliente.setAuto(rs.getString("auto"));
+					cliente.setMail(rs.getString("mail"));
+					cliente.setNombre(rs.getString("nombre"));							
+					cliente.setId(rs.getInt("cliente_ID"));
+					cliente.setPatente(rs.getString("patente"));
+				}else
+				{	
+					//System.out.print("\n[buscarClientePorApodo] NO HAY COINCIDENCIAS");	//DEBUG					
+					
+				}
+			}catch(SQLException e)
+			{
+				System.out.print("\n[buscarClientePorApodo] SQL Exception: "+e);		//DEBUG
+				conn.rollback();
+				
+				//throw new MiException("[buscarClientePorApodo] SQL Exception: "+e);
+			}						
+		}catch(SQLException e)
+		{
+			throw new MiException("[buscarClientePorApodo] EXCEPTION AL CONECTAR: "+e);
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[buscarClientePorApodo] EXCEPTION AL CONECTAR: "+e);
+		}
+		finally
+		{
+			try {
+				stmt.execute("SHUTDOWN");
+				conn.close();
+			} catch (SQLException e) {
+				//throw new MiException("[crearTablaUsuario] Exception Finally: "+e);
+				//System.out.print("\n[crearTablaUsuario] SQL Finally Exception: "+e);			//DEBUG
+			}						
+			
+		}
+		
+		return cliente;
+	}
 }

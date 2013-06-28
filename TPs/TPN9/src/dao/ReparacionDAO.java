@@ -18,6 +18,8 @@ public interface ReparacionDAO {
 	public boolean insertarReparacionInicio(Reparacion nuevareparacion) throws MiException;
 	public int buscarUltimaReparacionAutoparteId() throws  MiException;
 	public int buscarUltimaReparacionId() throws MiException;
+	public boolean insertarReparacion(Reparacion reparacion,int inLastIdRA) throws MiException;
+	public Reparacion buscarReparacionPorId(int id)throws MiException;
 	
 	
 }

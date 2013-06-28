@@ -3,7 +3,6 @@ package entities;
 public class Aceite extends Autoparte {
 
 	private int aceite_ID;
-	private int autoparteID;
 	private int cantidadlitros;
 	private String tipoAceite;
 	

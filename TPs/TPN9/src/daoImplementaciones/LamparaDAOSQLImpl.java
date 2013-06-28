@@ -283,7 +283,7 @@ public class LamparaDAOSQLImpl implements LamparaDAO{
 		
 			try
 			{
-				query="UPDATE Lampara SET lampara_ID='"+lampara.getLampara_ID()+"',autoparte_ID='"+lampara.getId()+"',color='"+lampara.getColor()+"',tama�o='"+lampara.getTamanio()+"' WHERE lampara_ID='"+lampara.getLampara_ID()+"'";
+				query="UPDATE Lampara SET lampara_ID='"+lampara.getLampara_ID()+"',autoparte_ID='"+lampara.getId()+"',color='"+lampara.getColor()+"',tamanio='"+lampara.getTamanio()+"' WHERE lampara_ID='"+lampara.getLampara_ID()+"'";
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[updateLampara] "+query);		//DEBUG

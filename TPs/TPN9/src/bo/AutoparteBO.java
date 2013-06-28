@@ -30,8 +30,7 @@ public class AutoparteBO {
 	}
 
 	public boolean insertarAutoparte(int autoparte_ID, String tipo,String marca, String modelo, double costo, int cantDisponible)throws MiException {
-		return autoparteDao.insertarAutoparte(autoparte_ID, tipo, marca,
-				modelo, costo, cantDisponible);
+		return autoparteDao.insertarAutoparte(autoparte_ID, tipo, marca,modelo, costo, cantDisponible);
 	}
 
 	public boolean eliminarAutoparte(Autoparte autoparte) throws MiException {
@@ -49,5 +48,9 @@ public class AutoparteBO {
 	public Autoparte buscarAutopartePorId(int id)throws MiException
 	{
 		return autoparteDao.buscarAutoPartePorId(id);
+	}
+	public boolean disminuirAutoparte(Autoparte autoparte) throws MiException
+	{
+		return autoparteDao.disminuirAutoparte(autoparte);
 	}
 }

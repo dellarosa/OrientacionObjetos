@@ -6,21 +6,28 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Label;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 import entities.Aceite;
 import entities.Cliente;
 import entities.Filtro;
 import entities.Lampara;
+import entities.Reparacion;
 import entities.Usuario;
 
 public class PanelGestor {
@@ -282,61 +289,165 @@ public class PanelGestor {
 		
 		DefaultTableModel model=new DefaultTableModel();
 		JTable table=new JTable(model);
-		model.addColumn("USUARIOS");
+		model.addColumn("ID");
+		model.addColumn("NOMBRE");
+		model.addColumn("EMAIL");
+		model.addColumn("USERNAME");
+		model.addColumn("PASSWORD");
+		model.addColumn("JERARQUIA");
+		model.addColumn("LOGUEADO");
 		
+		table.getTableHeader().setBackground(Color.red);
+		table.enable(false);
 		for (Usuario usuario : usuarios)
 		{										
-			model.addRow(new Object[]{usuario.toString()});
-		
+			//model.addRow(new Object[]{usuario.toString()});
+			String strRow[]={String.valueOf(usuario.getId()),usuario.getName(),usuario.getEmail(),usuario.getUsername(),
+					usuario.getPassword(),usuario.getJerarquia(),String.valueOf(usuario.getLogueado())};
+			model.addRow(strRow);
+			
 		}
 		return table;
 	}
 	public JTable cargarClientesEnTabla(List<Cliente> clientes) {
 		DefaultTableModel model=new DefaultTableModel();
 		JTable table=new JTable(model);
-		model.addColumn("CLIENTES");
+		model.addColumn("ID");
+		model.addColumn("NOMBRE");
+		model.addColumn("MAIL");
+		model.addColumn("AUTO");
+		model.addColumn("PATENTE");
+		table.getTableHeader().setBackground(Color.magenta);
+		table.setBackground(Color.blue);
+		table.setForeground(Color.white);
+		table.enable(false);
 		
 		for (Cliente cliente : clientes)
 		{										
-			model.addRow(new Object[]{cliente.toString()});
-		
+			//model.addRow(new Object[]{cliente.toString()});
+			String[] strRow={String.valueOf(cliente.getId()),cliente.getNombre(),cliente.getMail(),cliente.getAuto(),cliente.getPatente()};
+			model.addRow(strRow);
 		}
 		return table;
 	}
 	public JTable cargarAceiteEnTabla(List<Aceite> aceites) {
 		DefaultTableModel model=new DefaultTableModel();
 		JTable table=new JTable(model);
-		model.addColumn("ACEITES");
 		
+		model.addColumn("ID Autoparte");
+		model.addColumn("ID Aceite");
+		model.addColumn("MARCA");
+		model.addColumn("MODELO");
+		model.addColumn("CANT. DISP.");
+		model.addColumn("COSTO");
+		model.addColumn("CANT.LITROS");
+		model.addColumn("TIPO ACEITE");		
+		
+		table.getTableHeader().setBackground(Color.green);
+		table.enable(false);
 		for (Aceite aceite : aceites)
 		{										
-			model.addRow(new Object[]{aceite.toString()});
+			String[] strVector={String.valueOf(aceite.getId()),String.valueOf(aceite.getAceite_ID()),aceite.getMarca(),aceite.getModelo(),
+			String.valueOf(aceite.getCantDisponible()),String.valueOf(aceite.getCosto()),String.valueOf(aceite.getCantidadlitros()),aceite.getTipoAceite()};
+			model.addRow(strVector);
 		
 		}
 		return table;
 	}
 	public JTable cargarFiltroEnTabla(List<Filtro> filtros) {
 		DefaultTableModel model=new DefaultTableModel();
+		
+		model.addColumn("ID Autoparte");
+		model.addColumn("ID Filtro");
+		model.addColumn("MARCA");
+		model.addColumn("MODELO");
+		model.addColumn("CANT. DISP.");
+		model.addColumn("COSTO");
+		model.addColumn("MATERIAL");
+		model.addColumn("TAMANIO");		
 		JTable table=new JTable(model);
-		model.addColumn("FILTROS");
+		//table.setPreferredSize(new Dimension(800,200));
+		table.getTableHeader().setBackground(Color.green);
 		
+		table.enable(false);
 		for (Filtro filtro : filtros)
-		{										
-			model.addRow(new Object[]{filtro.toString()});
-		
+		{							
+			String[] strVector={String.valueOf(filtro.getId()),String.valueOf(filtro.getFiltro_ID()),filtro.getMarca(),filtro.getModelo(),
+			String.valueOf(filtro.getCantDisponible()),String.valueOf(filtro.getCosto()),filtro.getMaterial(),filtro.getTamanio()};
+			model.addRow(strVector);
 		}
 		return table;
 	}
 	public JTable cargarLamparaEnTabla(List<Lampara> lamparas) {
+		//Object[][] data = new Object[lamparas.size()][9];
+		//String[] strColumnas={"**TIPO","ID Autoparte","ID Filtro","MARCA","MODELO","CANT.DISP.","COSTO","MATERIAL","TAMANIO"};
+		//Object[] strColumnas={"**TIPO","ID Autoparte","ID Filtro","MARCA","MODELO","CANT.DISP.","COSTO","MATERIAL","TAMANIO"};
 		DefaultTableModel model=new DefaultTableModel();
-		JTable table=new JTable(model);
-		model.addColumn("FILTROS");
+		model.addColumn("ID Autoparte");
+		model.addColumn("ID Lampara");
+		model.addColumn("MARCA");
+		model.addColumn("MODELO");
+		model.addColumn("CANT. DISP.");
+		model.addColumn("COSTO");
+		model.addColumn("COLOR");
+		model.addColumn("TAMANIO");	
+		
+		JTable table=new JTable(model);		
+		table.getTableHeader().setBackground(Color.green);
+		table.enable(false);
 		
 		for(Lampara lampara : lamparas)
-		{										
-			model.addRow(new Object[]{lampara.toString()});
+		{	
+			String[] strVector={String.valueOf(lampara.getId()),String.valueOf(lampara.getLampara_ID()),lampara.getMarca(),lampara.getModelo(),
+			String.valueOf(lampara.getCantDisponible()),String.valueOf(lampara.getCosto()),lampara.getColor(),lampara.getTamanio()};
+			model.addRow(strVector);
 		
 		}
+		
 		return table;
+	}
+	public JPanel cargarAutopartesEnPanel(List<Filtro> lstFiltros,List<Aceite> lstAceites, List<Lampara> lstLamparas) {
+		
+		JPanel panelGrid=crearPanelGrid(new GridLayout(3,1),null,Color.gray,new Dimension(800,300),null);
+		JScrollPane pane = new JScrollPane(cargarFiltroEnTabla(lstFiltros));
+		//pane.setPreferredSize(new Dimension(800,300));
+		JScrollPane pane2 = new JScrollPane(cargarAceiteEnTabla(lstAceites));
+		JScrollPane pane3 = new JScrollPane(cargarLamparaEnTabla(lstLamparas));
+		panelGrid.add(pane);
+		panelGrid.add(pane2);
+		panelGrid.add(pane3);
+		
+		return panelGrid;
+	}
+	public JTable cargarReparacionesEnTabla(List<Reparacion> lstReparacion) {
+		DefaultTableModel model=new DefaultTableModel();
+		model.addColumn("ID Rep.");
+		model.addColumn("FECHA I");
+		model.addColumn("FECHA E");
+		model.addColumn("COSTO");
+		model.addColumn("ID Cliente");
+		model.addColumn("AUTO");
+		model.addColumn("PATENTE");
+		model.addColumn("NOMBRE");	
+	
+		JTable table=new JTable(model);		
+		table.getTableHeader().setBackground(Color.ORANGE);
+		table.enable(false);
+		
+		for(Reparacion repara : lstReparacion)
+		{
+			String[] strVector={String.valueOf(repara.getId()),repara.getFechainicio(),repara.getFechaentrega(),String.valueOf(repara.getCosto()),
+			String.valueOf(repara.getCliente().getId()),repara.getCliente().getAuto(),repara.getCliente().getPatente(),repara.getCliente().getNombre()};
+			model.addRow(strVector);
+		}
+		return table;
+	}
+	public JPanel armarPanelConImagen() {
+		ImageIcon image = new ImageIcon("image/taller.jpg");
+        JLabel label = new JLabel("", image, JLabel.CENTER);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add( label, BorderLayout.CENTER );
+        return panel;
 	}		
+	
 }

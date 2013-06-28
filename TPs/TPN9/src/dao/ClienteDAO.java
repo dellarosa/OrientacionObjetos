@@ -21,5 +21,7 @@ public interface ClienteDAO {
 	public boolean updateCliente(Cliente cliente) throws MiException;
 	public Cliente buscarClientePorApodo(String userToFind) throws MiException;
 	public int buscarUltimoClienteId() throws MiException;
+
+	public Cliente buscarClientePorPatente(String patente) throws MiException;
 	
 }

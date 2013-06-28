@@ -39,10 +39,7 @@ public class AceitePanelAlta extends JPanel{
 		this.handler = handler;
 	}
 	private static final long serialVersionUID = 1L;
-	public AceitePanelAlta()
-	{
-		
-	}
+	public AceitePanelAlta(){}
 	public AceitePanelAlta(final Handler handler)
 	{
 		this.setHandler(handler);
@@ -99,27 +96,35 @@ public class AceitePanelAlta extends JPanel{
     		{	
     			Aceite aceite=new Aceite();
     			
-    			aceite.setId(handler.buscarUltimaAutoparteId());	        			
-    			aceite.setAceite_ID(handler.buscarUltimoAceiteId());
-    			aceite.setCantDisponible(Integer.valueOf(areaCant.getText()));
-    			aceite.setCosto(Double.valueOf(areaCosto.getText()));
-    			aceite.setMarca(areaMarca.getText());
-    			aceite.setModelo(areaModelo.getText());
-    			aceite.setCantidadlitros(Integer.valueOf(areaCantLts.getText()));
-    			aceite.setTipoAceite(areaTipo.getText());
-    			aceite.setTipoAutoparte("aceite");
-			
-				if(getHandler().insertarAceite(aceite))
-				{
-					if(getHandler().insertarAutoparte(aceite))
-						JOptionPane.showMessageDialog(getHandler().getFrame(), "ACEITE CREADO CORRECTAMENTE");
-					else
+    			if(Integer.valueOf(areaCant.getText())>0)
+    			{
+	    			aceite.setId(handler.buscarUltimaAutoparteId());	        			
+	    			aceite.setAceite_ID(handler.buscarUltimoAceiteId());
+	    			aceite.setCantDisponible(Integer.valueOf(areaCant.getText()));
+	    			aceite.setCosto(Double.valueOf(areaCosto.getText()));
+	    			aceite.setMarca(areaMarca.getText());
+	    			aceite.setModelo(areaModelo.getText());
+	    			aceite.setCantidadlitros(Integer.valueOf(areaCantLts.getText()));
+	    			aceite.setTipoAceite(areaTipo.getText());
+	    			aceite.setTipoAutoparte("aceite");
+    			
+	    			if(getHandler().insertarAceite(aceite))
+					{
+						if(getHandler().insertarAutoparte(aceite))
+							JOptionPane.showMessageDialog(getHandler().getFrame(), "ACEITE CREADO CORRECTAMENTE");
+						else
+							JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
+					}else
+					{
 						JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
-				}else
-				{
-					JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
-				}
-				getHandler().backToPrincipal();
+					}
+					getHandler().backToPrincipal();
+    			}
+    			else
+    			{
+    				JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
+    				getHandler().backToPrincipal();
+    			}
     		}
         }catch (MiException e1) {
 			JOptionPane.showMessageDialog(getHandler().getFrame(), "Error interno Aceite", "Error", JOptionPane.ERROR_MESSAGE);

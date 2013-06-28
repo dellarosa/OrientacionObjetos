@@ -44,6 +44,12 @@ public class ReparacionBO {
 	public int buscarUltimaReparacionId() throws MiException {
 		return reparacionDao.buscarUltimaReparacionId();
 	}
+	public boolean insertarReparacion(Reparacion reparacion,int inLastIdRA) throws MiException {
+		return reparacionDao.insertarReparacion(reparacion,inLastIdRA);
+	}
+	public Reparacion buscarReparacionPorId(int id) throws MiException{
+		return reparacionDao.buscarReparacionPorId(id);
+	}
 
 	
 }

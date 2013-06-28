@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import utils.Definiciones;
@@ -46,7 +47,9 @@ public class UsuarioPanelBaja extends JPanel{
 		panelCenter.add(BorderLayout.NORTH,panelTitulo);
 		
 		List<Usuario> cargaUsuarios = listarUsuarios();
-		panelCenter.add(BorderLayout.CENTER,panelGestor.cargarUsuariosEnTabla(cargaUsuarios));
+		
+		JScrollPane pane=new JScrollPane(panelGestor.cargarUsuariosEnTabla(cargaUsuarios));
+		panelCenter.add(BorderLayout.CENTER,pane);
 		panelCenter.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese UserName de usuario a eliminar", tfUsuario));
 		
 		JButton btSubmit=new JButton("SUBMIT");								
@@ -94,21 +97,22 @@ public class UsuarioPanelBaja extends JPanel{
 		}else
 		{
 			JOptionPane optionPane= new JOptionPane();
-			int response=JOptionPane.showConfirmDialog(null, "ELIMINAR USUARIO "+tfUsuario.getText()+"?", "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int response=JOptionPane.showConfirmDialog(handler.getFrame(), "ELIMINAR USUARIO "+tfUsuario.getText()+"?", "Confirm",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(optionPane.YES_OPTION==response)
 			{	
 				try {
 					handler.eliminarUsuario(usuarioBaja);
 					//handler.backToPrincipal();
+					JOptionPane.showMessageDialog(handler.getFrame(), "USUARIO ELIMINADO");
 				} catch (MiException e) {
-					JOptionPane.showMessageDialog(null, e.getMessage(), "FALLO BAJA USUARIO", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(handler.getFrame(), e.getMessage(), "FALLO BAJA USUARIO", JOptionPane.ERROR_MESSAGE);
 				}
 				
 			}else if(optionPane.NO_OPTION==response)
-			{
+			{JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO USUARIO");
 			}else
 			{
-				JOptionPane.showMessageDialog(null, "NO SE ENCONTRO USUARIO");
+				JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO USUARIO");
 			}
 			handler.backToPrincipal();
 		}

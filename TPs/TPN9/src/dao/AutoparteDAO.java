@@ -22,5 +22,5 @@ public interface AutoparteDAO {
 	
 	public boolean crearTablaAutoparte() throws MiException;
 	public Autoparte buscarAutoPartePorId(int id) throws MiException;
-	
+	public boolean disminuirAutoparte(Autoparte autoparte)throws MiException;
 }

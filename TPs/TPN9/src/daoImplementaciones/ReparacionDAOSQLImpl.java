@@ -131,6 +131,7 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 								client.setMail(rsclient.getString("mail"));
 								client.setAuto(rsclient.getString("auto"));
 								client.setNombre(rsclient.getString("nombre"));
+								client.setPatente(rsclient.getString("patente"));
 							}
 							reparacion.setCliente(client);
 							//System.out.print("\n[cargaReparaciones] REPARACION CLIENTE: "+client.toString());	//DEBUG
@@ -247,7 +248,7 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 							}					
 							reparaciones.add(reparacion);
 						}while(rs.next());
-						System.out.print("\n[cargaReparaciones]HAY REPARACIONES: ");		//DEBUG
+						//System.out.print("\n[cargaReparaciones]HAY REPARACIONES: ");		//DEBUG
 				}else
 				{	
 					System.out.print("\n[cargaReparaciones]NO HAY REPARACIONES CARGADOS : ");		//DEBUG
@@ -294,14 +295,10 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 				conn.commit();
 				
 				System.out.print("\n[crearTablaReparacionAutoparte] "+query);			//DEBUG 
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[crearTablaReparacionAutoparte] SQL Exception AL CREAR: "+e);			//DEBUG
 				conn.rollback();	
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 				//throw new MiException("[crearTablaReparacionAutoparte] SQL Exception: "+e);
 			}
 		
@@ -313,7 +310,17 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 		
 			throw new MiException("[crearTablaReparacionAutoparte]ERROR AL CREAR TABLAS",e);
 		}
-		
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
 		return true;
 	}
 
@@ -337,14 +344,11 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 				stmt.executeUpdate(query);
 				conn.commit();
 				System.out.print("\n[insertarReparacionInicio] "+query);				//DEBUG
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
+				
 			}catch(SQLException e)
 			{
 				System.out.print("\n[insertarReparacionInicio] SQL Exception AL INSERTAR: "+e);					//DEBUG
 				conn.rollback();
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();	
 			}
 		
 		}catch(SQLException e)
@@ -355,7 +359,17 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 		
 			throw new MiException("[insertarReparacionInicio]ERROR AL CREAR TABLAS",e);
 		}
-		
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
 		return true;
 		
 	}
@@ -392,14 +406,10 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 				stmt.executeUpdate(query);					
 				conn.commit();
 				System.out.print("\n[insertarReparacionFinal] "+query);				//DEBUG
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[insertarupdateReparacionFinal] SQL Exception AL INSERTAR: "+e);					//DEBUG
 				conn.rollback();	
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}
 		
 		}catch(SQLException e)
@@ -410,7 +420,17 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 		
 			throw new MiException("\n[insertarupdateReparacionFinal]ERROR AL CREAR TABLAS",e);
 		}
-		
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
 		return true;
 		
 	}
@@ -445,14 +465,10 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 					//inLastID=-1;
 					
 				}			
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 			}catch(SQLException e)
 			{
 				System.out.print("\n[buscarUltimaReparacionId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
 				//throw new MiException("[buscarUltimaReparacionId] SQL Exception: "+e);
 			}						
 		}catch(SQLException e)
@@ -463,7 +479,17 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 		{
 			throw new MiException("[buscarUltimaReparacionId] EXCEPTION AL CONECTAR: "+e);
 		}
-
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
 		return inLastID;
 	}
 	//##################################### BUSCAR ULTIMO REPARACION AUTOPARTE ID ##########################################
@@ -495,17 +521,14 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 					inLastID=1;
 					//inLastID=-1;
 					
-				}	
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
+				}
 			}catch(SQLException e)
 			{
 				System.out.print("\n[buscarUltimaReparacionAutoparteId] SQL Exception: "+e);		//DEBUG				
 				conn.rollback();
 				
 				//throw new MiException("[buscarUltimaReparacionAutoparteId] SQL Exception: "+e);
-				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
-				conn.close();
+			
 			}						
 		}catch(SQLException e)
 		{
@@ -515,7 +538,253 @@ public class ReparacionDAOSQLImpl implements ReparacionDAO{
 		{
 			throw new MiException("[buscarUltimaReparacionAutoparteId] EXCEPTION AL CONECTAR: "+e);
 		}
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
 		return inLastID;
+	}
+	
+	
+	public boolean insertarReparacion(Reparacion reparacion,int inLastIdRA) throws MiException {
+		String query;
+		Connection conn=null;
+		Statement stmt = null;
+		try
+		{	
+			conn=DBManager.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			try
+			{	
+				for(Autoparte autoparte:reparacion.getAutopartes())
+				{	
+					query="INSERT INTO ReparacionAutoparte (reparacionAutoparte_ID,reparacion_ID,autoparte_ID) VALUES ("+
+					inLastIdRA+","+reparacion.getId()+","+autoparte.getId()+")";
+					stmt.executeUpdate(query);
+					conn.commit();
+					System.out.print("\n[insertarReparacion] "+query);				//DEBUG									
+					
+					inLastIdRA++;
+				}		
+				query="INSERT INTO Reparacion (reparacion_ID,cliente_ID,fechaInicio,entregado,costo,fechaEntrega) VALUES ("+
+						reparacion.getId()+","+reparacion.getCliente().getId()+",'"+reparacion.getFechainicio()+"',"+reparacion.getEntregado()+
+						",'"+reparacion.getCosto()+"','"+reparacion.getFechaentrega()+"')";
+				
+				stmt.executeUpdate(query);
+				conn.commit();
+				System.out.print("\n[insertarReparacion] "+query);				//DEBUG
+
+			}catch(SQLException e)
+			{
+				System.out.print("\n[insertarReparacion] SQL Exception AL INSERTAR: "+e);					//DEBUG
+				conn.rollback();
+			}
+		
+		}catch(SQLException e)
+		{
+			throw new MiException("\n[insertarReparacion]SQL Connection EXCEPTION "+e.getMessage());
+		}catch(Exception e)
+		{
+		
+			throw new MiException("\n[insertarReparacion]ERROR AL CREAR TABLAS",e);
+		}
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
+		return true;
+	}
+
+	//####################################################### BUSCAR REPARACION POR ID ################################
+	public Reparacion buscarReparacionPorId(int id) throws MiException 
+	{
+		String query;
+		Connection conn=null;
+		Statement stmt=null;
+		Reparacion reparacion = null;
+		
+		AceiteDAO aceiteDao=new AceiteDAOSQLImpl();
+		FiltroDAO filtroDao=new FiltroDAOSQLImpl();
+		LamparaDAO lamparaDao=new LamparaDAOSQLImpl();
+		
+		try
+		{			
+			conn = DBManager.getConnection();
+			conn.setAutoCommit(false);
+			stmt = conn.createStatement();
+			try
+			{				
+				query="SELECT * FROM Reparacion WHERE reparacion_ID="+id;
+				ResultSet rs=stmt.executeQuery(query);			
+				conn.commit();
+				
+				stmt.execute("SHUTDOWN");							
+				conn.close();
+				
+				//System.out.print("\n[buscarReparacionPorId] QUERY: "+query);	//DEBUG
+				if(rs.next())
+				{
+					reparacion= new Reparacion();
+				
+					conn = DBManager.getConnection();
+					conn.setAutoCommit(false);
+					stmt = conn.createStatement();
+					
+					reparacion.setId(rs.getInt("reparacion_ID"));
+					//######################CLIENTE###############					
+					query="SELECT * FROM Cliente WHERE cliente_ID="+rs.getInt("cliente_ID");
+					ResultSet rsclient=stmt.executeQuery(query);			
+					conn.commit();
+					
+					stmt.execute("SHUTDOWN");							
+					conn.close();
+				//	System.out.print("\n[buscarReparacionPorId] QUERY: "+query);	//DEBUG
+					Cliente client=new Cliente();
+					if(rsclient.next())
+					{
+						client.setId(rs.getInt("cliente_ID"));
+						client.setMail(rsclient.getString("mail"));
+						client.setAuto(rsclient.getString("auto"));
+						client.setNombre(rsclient.getString("nombre"));
+						client.setPatente(rsclient.getString("patente"));						
+					}
+					reparacion.setCliente(client);
+					//System.out.print("\n[buscarReparacionPorId] REPARACION CLIENTE: "+client.toString());	//DEBUG
+					
+					//#########################################
+					reparacion.setFechainicio(rs.getString("fechaInicio"));
+					reparacion.setFechaentrega(rs.getString("fechaEntrega"));
+					reparacion.setCosto(rs.getDouble("costo"));
+					reparacion.setEntregado(rs.getInt("entregado"));	
+						
+					//######################AUTOPARTE###############					
+					
+					List<Autoparte> autopartes=new ArrayList<Autoparte>();
+					Filtro filtro=new Filtro();
+					Aceite aceite=new Aceite();
+					Lampara lampara=new Lampara();
+						
+					conn = DBManager.getConnection();
+					conn.setAutoCommit(false);
+					stmt = conn.createStatement();
+														
+					//query="SELECT * FROM ReparacionAutoparte";
+					query="SELECT * FROM ReparacionAutoparte WHERE reparacion_ID="+rs.getInt("reparacion_ID");
+					ResultSet rsRepAuto=stmt.executeQuery(query);			
+					conn.commit();
+					
+					//System.out.print("\n[buscarReparacionPorId] QUERY: "+query);	//DEBUG									
+					
+					stmt.execute("SHUTDOWN");							
+					conn.close();	
+					
+					while(rsRepAuto.next())
+					{
+						conn = DBManager.getConnection();
+						conn.setAutoCommit(false);
+						stmt = conn.createStatement();
+						
+						query="SELECT * FROM Autoparte WHERE autoparte_ID="+rsRepAuto.getInt("autoparte_ID");	//VA a traer uno solo
+						ResultSet rsAutopart=stmt.executeQuery(query);			
+						conn.commit();		
+						
+						//System.out.print("\n[buscarReparacionPorId] QUERY: "+query);	//DEBUG
+						if(rsAutopart.next())
+						{
+							//System.out.print("\n[buscarReparacionPorId] TIPO AUTOPARTE: "+rsAutopart.getString("tipoAutoparte"));	//DEBUG
+							if(rsAutopart.getString("tipoAutoparte").equals("filtro"))
+							{	
+								filtro=filtroDao.buscarFiltroPorIdAutoParte(rsAutopart.getInt("autoparte_ID"));		//POdria usar la lista de filtros
+								if(filtro!=null)
+								{	
+									filtro.setCosto(rsAutopart.getDouble("costo"));
+									filtro.setId(rsAutopart.getInt("autoparte_ID"));
+									filtro.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+									filtro.setMarca(rsAutopart.getString("marca"));
+									filtro.setModelo(rsAutopart.getString("modelo"));
+									filtro.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+									autopartes.add(filtro);
+									//System.out.print("\n[buscarReparacionPorId] FILTRO EN REPARACION: "+filtro.toString());	//DEBUG
+								}
+						
+							}else if(rsAutopart.getString("tipoAutoparte").equals("aceite"))
+							{	
+								aceite=aceiteDao.buscarAceitePorIdAutoParte(rsAutopart.getInt("autoparte_ID"));
+								if(aceite!=null)
+								{
+									aceite.setCosto(rsAutopart.getDouble("costo"));
+									aceite.setId(rsAutopart.getInt("autoparte_ID"));
+									aceite.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+									aceite.setMarca(rsAutopart.getString("marca"));
+									aceite.setModelo(rsAutopart.getString("modelo"));
+									aceite.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+									autopartes.add(aceite);		
+									//System.out.print("\n[buscarReparacionPorId] ACEITE EN REPARACION: "+aceite.toString());	//DEBUG
+								}
+							}else if(rsAutopart.getString("tipoAutoparte").equals("lampara"))
+							{
+								lampara=lamparaDao.buscarLamparaPorIdAutoParte(rsAutopart.getInt("autoparte_ID"));
+								if(lampara!=null)
+								{	
+									lampara.setCosto(rsAutopart.getDouble("costo"));
+									lampara.setId(rsAutopart.getInt("autoparte_ID"));
+									lampara.setCantDisponible(rsAutopart.getInt("cantidadDisponible"));
+									lampara.setMarca(rsAutopart.getString("marca"));
+									lampara.setModelo(rsAutopart.getString("modelo"));
+									lampara.setTipoAutoparte(rsAutopart.getString("tipoAutoparte"));
+									autopartes.add(lampara);
+									//System.out.print("\n[buscarReparacionPorId] LAMPARA EN REPARACION: "+lampara.toString());	//DEBUG
+								}	
+							}else
+							{}
+						}										
+					}
+					reparacion.setAutopartes(autopartes);
+				}else
+				{	
+					System.out.print("\n[buscarReparacionPorId]NO SE ENCONTRO REPARACION");		//DEBUG
+				}			
+			}catch(SQLException e)
+			{
+				System.out.print("\n[buscarReparacionPorId] SQL Exception al cargar: "+e);		//DEBUG
+				conn.rollback();
+				//throw new MiException("[buscarReparacionPorId] SQL Exception: "+e);
+			}						
+		}catch(SQLException e)
+		{
+			throw new MiException("[buscarReparacionPorId] EXCEPTION AL CONECTAR: "+e);
+		}
+		catch(Exception e)
+		{
+			throw new MiException("[buscarReparacionPorId] EXCEPTION: "+e);
+		}
+		finally
+		{
+			try
+			{
+				stmt.execute("SHUTDOWN");							//CIERRO STATEMENT
+				conn.close();
+			}catch(SQLException e)
+			{
+				
+			}
+		}
+		return reparacion;
 	}
 	
 }

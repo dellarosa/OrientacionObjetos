@@ -42,10 +42,8 @@ public class UsuarioPanelAlta extends JPanel
 	}
 
 	private static final long serialVersionUID = 1L;
-	public UsuarioPanelAlta()
-	{
-		
-	}
+	public UsuarioPanelAlta(){}
+	
 	public UsuarioPanelAlta(final Handler handler)
 	{
 			this.setHandler(handler);
@@ -105,13 +103,7 @@ public class UsuarioPanelAlta extends JPanel
 				{
     				if(getHandler().buscarUsuarioPorApodo(areaUserName.getText())==null)
         			{
-        				userCreate.setName(areaName.getText());							            	
-    					userCreate.setEmail(areaEmail.getText());							
-    					userCreate.setUsername(areaUserName.getText());							
-    					userCreate.setPassword(areaPassword.getText());							
-    					userCreate.setJerarquia(areaJerarquia.getText());
-    					userCreate.setLogueado(0);
-        				userCreate.setId(handler.buscarUltimoUsuarioId());			//podria buscar en la lista, pero ...
+        				crearNuevoUsuario(userCreate);			
         				
         				if(getHandler().insertarUsuario(userCreate))
 						{
@@ -130,6 +122,15 @@ public class UsuarioPanelAlta extends JPanel
 					getHandler().backToPrincipal();
 				}            			
 		}
+	}
+	private void crearNuevoUsuario(Usuario userCreate) throws MiException {
+		userCreate.setName(areaName.getText());							            	
+		userCreate.setEmail(areaEmail.getText());							
+		userCreate.setUsername(areaUserName.getText());							
+		userCreate.setPassword(areaPassword.getText());							
+		userCreate.setJerarquia(areaJerarquia.getText());
+		userCreate.setLogueado(0);
+		userCreate.setId(handler.buscarUltimoUsuarioId());
 	}
 	
 	private boolean validarCampos() {

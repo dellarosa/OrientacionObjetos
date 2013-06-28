@@ -14,8 +14,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import utils.FuncionesAutopartes;
 import utils.MiException;
 import utils.PanelGestor;
 import entities.Autoparte;
@@ -27,7 +29,8 @@ public class LamparaPanelMostrar extends JPanel{
 	
 	private Handler handler;
 	private static final long serialVersionUID = 1L;
-
+	private FuncionesAutopartes funcionesAutopartes=null;
+	
 	public LamparaPanelMostrar(final Handler handler)
 	{
 		this.handler=handler;
@@ -36,20 +39,16 @@ public class LamparaPanelMostrar extends JPanel{
 		
 		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(600,400),null);
 		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR LAMPARAS",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-
-		List<Lampara> lstLamparas = listarLamparas();		
-    	panelResto.add(panelGestor.cargarLamparaEnTabla(lstLamparas));
-        
-		final JButton btSubmit=new JButton("SUBMIT");										
+		
+		funcionesAutopartes=new FuncionesAutopartes();
+		List<Lampara> lstLamparas = funcionesAutopartes.listarLamparas(handler);		
+    	
+		JScrollPane pane = new JScrollPane(panelGestor.cargarLamparaEnTabla(lstLamparas));
+		panelResto.add(pane);
+		final JButton btSubmit=new JButton("VOLVER");										
 		btSubmit.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					handler.backToPrincipal();
-				}catch(Exception e)
-				{
-					
-				}
+				handler.backToPrincipal();				
 		}});
 		
         this.add(BorderLayout.NORTH,panelTitulo);
@@ -57,26 +56,5 @@ public class LamparaPanelMostrar extends JPanel{
 		this.add(BorderLayout.SOUTH,btSubmit);		
 	}
 
-	private List<Lampara> listarLamparas() {
-		List<Autoparte> lstAutopartes=null;
-		
-		try
-		{
-			lstAutopartes= handler.cargaAutopartes();
-		} catch (MiException e1) {
-			JOptionPane.showMessageDialog(null, "Error al cargar el listado de Autopartes", "Error", JOptionPane.ERROR_MESSAGE);
-			handler.backToPrincipal();
-		}
-		List<Lampara> lstLamparas=new ArrayList<Lampara>();
-		for(Autoparte autop:lstAutopartes)
-		{
-			if(autop instanceof Lampara)
-			{
-				
-				lstLamparas.add((Lampara)autop);
-			}
-		}
-		return lstLamparas;
-	}
-
+	
 }

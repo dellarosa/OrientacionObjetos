@@ -1,16 +1,21 @@
 package handler;
 
+import java.awt.BorderLayout;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import utils.MiException;
+import utils.PanelGestor;
 
 import entities.Aceite;
 import entities.Autoparte;
 import entities.Cliente;
 import entities.Filtro;
 import entities.Lampara;
+import entities.Reparacion;
 import entities.Usuario;
 
 import bo.AceiteBO;
@@ -30,7 +35,6 @@ public class Handler {
 	private ClienteBO clienteBO;
 	private AutoparteBO autoparteBO;
 	private ReparacionBO reparacionBO;
-	private GeneralBO generalBO;
 	private FiltroBO filtroBO;
 	private AceiteBO aceiteBO;
 	private LamparaBO lamparaBO;
@@ -41,7 +45,6 @@ public class Handler {
 		this.clienteBO=new ClienteBO();
 		this.autoparteBO=new AutoparteBO();
 		this.reparacionBO=new ReparacionBO();
-		this.generalBO=new GeneralBO();
 		this.filtroBO=new FiltroBO();
 		this.aceiteBO=new AceiteBO();
 		this.lamparaBO=new LamparaBO();
@@ -57,7 +60,10 @@ public class Handler {
 	}
 	
 	public void backToPrincipal() {
-		frame.switchPanel(new JPanel());
+		//frame.switchPanel(new JPanel());
+		PanelGestor pGestor=new PanelGestor();
+        //System.out.print("\n[backToPrincipal] PASE VOY POR PANE");	//DEBUG
+		frame.switchPanel(pGestor.armarPanelConImagen());
 	}
 	
 	public void eliminarUsuario(Usuario usuario) throws MiException {
@@ -108,6 +114,9 @@ public class Handler {
 	public Cliente buscarClientePorApodo(String text) throws MiException {
 		return clienteBO.buscarClientePorApodo(text);
 	}
+	public Cliente buscarClientePorPatente(String patente) throws MiException {
+		return clienteBO.buscarClientePorPatente(patente);
+	}
 
 	public boolean updateCliente(Cliente cliente) throws MiException {
 		return clienteBO.updateCliente(cliente);
@@ -144,6 +153,12 @@ public class Handler {
 	public Autoparte buscarAutopartePorId(int id) throws MiException{
 		return autoparteBO.buscarAutopartePorId(id);
 	}
+	
+	public boolean disminuirAutoparte(Autoparte autoparte) throws MiException
+	{
+		return autoparteBO.disminuirAutoparte(autoparte);
+	}
+	
 	public Filtro buscarFiltroPorIdAutoParte(int id) throws MiException {
 		return filtroBO.buscarFiltroPorIdAutoParte(id);
 	}
@@ -184,9 +199,33 @@ public class Handler {
 		return autoparteBO.updateAutoparte(autoparte);
 	}
 
+	public boolean updateLampara(Lampara lampara) throws MiException{
+		return lamparaBO.updateLampara(lampara);
+	}
 
+	public boolean updateAceite(Aceite aceite) throws MiException{
+		return aceiteBO.updateAceite(aceite);
+	}
 
-	
+	public int buscarUltimaReparacionId() throws MiException{
+		return reparacionBO.buscarUltimaReparacionId();
+	}
 
+	public boolean insertarReparacion(Reparacion reparacion,int inLastIdRA)throws MiException{
+		return reparacionBO.insertarReparacion(reparacion,inLastIdRA);
+		
+	}
+	public int buscarUltimaReparacionAutoparteId() throws MiException
+	{
+		return reparacionBO.buscarUltimaReparacionAutoparteId();
+	}
+
+	public List<Reparacion> cargaReparaciones() throws MiException {
+		return reparacionBO.cargaReparaciones();
+	}
+
+	public Reparacion buscarReparacionPorId(int id) throws MiException {
+		return reparacionBO.buscarReparacionPorId(id);
+	}
 
 }

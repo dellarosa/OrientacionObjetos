@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import bo.ClienteBO;
@@ -36,19 +37,15 @@ public class ClientePanelMostrar extends JPanel {
 		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(600,400),null);
 		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR CLIENTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 		
-		JTable table = cargarClientesEnTabla(panelGestor);    	
-    	panelResto.add(table);
+		JTable table = cargarClientesEnTabla(panelGestor);
+		JScrollPane pane=new JScrollPane(table);
+    	panelResto.add(pane);
         
 		final JButton btSubmit=new JButton("VOLVER");					
 		btSubmit.addActionListener(new ActionListener() {	
-			public void actionPerformed(ActionEvent arg0) {
-				try
-				{
-					handler.backToPrincipal();
-				}catch(Exception e)
-				{
-					
-				}
+			public void actionPerformed(ActionEvent arg0) {			
+				handler.backToPrincipal();
+				
 		}});
 		
         this.add(BorderLayout.NORTH,panelTitulo);

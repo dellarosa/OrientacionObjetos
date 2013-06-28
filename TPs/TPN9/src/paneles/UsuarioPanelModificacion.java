@@ -32,6 +32,8 @@ public class UsuarioPanelModificacion extends JPanel{
 	private JTextField areaPassword;				
 	private JTextField areaJerarquia;
 	private Handler handler;
+	PanelGestor panelGestor;
+	
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -43,12 +45,15 @@ public class UsuarioPanelModificacion extends JPanel{
 	
 	public UsuarioPanelModificacion(final Handler handler)
 	{		
+		panelGestor=new PanelGestor();
 		this.handler=handler;
 		this.setLayout(new BorderLayout());		
 		String seleccion = JOptionPane.showInputDialog(null,"","INGRESE USUARIO A MODIFICAR",JOptionPane.QUESTION_MESSAGE);
 		if((seleccion==null)||(seleccion.equals("")))
     	{	
     		JOptionPane.showMessageDialog(null, "DATOS VACIOS");
+    		
+			this.add(panelGestor.armarPanelConImagen());
     	}
 		else
     	{
@@ -63,9 +68,9 @@ public class UsuarioPanelModificacion extends JPanel{
     		if(getUsuario()==null)
 			{
     			JOptionPane.showMessageDialog(null, "NO SE ENCONTRO SELECCION");
+    			this.add(panelGestor.armarPanelConImagen());
 			}else
-			{		
-				PanelGestor panelGestor= new PanelGestor();
+			{	
 				JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);
 				JPanel panelTitulo= panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MODIFICACION DE USUARIO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 				

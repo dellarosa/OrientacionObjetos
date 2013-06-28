@@ -9,18 +9,12 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import bo.ClienteBO;
-import bo.UsuarioBO;
 
 import utils.Definiciones;
 import utils.MiException;
@@ -53,7 +47,8 @@ public class ClientePanelModificacion extends JPanel {
 		if((seleccion==null)||(seleccion.equals("")))
     	{
 			JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS - CANCELADO ");
-			handler.backToPrincipal();
+			//handler.backToPrincipal();
+			this.add(panelGestor.armarPanelConImagen());
     	}else
     	{
     		try
@@ -66,6 +61,7 @@ public class ClientePanelModificacion extends JPanel {
 			if(getCliente()==null)
 			{
 				JOptionPane.showMessageDialog(handler.getFrame(), "NO SE ENCONTRO CLIENTE");
+				this.add(panelGestor.armarPanelConImagen());
     		}
 			else
 			{	

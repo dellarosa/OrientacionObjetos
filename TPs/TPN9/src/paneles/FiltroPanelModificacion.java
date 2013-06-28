@@ -14,9 +14,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import utils.Definiciones;
+import utils.FuncionesAutopartes;
 import utils.MiException;
 import utils.PanelGestor;
 import entities.Autoparte;
@@ -38,7 +40,7 @@ public class FiltroPanelModificacion extends JPanel{
 	private JTextField tfTamanio;
 	private JTextField tfMaterial;
 	PanelGestor panelGestor=null;
-	
+	FuncionesAutopartes funcionesAutopartes=null;
 	public FiltroPanelModificacion(){};
 	public FiltroPanelModificacion(final Handler handler)
 	{
@@ -46,13 +48,18 @@ public class FiltroPanelModificacion extends JPanel{
 		this.setLayout(new BorderLayout());
 		panelGestor=new PanelGestor();
 		
-		JPanel panelCentro=panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.gray,new Dimension(400,400));			
-		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MODIFICACION DE FILTRO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
+		JPanel panelCentro=panelGestor.crearPanelBorderLayout(new BorderLayout(),null,Color.gray,new Dimension(800,400));			
+		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(800,50),"MODIFICACION DE FILTRO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
 
 		tfIngreso=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);
 		
-		List<Filtro> lstFiltro = listarFiltros();
-		panelCentro.add(BorderLayout.CENTER,panelGestor.cargarFiltroEnTabla(lstFiltro));
+		funcionesAutopartes =new FuncionesAutopartes();
+		
+		List<Filtro> lstFiltro = funcionesAutopartes.listarFiltros(handler);
+		
+		JScrollPane pane = new JScrollPane(panelGestor.cargarFiltroEnTabla(lstFiltro));
+		panelCentro.add(BorderLayout.CENTER,pane);
+		
 		panelCentro.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese id Autoparte del Filtro a modificar", tfIngreso));
 		
 		JButton btSubmit=new JButton("SUBMIT");											
@@ -147,7 +154,7 @@ public class FiltroPanelModificacion extends JPanel{
     			}				
     			handler.backToPrincipal();
     		}catch (MiException e1) {
-    			JOptionPane.showMessageDialog(handler.getFrame(), "Error al modificar cliente", "Error", JOptionPane.ERROR_MESSAGE);
+    			JOptionPane.showMessageDialog(handler.getFrame(), "Error al modificar filtro", "Error", JOptionPane.ERROR_MESSAGE);
     			handler.backToPrincipal();
     		}
     	}});
@@ -178,28 +185,7 @@ public class FiltroPanelModificacion extends JPanel{
 			handler.backToPrincipal();
 		}
 	}
-	private List<Filtro> listarFiltros() {
-		List<Autoparte> lstAutopartes=null;
 		
-		try
-		{
-			lstAutopartes= handler.cargaAutopartes();
-		} catch (MiException e1) {
-			JOptionPane.showMessageDialog(handler.getFrame(), "Error al cargar el listado de Autopartes", "Error", JOptionPane.ERROR_MESSAGE);
-			handler.backToPrincipal();
-		}
-		List<Filtro> lstFiltro=new ArrayList<Filtro>();
-		for(Autoparte autop:lstAutopartes)
-		{
-			if(autop instanceof Filtro)
-			{
-				
-				lstFiltro.add((Filtro)autop);
-			}
-		}
-		return lstFiltro;
-	}
-	
 	private boolean validarCamposIngreso() {
 		return (tfIngreso.getText()==null)||(tfIngreso.getText().equals("")||tfIngreso==null);
 	}

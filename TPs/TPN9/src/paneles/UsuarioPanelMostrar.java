@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import utils.MiException;
@@ -35,7 +36,8 @@ public class UsuarioPanelMostrar extends JPanel {
 		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(400,400),null);
 		
 		JTable table = cargarUsuariosEnTabla(panelGestor);
-    	panelResto.add(table);
+		JScrollPane pane=new JScrollPane(table);
+    	panelResto.add(pane);
     	
     	JButton btSubmit=new JButton("VOLVER");					
 		btSubmit.addActionListener(new ActionListener() {	

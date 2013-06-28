@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import utils.Definiciones;
@@ -41,7 +42,10 @@ public class FiltroPanelBaja extends JPanel{
 		tfIngreso=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);
 		
 		List<Filtro> lstFiltro = listarFiltros();
-		panelCentro.add(BorderLayout.CENTER,panelGestor.cargarFiltroEnTabla(lstFiltro));
+		JScrollPane pane = new JScrollPane(panelGestor.cargarFiltroEnTabla(lstFiltro));
+		
+		
+		panelCentro.add(BorderLayout.CENTER,pane);		
 		panelCentro.add(BorderLayout.SOUTH,panelGestor.crearPanelOpcion("Ingrese id Autoparte del Filtro a eliminar", tfIngreso));
 		
 		JButton btSubmit=new JButton("SUBMIT");											

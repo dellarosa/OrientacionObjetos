@@ -2,10 +2,18 @@ package main;
 
 import handler.Handler;
 
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,27 +32,37 @@ import paneles.FiltroPanelAlta;
 import paneles.FiltroPanelBaja;
 import paneles.FiltroPanelModificacion;
 import paneles.FiltroPanelMostrar;
+import paneles.ImagePanel;
 import paneles.LamparaPanelAlta;
 import paneles.LamparaPanelBaja;
 import paneles.LamparaPanelModificacion;
 import paneles.LamparaPanelMostrar;
+import paneles.ReparacionPanel;
+import paneles.ReparacionPanelMostrar;
 import paneles.UsuarioPanelAlta;
 import paneles.UsuarioPanelBaja;
 import paneles.UsuarioPanelModificacion;
 import paneles.UsuarioPanelMostrar;
 import utils.MiException;
+import utils.PanelGestor;
 
 public class MiFrame extends JFrame {
-
+	
+	private PanelGestor panelGestor;
 	private static final long serialVersionUID = 1L;
-
 	public MiFrame(Handler handler) {
-		setSize(600, 600);
+		setSize(800, 600);
         setTitle("TALLER MECANICO 2013");
         //frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
         addMenuBar(handler);
+        
+        //ImagePanel imgPanel=new ImagePanel("image/taller.jpg");
+        //this.setContentPane(imgPanel);
+        panelGestor=new PanelGestor();
+        this.getContentPane().add(panelGestor.armarPanelConImagen());
+        
 	}
 	
 	private void addMenuBar(final Handler handler) {
@@ -255,10 +273,26 @@ public class MiFrame extends JFrame {
 		
 		menuBar.add(menuAutopartes);
 		
-		menuBar.add(menuReparacion);
+		
 		//##################################### REPARACION ########################################
+		JMenuItem finalizarReparacion=new JMenuItem("Finalizar Reparacion");
+		finalizarReparacion.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				MiFrame.this.switchPanel(new ReparacionPanel(handler));
+			}			
+		});
+		menuReparacion.add(finalizarReparacion);
+		
+		JMenuItem mostrarReparaciones=new JMenuItem("Mostrar Reparaciones");
+		mostrarReparaciones.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				MiFrame.this.switchPanel(new ReparacionPanelMostrar(handler));
+			}			
+		});
+		menuReparacion.add(mostrarReparaciones);
 		
 		
+		menuBar.add(menuReparacion);		
 		
 		
 		
@@ -268,6 +302,7 @@ public class MiFrame extends JFrame {
 	public void switchPanel(JPanel panel) {
 		getContentPane().removeAll();
 		getContentPane().add(panel);
+		//this.setContentPane(panel);
 		getContentPane().validate();
 	}	
 }
