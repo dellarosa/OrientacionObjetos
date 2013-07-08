@@ -6,18 +6,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
-import bo.ClienteBO;
 import utils.Definiciones;
 import utils.MiException;
 import utils.PanelGestor;
@@ -49,7 +45,7 @@ public class ClientePanelBaja extends JPanel{
 		btSubmit.setText("SUBMIT");								
 		btSubmit.addActionListener(new ActionListener() {												
         public void actionPerformed(ActionEvent evt) {
-        	if(validarCampos())
+        	if(validarCamposVacios())
         	{
 				JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
         	}else
@@ -113,7 +109,7 @@ public class ClientePanelBaja extends JPanel{
 			handler.backToPrincipal();
 		}
 	}
-	private boolean validarCampos() {
+	private boolean validarCamposVacios() {
 		return (tfIngreso.getText()==null)||(tfIngreso.getText().equals("")||tfIngreso==null);
 	}
 }

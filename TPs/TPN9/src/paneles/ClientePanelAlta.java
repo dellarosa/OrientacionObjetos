@@ -21,7 +21,7 @@ import utils.MiException;
 import utils.PanelGestor;
 import entities.Cliente;
 
-public class ClientePanelAlta extends JPanel{
+public class ClientePanelAlta extends PanelAlta{
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,35 +30,14 @@ public class ClientePanelAlta extends JPanel{
 	private JTextField areaAuto;
 	private JTextField areaPatente;
 	
-	private Handler handler;
-	
 	public ClientePanelAlta() {}
 	
 	public ClientePanelAlta(final Handler handler)
-	{			
-		this.handler = handler;		
-		this.setLayout(new BorderLayout());
-		PanelGestor panelGestor = new PanelGestor();
-		
-		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CREACION DE CLIENTE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-		JPanel panelGrid = crearFormulario(panelGestor);
-		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);
-		
-		panelResto.add(panelGrid);
-		
-		JButton btSubmit = new JButton("SUBMIT");								
-		btSubmit.addActionListener(new ActionListener(){												
-	        public void actionPerformed(ActionEvent evt) {
-	        		altaCliente();
-		    }
-		});
-		
-		this.add(BorderLayout.NORTH, panelTitulo);			
-		this.add(BorderLayout.CENTER, panelResto);
-		this.add(BorderLayout.SOUTH, btSubmit);
+	{	
+		super(handler,"CREACION DE CLIENTE");
 	}
 
-	private JPanel crearFormulario(PanelGestor panelGestor) {
+	public JPanel crearFormulario(PanelGestor panelGestor) {
 		areaName=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaEmail=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaAuto=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
@@ -76,7 +55,8 @@ public class ClientePanelAlta extends JPanel{
 		return panelGrid;
 	}
 
-	private void altaCliente() {
+	public void alta(Handler handler) {
+		System.out.print("\n[alta] llegue \n");
 		if(validarCamposVacios()) {
 			
 			JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
@@ -84,10 +64,14 @@ public class ClientePanelAlta extends JPanel{
 		} else {	
 			try {
 				Cliente cliente=new Cliente();
+				
+				System.out.print("\n[alta]Por buscar:"+areaPatente.getText()+" \n");
 				if(handler.buscarClientePorPatente(areaPatente.getText())==null)		//PUEDE/DEBE ESTAR DENTRO DEL INSERTAR CLIENTE EN EL BO
 				{
-					crearClienteNuevo(cliente);
+					System.out.print("\n[alta] Por llenar \n");
 					
+					llenarObjetoCliente(cliente,handler);
+					System.out.print("\n[alta] Por insertar \n");
 					handler.insertarCliente(cliente);
 					JOptionPane.showMessageDialog(handler.getFrame(), "CLIENTE CREADO CORRECTAMENTE");
 				}else
@@ -103,7 +87,9 @@ public class ClientePanelAlta extends JPanel{
 		}
 	}
 
-	private void crearClienteNuevo(Cliente cliente) throws MiException {
+	private void llenarObjetoCliente(Cliente cliente,Handler handler) throws MiException {
+		System.out.print("\n[alta] llenando \n");
+		
 		cliente.setNombre(areaName.getText());							            	
 		cliente.setMail(areaEmail.getText());							
 		cliente.setAuto(areaAuto.getText());
@@ -111,10 +97,11 @@ public class ClientePanelAlta extends JPanel{
 		cliente.setPatente(areaPatente.getText());
 	}
 
-	private boolean validarCamposVacios() {
+	public boolean validarCamposVacios() {
 		return areaName.getText().equals("") ||
 				areaEmail.getText().equals("") ||
 				areaAuto.getText().equals("")||
 				areaPatente.getText().equals("");
 	}
+
 }

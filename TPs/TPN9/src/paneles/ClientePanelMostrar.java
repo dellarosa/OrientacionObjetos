@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,50 +19,28 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import entities.Lampara;
+
 import bo.ClienteBO;
 
+import utils.FuncionesAutopartes;
 import utils.MiException;
 import utils.PanelGestor;
 
-public class ClientePanelMostrar extends JPanel {
+public class ClientePanelMostrar extends PanelMostrar {
 
 	private static final long serialVersionUID = 1L;
 	private Handler handler;
-	public ClientePanelMostrar(){}
 	public ClientePanelMostrar(final Handler handler)
 	{
-		this.handler=handler;
-		this.setLayout(new BorderLayout());
-		PanelGestor panelGestor=new PanelGestor();
-		
-		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.white,new Dimension(600,400),null);
-		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"MOSTRAR CLIENTES",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-		
-		JTable table = cargarClientesEnTabla(panelGestor);
-		JScrollPane pane=new JScrollPane(table);
-    	panelResto.add(pane);
-        
-		final JButton btSubmit=new JButton("VOLVER");					
-		btSubmit.addActionListener(new ActionListener() {	
-			public void actionPerformed(ActionEvent arg0) {			
-				handler.backToPrincipal();
-				
-		}});
-		
-        this.add(BorderLayout.NORTH,panelTitulo);
-		this.add(BorderLayout.CENTER,panelResto);
-		this.add(BorderLayout.SOUTH,btSubmit);
+		super(handler,"MOSTRAR CLIENTES");
 		
 	}
-	private JTable cargarClientesEnTabla(PanelGestor panelGestor) {
-		JTable table=null;
-		try
-		{
-			table=panelGestor.cargarClientesEnTabla(handler.cargaClientes());
-		} catch (MiException e1) {
-			JOptionPane.showMessageDialog(handler.getFrame(), "Error al crear paneles", "Error", JOptionPane.ERROR_MESSAGE);
-			handler.backToPrincipal();
-		}
-		return table;
+
+	public JScrollPane llenarPanelAMostrar(Handler handler,PanelGestor panelGestor) throws MiException {
+		
+		JTable table = panelGestor.cargarClientesEnTabla(handler.cargaClientes());
+		JScrollPane pane=new JScrollPane(table);
+		return pane;
 	}	
 }

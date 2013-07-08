@@ -22,51 +22,23 @@ import utils.PanelGestor;
 import entities.Aceite;
 
 
-public class AceitePanelAlta extends JPanel{
+public class AceitePanelAlta extends PanelAlta{
 
-	private Handler handler;
 	private JTextField areaMarca;				
 	private JTextField areaModelo;				
 	private JTextField areaTipo;				
 	private JTextField areaCantLts;
 	private JTextField areaCosto;
 	private JTextField areaCant;
-	
-	public Handler getHandler() {
-		return handler;
-	}
-	public void setHandler(Handler handler) {
-		this.handler = handler;
-	}
+
 	private static final long serialVersionUID = 1L;
 	public AceitePanelAlta(){}
 	public AceitePanelAlta(final Handler handler)
 	{
-		this.setHandler(handler);
-		this.setLayout(new BorderLayout());
-		
-		PanelGestor panelGestor=new PanelGestor();
-	
-			JPanel panelGrid = crearFormularioAlta(panelGestor);			
-			JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CREACION DE ACEITE",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-			JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);
-			
-			panelResto.add(panelGrid);
-			
-			JButton btSubmit=new JButton("SUBMIT");											
-			btSubmit.addActionListener(new ActionListener(){												
-	        public void actionPerformed(ActionEvent evt) {
-	        		
-	        	aceiteAlta(); 
-	        }
-			});
-			
-			this.add(BorderLayout.NORTH,panelTitulo);			
-			this.add(BorderLayout.CENTER,panelResto);
-			this.add(BorderLayout.SOUTH,btSubmit);
+		super(handler,"CREACION DE ACEITE");
 		
 	}
-	private JPanel crearFormularioAlta(PanelGestor panelGestor) {
+	public JPanel crearFormulario(PanelGestor panelGestor) {
 		areaMarca=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaModelo=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaTipo=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
@@ -86,52 +58,55 @@ public class AceitePanelAlta extends JPanel{
 		JPanel panelGrid=panelGestor.crearPanelConFieldsEnForm(textFields,labels);
 		return panelGrid;
 	}
-	private void aceiteAlta() {
+	public void alta(Handler handler) {
 		try
     	{
-    		if(validarCampos())
+    		if(validarCamposVacios())
     		{
-    			JOptionPane.showMessageDialog(getHandler().getFrame(), "DATOS VACIOS");
+    			JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
     		}else
     		{	
     			Aceite aceite=new Aceite();
     			
     			if(Integer.valueOf(areaCant.getText())>0)
     			{
-	    			aceite.setId(handler.buscarUltimaAutoparteId());	        			
-	    			aceite.setAceite_ID(handler.buscarUltimoAceiteId());
-	    			aceite.setCantDisponible(Integer.valueOf(areaCant.getText()));
-	    			aceite.setCosto(Double.valueOf(areaCosto.getText()));
-	    			aceite.setMarca(areaMarca.getText());
-	    			aceite.setModelo(areaModelo.getText());
-	    			aceite.setCantidadlitros(Integer.valueOf(areaCantLts.getText()));
-	    			aceite.setTipoAceite(areaTipo.getText());
-	    			aceite.setTipoAutoparte("aceite");
+	    			llenarObjetoAceite(handler, aceite);
     			
-	    			if(getHandler().insertarAceite(aceite))
+	    			if(handler.insertarAceite(aceite))
 					{
-						if(getHandler().insertarAutoparte(aceite))
-							JOptionPane.showMessageDialog(getHandler().getFrame(), "ACEITE CREADO CORRECTAMENTE");
+						if(handler.insertarAutoparte(aceite))
+							JOptionPane.showMessageDialog(handler.getFrame(), "ACEITE CREADO CORRECTAMENTE");
 						else
-							JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
+							JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION ACEITE");
 					}else
 					{
-						JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
+						JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION ACEITE");
 					}
-					getHandler().backToPrincipal();
+	    			handler.backToPrincipal();
     			}
     			else
     			{
-    				JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION ACEITE");
-    				getHandler().backToPrincipal();
+    				JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION ACEITE");
+    				handler.backToPrincipal();
     			}
     		}
         }catch (MiException e1) {
-			JOptionPane.showMessageDialog(getHandler().getFrame(), "Error interno Aceite", "Error", JOptionPane.ERROR_MESSAGE);
-			getHandler().backToPrincipal();
+			JOptionPane.showMessageDialog(handler.getFrame(), "Error interno Aceite", "Error", JOptionPane.ERROR_MESSAGE);
+			handler.backToPrincipal();
 		}
 	}
-	private boolean validarCampos() {
+	private void llenarObjetoAceite(Handler handler, Aceite aceite)	throws MiException {
+		aceite.setId(handler.buscarUltimaAutoparteId());	        			
+		aceite.setAceite_ID(handler.buscarUltimoAceiteId());
+		aceite.setCantDisponible(Integer.valueOf(areaCant.getText()));
+		aceite.setCosto(Double.valueOf(areaCosto.getText()));
+		aceite.setMarca(areaMarca.getText());
+		aceite.setModelo(areaModelo.getText());
+		aceite.setCantidadlitros(Integer.valueOf(areaCantLts.getText()));
+		aceite.setTipoAceite(areaTipo.getText());
+		aceite.setTipoAutoparte("aceite");
+	}
+	public boolean validarCamposVacios() {
 		return areaMarca.getText().equals("")||areaModelo.getText().equals("")||areaTipo.getText().equals("")||areaCantLts.getText().equals("")||areaCosto.getText().equals("")||areaCant.getText().equals("");
 	}
 }

@@ -21,50 +21,23 @@ import utils.MiException;
 import utils.PanelGestor;
 import entities.Filtro;
 
-public class FiltroPanelAlta extends JPanel{
+public class FiltroPanelAlta extends PanelAlta{
 
-	private Handler handler;
 	private JTextField areaMarca;				
 	private JTextField areaModelo;				
 	private JTextField areaMaterial;				
 	private JTextField areaTamanio;
 	private JTextField areaCosto;
 	private JTextField areaCant;
-	
-	public Handler getHandler() {
-		return handler;
-	}
-	public void setHandler(Handler handler) {
-		this.handler = handler;
-	}
+
 	private static final long serialVersionUID = 1L;
 	public FiltroPanelAlta(){}
 	public FiltroPanelAlta(final Handler handler)
 	{
-		this.setHandler(handler);		
-		this.setLayout(new BorderLayout());
-		PanelGestor panelGestor=new PanelGestor();			
-		
-		JPanel panelGrid = crearFormularioAlta(panelGestor);
-		
-		JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CREACION DE FILTRO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-		JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);			
-		
-		panelResto.add(panelGrid);
-		
-		JButton btSubmit=new JButton("SUBMIT");											
-		btSubmit.addActionListener(new ActionListener(){												
-        public void actionPerformed(ActionEvent evt) {
-        	filtroAlta(); 
-        }
-		});
-		
-		this.add(BorderLayout.NORTH,panelTitulo);			
-		this.add(BorderLayout.CENTER,panelResto);
-		this.add(BorderLayout.SOUTH,btSubmit);
+		super(handler,"CREACION DE FILTRO");
 
 	}
-	private JPanel crearFormularioAlta(PanelGestor panelGestor) {
+	public JPanel crearFormulario(PanelGestor panelGestor) {
 		areaMarca=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaModelo=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaMaterial=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
@@ -85,47 +58,57 @@ public class FiltroPanelAlta extends JPanel{
 		JPanel panelGrid=panelGestor.crearPanelConFieldsEnForm(textFields,labels);
 		return panelGrid;
 	}
-	private void filtroAlta() {
+	public void alta(Handler handler) {
 		try
     	{
-    		if(validarCampos())
+    		if(validarCamposVacios())
     		{
-    			JOptionPane.showMessageDialog(getHandler().getFrame(), "DATOS VACIOS");
+    			JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
     		}else
     		{	
     			//En el futuro podria buscar si ya existe el filtro
         			Filtro filtro=new Filtro();
-        			
-        			filtro.setId(getHandler().buscarUltimaAutoparteId());
-        					        			
-        			filtro.setFiltro_ID(getHandler().buscarUltimoFiltroId());
-        			filtro.setCantDisponible(Integer.valueOf(areaCant.getText()));
-        			filtro.setCosto(Double.valueOf(areaCosto.getText()));
-        			filtro.setMarca(areaMarca.getText());
-        			filtro.setModelo(areaModelo.getText());
-        			filtro.setMaterial(areaMaterial.getText());
-        			filtro.setTamanio(areaTamanio.getText());
-        			filtro.setTipoAutoparte("filtro");
-				
-					if(getHandler().insertarFiltro(filtro))
-					{
-						if(getHandler().insertarAutoparte(filtro))
-							JOptionPane.showMessageDialog(getHandler().getFrame(), "FILTRO CREADO CORRECTAMENTE");
-						else
-							JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION FILTRO");
-					}else
-					{
-						JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION FILTRO");
-					}
-					getHandler().backToPrincipal();
+        			if(Integer.valueOf(areaCant.getText())>0)
+        			{
+	        			llenarObjetoFiltro(handler, filtro);
+	        			if(handler.insertarFiltro(filtro))
+						{
+							if(handler.insertarAutoparte(filtro))
+								JOptionPane.showMessageDialog(handler.getFrame(), "FILTRO CREADO CORRECTAMENTE");
+							else
+								JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION FILTRO");
+						}else
+						{
+							JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION FILTRO");
+						}
+						
+        			}else
+        			{
+        				JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION ACEITE");        				
+        			}
+        			handler.backToPrincipal();
     		}
     		
         }catch (MiException e1) {
-			JOptionPane.showMessageDialog(getHandler().getFrame(), "Error interno Filtro", "Error", JOptionPane.ERROR_MESSAGE);
-			getHandler().backToPrincipal();
+			JOptionPane.showMessageDialog(handler.getFrame(), "Error interno Filtro", "Error", JOptionPane.ERROR_MESSAGE);
+			handler.backToPrincipal();
 		}
 	}
-	private boolean validarCampos() {
+	private void llenarObjetoFiltro(Handler handler, Filtro filtro)
+			throws MiException {
+		filtro.setId(handler.buscarUltimaAutoparteId());
+				        			
+		filtro.setFiltro_ID(handler.buscarUltimoFiltroId());
+		filtro.setCantDisponible(Integer.valueOf(areaCant.getText()));
+		filtro.setCosto(Double.valueOf(areaCosto.getText()));
+		filtro.setMarca(areaMarca.getText());
+		filtro.setModelo(areaModelo.getText());
+		filtro.setMaterial(areaMaterial.getText());
+		filtro.setTamanio(areaTamanio.getText());
+		filtro.setTipoAutoparte("filtro");
+	}
+	public boolean validarCamposVacios() {
 		return areaMarca.getText().equals("")||areaModelo.getText().equals("")||areaMaterial.getText().equals("")||areaTamanio.getText().equals("")||areaCosto.getText().equals("")||areaCant.getText().equals("");
 	}
+	
 }

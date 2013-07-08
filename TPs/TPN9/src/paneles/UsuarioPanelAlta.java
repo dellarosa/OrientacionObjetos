@@ -25,53 +25,23 @@ import utils.PanelGestor;
 import bo.UsuarioBO;
 import entities.Usuario;
 
-public class UsuarioPanelAlta extends JPanel 
+public class UsuarioPanelAlta extends PanelAlta 
 {
 	private JTextField areaName;				
 	private JTextField areaEmail;				
 	private JTextField areaUserName;				
 	private JTextField areaPassword;				
 	private JTextField areaJerarquia;
-	private Handler handler;
-	
-	public Handler getHandler() {
-		return handler;
-	}
-	public void setHandler(Handler handler) {
-		this.handler = handler;
-	}
 
 	private static final long serialVersionUID = 1L;
 	public UsuarioPanelAlta(){}
 	
 	public UsuarioPanelAlta(final Handler handler)
 	{
-			this.setHandler(handler);
-			this.setLayout(new BorderLayout());
-
-			PanelGestor panelGestor=new PanelGestor();
-			JPanel panelResto=panelGestor.crearPanelGrid(new GridLayout(2,1),null,Color.gray,new Dimension(400,400),null);
-			JPanel panelTitulo = panelGestor.crearPanelBorderConTitulo(new BorderLayout(),null,Color.black,new Dimension(400,50),"CREACION DE USUARIO",JLabel.CENTER,new Font(Font.SERIF,Font.BOLD,15),Color.white);
-			
-			JPanel panelGrid = crearFormularioAlta(panelGestor);			
-			
-			panelResto.add(panelGrid);
-			
-			JButton btSubmit=new JButton("SUBMIT");
-			btSubmit.addActionListener(new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					usuarioAlta();				
-			}
-			});
-			
-			
-			this.add(BorderLayout.NORTH,panelTitulo);			
-			this.add(BorderLayout.CENTER,panelResto);
-			this.add(BorderLayout.SOUTH,btSubmit);			
+		super(handler,"CREACION DE USUARIO");	
 	}
 	
-	private JPanel crearFormularioAlta(PanelGestor panelGestor) {
+	public JPanel crearFormulario(PanelGestor panelGestor) {
 		areaName=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaEmail=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
 		areaUserName=panelGestor.crearTextField("",20,Definiciones.line_blackline,new Font(Font.SERIF,-1,12),Color.white,JTextField.LEFT_ALIGNMENT);				
@@ -91,39 +61,39 @@ public class UsuarioPanelAlta extends JPanel
 		return panelGrid;
 	}
 	
-	private void usuarioAlta() {
+	public void alta(Handler handler) {
 		Usuario userCreate=new Usuario();
 		            		
-		if(validarCampos())
+		if(validarCamposVacios())
 		{	
-			JOptionPane.showMessageDialog(getHandler().getFrame(), "DATOS VACIOS");
+			JOptionPane.showMessageDialog(handler.getFrame(), "DATOS VACIOS");
 		}else
 		{	
     			try
 				{
-    				if(getHandler().buscarUsuarioPorApodo(areaUserName.getText())==null)
+    				if(handler.buscarUsuarioPorApodo(areaUserName.getText())==null)
         			{
-        				crearNuevoUsuario(userCreate);			
+        				llenarObjetoUsuario(userCreate,handler);			
         				
-        				if(getHandler().insertarUsuario(userCreate))
+        				if(handler.insertarUsuario(userCreate))
 						{
-							JOptionPane.showMessageDialog(getHandler().getFrame(), "USUARIO CREADO CORRECTAMENTE");
+							JOptionPane.showMessageDialog(handler.getFrame(), "USUARIO CREADO CORRECTAMENTE");
 						}else
 						{
-							JOptionPane.showMessageDialog(getHandler().getFrame(), "FALLO CREACION USUARIO");
+							JOptionPane.showMessageDialog(handler.getFrame(), "FALLO CREACION USUARIO");
 						}
-        				getHandler().backToPrincipal();
+        				handler.backToPrincipal();
         			}else
 					{
-						JOptionPane.showMessageDialog(getHandler().getFrame(), "EL USUARIO YA EXISTE, VUELVA A INGRESAR LOS DATOS");
+						JOptionPane.showMessageDialog(handler.getFrame(), "EL USUARIO YA EXISTE, VUELVA A INGRESAR LOS DATOS");
 					}
 				} catch (MiException e1) {
-					JOptionPane.showMessageDialog(getHandler().getFrame(), "Error interno Usuario", "Error", JOptionPane.ERROR_MESSAGE);
-					getHandler().backToPrincipal();
+					JOptionPane.showMessageDialog(handler.getFrame(), "Error interno Usuario", "Error", JOptionPane.ERROR_MESSAGE);
+					handler.backToPrincipal();
 				}            			
 		}
 	}
-	private void crearNuevoUsuario(Usuario userCreate) throws MiException {
+	private void llenarObjetoUsuario(Usuario userCreate,Handler handler) throws MiException {
 		userCreate.setName(areaName.getText());							            	
 		userCreate.setEmail(areaEmail.getText());							
 		userCreate.setUsername(areaUserName.getText());							
@@ -133,7 +103,7 @@ public class UsuarioPanelAlta extends JPanel
 		userCreate.setId(handler.buscarUltimoUsuarioId());
 	}
 	
-	private boolean validarCampos() {
+	public boolean validarCamposVacios() {
 		return areaName.getText().equals("")||areaPassword.getText().equals("")||areaUserName.getText().equals("")||areaEmail.getText().equals("")||areaJerarquia.getText().equals("");
 	}
 }
